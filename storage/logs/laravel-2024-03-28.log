@@ -1,0 +1,144 @@
+[2024-03-28 00:44:02] local.INFO: Detected N+1 Query  
+[2024-03-28 00:44:02] local.INFO: Model: App\Models\UserSecurity
+Relation: App\Models\People
+Num-Called: 2
+Call-Stack:
+#17 \app\Http\Livewire\EventReportList\HazardId\Panel\Index.php:100
+#18 \vendor\laravel\framework\src\Illuminate\Container\BoundMethod.php:36
+#19 \vendor\laravel\framework\src\Illuminate\Container\Util.php:41
+#20 \vendor\laravel\framework\src\Illuminate\Container\BoundMethod.php:93
+#21 \vendor\laravel\framework\src\Illuminate\Container\BoundMethod.php:37
+#22 \vendor\laravel\framework\src\Illuminate\Container\Container.php:661
+#23 \vendor\livewire\livewire\src\Component.php:173
+#24 \vendor\livewire\livewire\src\LifecycleManager.php:131
+#25 \vendor\livewire\livewire\src\Connection\ConnectionHandler.php:14
+#26 \vendor\livewire\livewire\src\Controllers\HttpConnectionHandler.php:21
+#27 \vendor\laravel\framework\src\Illuminate\Routing\ControllerDispatcher.php:46
+#28 \vendor\laravel\framework\src\Illuminate\Routing\Route.php:260
+#29 \vendor\laravel\framework\src\Illuminate\Routing\Route.php:205
+#30 \vendor\laravel\framework\src\Illuminate\Routing\Router.php:798
+#31 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:141
+#32 \app\Http\Middleware\Localization.php:23
+#33 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#34 \vendor\laravel\framework\src\Illuminate\Routing\Middleware\SubstituteBindings.php:50
+#35 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#36 \vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken.php:78
+#37 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#38 \vendor\laravel\framework\src\Illuminate\View\Middleware\ShareErrorsFromSession.php:49
+#39 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#40 \vendor\laravel\framework\src\Illuminate\Session\Middleware\StartSession.php:121
+#41 \vendor\laravel\framework\src\Illuminate\Session\Middleware\StartSession.php:64
+#42 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#43 \vendor\laravel\framework\src\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse.php:37
+#44 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#45 \vendor\laravel\framework\src\Illuminate\Cookie\Middleware\EncryptCookies.php:67
+#46 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#47 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:116
+#48 \vendor\laravel\framework\src\Illuminate\Routing\Router.php:799
+#49 \vendor\laravel\framework\src\Illuminate\Routing\Router.php:776
+  
+[2024-03-28 00:44:02] local.INFO: Model: App\Models\People
+Relation: App\Models\Companies
+Num-Called: 2
+Call-Stack:
+#22 \app\Http\Livewire\EventReportList\HazardId\Panel\Index.php:100
+#23 \vendor\laravel\framework\src\Illuminate\Container\BoundMethod.php:36
+#24 \vendor\laravel\framework\src\Illuminate\Container\Util.php:41
+#25 \vendor\laravel\framework\src\Illuminate\Container\BoundMethod.php:93
+#26 \vendor\laravel\framework\src\Illuminate\Container\BoundMethod.php:37
+#27 \vendor\laravel\framework\src\Illuminate\Container\Container.php:661
+#28 \vendor\livewire\livewire\src\Component.php:173
+#29 \vendor\livewire\livewire\src\LifecycleManager.php:131
+#30 \vendor\livewire\livewire\src\Connection\ConnectionHandler.php:14
+#31 \vendor\livewire\livewire\src\Controllers\HttpConnectionHandler.php:21
+#32 \vendor\laravel\framework\src\Illuminate\Routing\ControllerDispatcher.php:46
+#33 \vendor\laravel\framework\src\Illuminate\Routing\Route.php:260
+#34 \vendor\laravel\framework\src\Illuminate\Routing\Route.php:205
+#35 \vendor\laravel\framework\src\Illuminate\Routing\Router.php:798
+#36 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:141
+#37 \app\Http\Middleware\Localization.php:23
+#38 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#39 \vendor\laravel\framework\src\Illuminate\Routing\Middleware\SubstituteBindings.php:50
+#40 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#41 \vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken.php:78
+#42 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#43 \vendor\laravel\framework\src\Illuminate\View\Middleware\ShareErrorsFromSession.php:49
+#44 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#45 \vendor\laravel\framework\src\Illuminate\Session\Middleware\StartSession.php:121
+#46 \vendor\laravel\framework\src\Illuminate\Session\Middleware\StartSession.php:64
+#47 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#48 \vendor\laravel\framework\src\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse.php:37
+#49 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+  
+[2024-03-28 00:44:09] local.INFO: Detected N+1 Query  
+[2024-03-28 00:44:09] local.INFO: Model: App\Models\UserSecurity
+Relation: App\Models\People
+Num-Called: 2
+Call-Stack:
+#17 \app\Http\Livewire\EventReportList\HazardId\Panel\Index.php:100
+#18 \vendor\laravel\framework\src\Illuminate\Container\BoundMethod.php:36
+#19 \vendor\laravel\framework\src\Illuminate\Container\Util.php:41
+#20 \vendor\laravel\framework\src\Illuminate\Container\BoundMethod.php:93
+#21 \vendor\laravel\framework\src\Illuminate\Container\BoundMethod.php:37
+#22 \vendor\laravel\framework\src\Illuminate\Container\Container.php:661
+#23 \vendor\livewire\livewire\src\Component.php:173
+#24 \vendor\livewire\livewire\src\LifecycleManager.php:131
+#25 \vendor\livewire\livewire\src\Connection\ConnectionHandler.php:14
+#26 \vendor\livewire\livewire\src\Controllers\HttpConnectionHandler.php:21
+#27 \vendor\laravel\framework\src\Illuminate\Routing\ControllerDispatcher.php:46
+#28 \vendor\laravel\framework\src\Illuminate\Routing\Route.php:260
+#29 \vendor\laravel\framework\src\Illuminate\Routing\Route.php:205
+#30 \vendor\laravel\framework\src\Illuminate\Routing\Router.php:798
+#31 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:141
+#32 \app\Http\Middleware\Localization.php:23
+#33 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#34 \vendor\laravel\framework\src\Illuminate\Routing\Middleware\SubstituteBindings.php:50
+#35 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#36 \vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken.php:78
+#37 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#38 \vendor\laravel\framework\src\Illuminate\View\Middleware\ShareErrorsFromSession.php:49
+#39 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#40 \vendor\laravel\framework\src\Illuminate\Session\Middleware\StartSession.php:121
+#41 \vendor\laravel\framework\src\Illuminate\Session\Middleware\StartSession.php:64
+#42 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#43 \vendor\laravel\framework\src\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse.php:37
+#44 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#45 \vendor\laravel\framework\src\Illuminate\Cookie\Middleware\EncryptCookies.php:67
+#46 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#47 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:116
+#48 \vendor\laravel\framework\src\Illuminate\Routing\Router.php:799
+#49 \vendor\laravel\framework\src\Illuminate\Routing\Router.php:776
+  
+[2024-03-28 00:44:09] local.INFO: Model: App\Models\People
+Relation: App\Models\Companies
+Num-Called: 2
+Call-Stack:
+#22 \app\Http\Livewire\EventReportList\HazardId\Panel\Index.php:100
+#23 \vendor\laravel\framework\src\Illuminate\Container\BoundMethod.php:36
+#24 \vendor\laravel\framework\src\Illuminate\Container\Util.php:41
+#25 \vendor\laravel\framework\src\Illuminate\Container\BoundMethod.php:93
+#26 \vendor\laravel\framework\src\Illuminate\Container\BoundMethod.php:37
+#27 \vendor\laravel\framework\src\Illuminate\Container\Container.php:661
+#28 \vendor\livewire\livewire\src\Component.php:173
+#29 \vendor\livewire\livewire\src\LifecycleManager.php:131
+#30 \vendor\livewire\livewire\src\Connection\ConnectionHandler.php:14
+#31 \vendor\livewire\livewire\src\Controllers\HttpConnectionHandler.php:21
+#32 \vendor\laravel\framework\src\Illuminate\Routing\ControllerDispatcher.php:46
+#33 \vendor\laravel\framework\src\Illuminate\Routing\Route.php:260
+#34 \vendor\laravel\framework\src\Illuminate\Routing\Route.php:205
+#35 \vendor\laravel\framework\src\Illuminate\Routing\Router.php:798
+#36 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:141
+#37 \app\Http\Middleware\Localization.php:23
+#38 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#39 \vendor\laravel\framework\src\Illuminate\Routing\Middleware\SubstituteBindings.php:50
+#40 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#41 \vendor\laravel\framework\src\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken.php:78
+#42 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#43 \vendor\laravel\framework\src\Illuminate\View\Middleware\ShareErrorsFromSession.php:49
+#44 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#45 \vendor\laravel\framework\src\Illuminate\Session\Middleware\StartSession.php:121
+#46 \vendor\laravel\framework\src\Illuminate\Session\Middleware\StartSession.php:64
+#47 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+#48 \vendor\laravel\framework\src\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse.php:37
+#49 \vendor\laravel\framework\src\Illuminate\Pipeline\Pipeline.php:180
+  
