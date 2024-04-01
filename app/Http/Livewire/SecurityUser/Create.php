@@ -14,14 +14,19 @@ use Livewire\WithPagination;
 class Create extends Component
 {
     use WithPagination;
+    public $search_workgroup = '';
     public $search = '';
+    public $searchLevel = '';
     public $openModalWG = '';
     public $openModalEST = '';
     public $selectedUser = [];
+    public $selectedWorkgroup = [];
     public $event_sub_types_id;
     public $event_sub_types;
     public $workgroup;
+    public $radio_select;
     public $workgroup_id;
+    public $ComapanyLevel_id;
     public $workflow;
     public $CompanyLevel;
     public $showWG = true;
@@ -30,11 +35,12 @@ class Create extends Component
     public function render()
     {
         if (!empty($this->radio_select)) {
-            if ($this->radio_select == 'companyLevel') {
+            if ($this->radio_select === 'companyLevel') {
                 $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_workgroup))->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
-            } else {
+            }
+            if ($this->radio_select === 'workgroup') {
                 if ($this->showWG == true) {
-                    $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
+                    $this->ModalWorkgroup = Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit',])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
                 }
             }
         } else {
@@ -43,42 +49,46 @@ class Create extends Component
         }
         return view('livewire.security-user.create', [
             'People' => People::search(trim($this->search))->paginate(10),
-            'ResponsibleRole' =>ResponsibleRole::get(),
-            'SubType'=>EventSubType::with('EventType')->get()
-
+            'ResponsibleRole' => ResponsibleRole::get(),
+            'SubType' => EventSubType::with('EventType')->get(),
         ]);
     }
-// Workgroup Function
+    // Workgroup Function
     public function cari($id)
     {
+        $this->selectedWorkgroup=[];
         $this->showWG = false;
-        if (!empty($id)) {
-            $id_Dept = CompanyLevel::with(['BussinessUnit'])->where('id', $id)->first()->id;
-            $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->where('companyLevel_id', $id_Dept)->get();
+        if ($id) {
+            $this->ComapanyLevel_id = $id;
+            $this->ModalWorkgroup = Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit',])->where('companyLevel_id', $id)->get();
         } else {
-            $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->get();
+            $this->ModalWorkgroup = Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit',])->get();
         }
-
     }
-    public function workGroup($id, $bu, $deptOrCont, $job_class)
+    public function workGroup( $bu, $deptOrCont)
     {
+        $this->showWG = false;
+        $this->workgroup = "$bu-$deptOrCont";
 
-        $this->workgroup_id = $id;
-        $this->workgroup = "$bu-$deptOrCont-$job_class";
+       
+    }
+    public function btnsave()
+    {
         $this->wgClickClose();
     }
-    
     public function wgClick()
     {
         $this->openModalWG = 'modal-open';
     }
+   
     public function wgClickClose()
     {
         $this->resetPage();
         $this->openModalWG = '';
-        
+        $this->selectedWorkgroup=[];
     }
-    public function subtypeClick($id, $eventType,$subtype){
+    public function subtypeClick($id, $eventType, $subtype)
+    {
         $this->event_sub_types_id = $id;
         $this->event_sub_types = "$eventType-$subtype";
         $this->EventSubtypeClose();
@@ -92,10 +102,12 @@ class Create extends Component
         $this->resetPage();
         $this->openModalEST = '';
     }
-// Store Function
+    // Store Function
 
     public function store()
     {
+
+    
         $this->validate([
             'selectedUser' => 'required',
             'workflow' => 'required',
@@ -103,12 +115,16 @@ class Create extends Component
             'event_sub_types' => 'required',
         ]);
         foreach ($this->selectedUser as $key => $value) {
-            UserSecurity::create([
-                'user_id' => $this->selectedUser[$key],
-                'workflow' => $this->workflow,
-                'workgroup_id' => $this->workgroup_id,
-                'event_sub_types_id' => $this->event_sub_types_id,
-            ]);
+            foreach ($this->selectedWorkgroup as $wg => $value) {
+
+
+                UserSecurity::create([
+                    'user_id' => $this->selectedUser[$key],
+                    'workflow' => $this->workflow,
+                    'workgroup_id' => $this->selectedWorkgroup[$wg],
+                    'event_sub_types_id' => $this->event_sub_types_id,
+                ]);
+            }
         }
         session()->flash('success', 'Data added Successfully!!');
         $this->clearFields();
@@ -122,8 +138,8 @@ class Create extends Component
         } else {
             $this->selectedUser = [];
         }
-
     }
+
     public function clearSelect()
     {
         $this->selectedUser = [];

@@ -44,6 +44,7 @@ class Create extends Component
     }
     public function store()
     {
+        
         $this->validate([
             'date' => 'required',
             'company_category' => 'required',

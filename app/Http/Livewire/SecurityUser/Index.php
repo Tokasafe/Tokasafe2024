@@ -27,7 +27,7 @@ class Index extends Component
                 'eventsubtype',
                 'Workgroup.CompanyLevel',
                 'Workgroup.CompanyLevel.BussinessUnit',
-            ])->searchperson(trim($this->searchPerson))->searchwokrgroup(trim($this->searchWorkgroup))->paginate(5),
+            ])->searchperson(trim($this->searchPerson))->searchwokrgroup(trim($this->searchPerson))->paginate(5),
         ])->extends('navigation.homebase', ['header' => 'Security User'])->section('content');
     }
     public function update_UserSecurity($id)

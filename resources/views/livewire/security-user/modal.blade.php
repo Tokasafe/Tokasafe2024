@@ -2,7 +2,7 @@
     {{-- Modal Workgroup --}}
     <div class="modal @if (!empty($openModalWG)) modal-open @endif ">
         {{--   --}}
-        <div class="h-auto md:max-w-5xl md:w-5/12 modal-box">
+        <div class="h-auto sm:w-127 modal-box">
             <h3 class="text-lg font-bold text-center text-emerald-600">Wokrgroup!</h3>
             <div class="grid m-2 justify-items-stretch">
 
@@ -21,8 +21,8 @@
 
 
                             </span>
-                            <input wire:model='search_workgroup'
-                                class="block w-full py-2 pr-3 bg-white border-2 rounded-md shadow-sm input-xs placeholder:italic placeholder:text-slate-400 border-emerald-300 pl-9 focus:outline-none focus:border-emerald-500 focus:ring-emerald-500 focus:ring-1 sm:text-sm"
+                            <input wire:model='search_workgroup' 
+                                class="block w-full py-2 pr-3 bg-white border-2  rounded-md shadow-sm input-xs placeholder:italic placeholder:text-slate-400 border-emerald-300 pl-9 focus:outline-none focus:border-emerald-500 focus:ring-emerald-500 focus:ring-1 sm:text-sm"
                                 placeholder="Search For..." type="text" name="search" />
                         </label>
                         <div class="flex join-item">
@@ -64,24 +64,28 @@
                 <div class="flex flex-col capitalize cursor-pointer basis-4/5">
                     <p class="font-semibold text-center border-y-2 border-emerald-500">Workgroup</p>
                     <div class="h-32 overflow-y-auto lg:h-72">
-                        @foreach ($ModalWorkgroup as $index => $wg)
-                            <ul class="ml-4 text-xs list-disc list-outside ">
-                                <li class=" hover:bg-cyan-200">
-                                    <p
-                                        wire:click="workGroup('{{ $wg->id }}','{{ $wg->companyLevel->BussinessUnit->name }}','{{ $wg->CompanyLevel->deptORcont }}','{{ $wg->job_class }}')">
-
-                                        {{ $wg->CompanyLevel->BussinessUnit->name }}-{{ $wg->CompanyLevel->deptORcont }}-{{ $wg->job_class }}
-                                    </p>
-                                </li>
-
-                                <!-- ... -->
-                            </ul>
-                        @endforeach
+                        <table class="table table-zebra table-xs">
+                            @foreach ($ModalWorkgroup as $index => $workgroup)
+                                <tr>
+                                    <td class="text-xs">
+                                        <label class="cursor-pointer label">
+                                            <input type="checkbox" class="checkbox checkbox-xs  border-orange-400 checked:border-indigo-800 [--chkbg:theme(colors.indigo.600)] [--chkfg:orange]"
+                                                wire:model='selectedWorkgroup'value="{{ $workgroup->id }}" />
+                                            <span class=""
+                                                wire:click="workGroup('{{ $workgroup->companyLevel->BussinessUnit->name }}','{{ $workgroup->CompanyLevel->deptORcont }}')">
+                                                {{ $workgroup->CompanyLevel->BussinessUnit->name }}-{{ $workgroup->CompanyLevel->deptORcont }}-{{ $workgroup->job_class }}
+                                            </span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>
                     </div>
 
                 </div>
             </div>
             <div class="modal-action">
+                <label wire:click='btnsave' class="btn btn-xs btn-success">{{__('Save')}}!</label>
                 <label wire:click='wgClickClose' class="btn btn-xs btn-error">Close!</label>
             </div>
         </div>
@@ -102,7 +106,8 @@
                     </thead>
                     <tbody>
                         @foreach ($SubType as $key => $value)
-                            <tr wire:click="subtypeClick('{{ $value->id}}','{{ $value->EventType->name}}','{{ $value->name}}')" class="hover:bg-cyan-300 cursor-pointer">
+                            <tr wire:click="subtypeClick('{{ $value->id }}','{{ $value->EventType->name }}','{{ $value->name }}')"
+                                class="hover:bg-cyan-300 cursor-pointer">
                                 <th>{{ $key + 1 }}</th>
                                 <td>{{ $value->EventType->name }}</td>
                                 <td>{{ $value->name }}</td>
