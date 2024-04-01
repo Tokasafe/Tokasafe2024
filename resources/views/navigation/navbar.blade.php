@@ -445,7 +445,7 @@
                                 <ul class=" text-xs text-center w-28 menu-xs max-w-xs">
                                     <li>
                                         <a
-                                            href="{{ route('ManhoursGuest') }}"class="{{ Request::is('user/manhours/manhoursRegister*') ? ' active font-semibold ' : '' }}">{{ __('Hazard_Report') }}</a>
+                                            href="{{ route('ManhoursGuest') }}"class="{{ Request::is('user/manhours/manhoursRegister*') ? ' active font-semibold ' : '' }}">{{ __('Register') }}</a>
                                     </li>
                                 </ul>
                             </details>

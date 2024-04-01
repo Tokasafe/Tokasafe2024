@@ -14,7 +14,7 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     use WithPagination;
-    public $IdData,$code,$company,$job_class,$searchCompany='',$searchCompanyCategory='',$searchDept='',$searchDateRange='',$tglMulai,$endDate,$selectAll=false,$selectedManhours=[],$bulkDisable = true;
+    public $IdData, $code, $company, $job_class, $searchCompany = '', $searchCompanyCategory = '', $searchDept = '', $searchDateRange = '', $tglMulai, $endDate, $selectAll = false, $selectedManhours = [], $bulkDisable = true;
     protected $listeners = [
         'TglMulai_m',
         'TglAkhir_m',
@@ -32,32 +32,29 @@ class Index extends Component
         if (!is_null($value)) {
 
             $this->endDate = date('Y-m-d', strtotime($value));
-           
         }
     }
     public function render()
     {
-       
+
         $this->bulkDisable = count($this->selectedManhours) < 2;
         if (empty($this->searchDateRange)) {
-            if (!empty(ManhoursRegister::orderby('date', 'asc')->first()->date)) {
+            if (!empty(ManhoursRegister::orderby('date', 'DESC')->first()->date)) {
                 $this->tglMulai = ManhoursRegister::orderby('date', 'asc')->first()->date;
                 $this->endDate = ManhoursRegister::orderby('date', 'desc')->first()->date;
-            }
-            else{
-                $this->tglMulai="";
-                $this->endDate="";
+            } else {
+                $this->tglMulai = "";
+                $this->endDate = "";
             }
         }
-       
-          
-            $MR =ManhoursRegister::company(trim($this->searchCompany))->companyCategory(trim($this->searchCompanyCategory))->dept(trim($this->searchDept))->dateRange([trim($this->tglMulai), trim($this->endDate)])->orderBy('date','DESC')->orderBy('company','DESC')->paginate(20);
-        
-        return view('livewire.manhours.manhours-register.index',[
-            'Company'=>Companies::get(),
-            'Dept'=>Department::get(),
-            'CompanyCategory'=>CompanyCategory::get(),
-            'ManhoursRegister'=>  $MR
+
+        $MR = ManhoursRegister::orderBy('date', 'DESC')->orderBy('company', 'DESC')->company(trim($this->searchCompany))->companyCategory(trim($this->searchCompanyCategory))->dept(trim($this->searchDept))->dateRange([trim($this->tglMulai), trim($this->endDate)])->paginate(20);
+
+        return view('livewire.manhours.manhours-register.index', [
+            'Company' => Companies::searchcategory(trim($this->searchCompanyCategory))->get(),
+            'Dept' => Department::get(),
+            'CompanyCategory' => CompanyCategory::get(),
+            'ManhoursRegister' =>  $MR
         ])->extends('navigation.homebase', ['header' => 'Manhours Register'])->section('content');
     }
     public function update($id)
@@ -70,10 +67,22 @@ class Index extends Component
         $this->company = ManhoursRegister::whereId($id)->first()->company;
         $this->job_class = ManhoursRegister::whereId($id)->first()->role_class;
     }
+
     public function deleteFile()
     {
         try {
             ManhoursRegister::find($this->IdData)->delete();
+            session()->flash('success', "Data Deleted Successfully!!");
+        } catch (\Exception $e) {
+            session()->flash('error', "Something goes wrong!!");
+        }
+    }
+    public function deleteAll()
+    {
+        $main = ManhoursRegister::company(trim($this->searchCompany))->companyCategory(trim($this->searchCompanyCategory))->dept(trim($this->searchDept))->dateRange([trim($this->tglMulai), trim($this->endDate)])->pluck('id');
+        $this->selectedManhours = $main;
+        try {
+            ManhoursRegister::whereIn('id',$this->selectedManhours)->delete();
             session()->flash('success', "Data Deleted Successfully!!");
         } catch (\Exception $e) {
             session()->flash('error', "Something goes wrong!!");
@@ -85,10 +94,9 @@ class Index extends Component
     }
     public function updatedSelectAll($value)
     {
-        $main =ManhoursRegister::company(trim($this->searchCompany))->companyCategory(trim($this->searchCompanyCategory))->dept(trim($this->searchDept))->dateRange([trim($this->tglMulai), trim($this->endDate)])->pluck('id');
+        $main = ManhoursRegister::company(trim($this->searchCompany))->companyCategory(trim($this->searchCompanyCategory))->dept(trim($this->searchDept))->dateRange([trim($this->tglMulai), trim($this->endDate)])->pluck('id');
         if ($value) {
             $this->selectedManhours = $main;
-          
         } else {
             $this->selectedManhours = [];
         }
@@ -99,10 +107,9 @@ class Index extends Component
         if ($this->searchCompany) {
             $company = $this->searchCompany;
         } else {
-           $company ="List Manhours";
+            $company = "List Manhours";
         }
-        
-        return (new ManhoursExport($this->selectedManhours))->download("$company.csv");
-    }
 
+        return (new ManhoursExport($this->selectedManhours))->download("$company.xlsx");
+    }
 }

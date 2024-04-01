@@ -12,31 +12,31 @@
 
     <!-- Put this part before </body> tag -->
     <input type="checkbox" id="addPC" class="modal-toggle" />
-    <div class="modal " >
-        <div class="w-auto modal-box">
+    <div class="modal ">
+        <div class="w-auto sm:w-126 modal-box">
             <div class="divider divider-accent m-0">Add User Security!</div>
-            <form wire:submit.prevent='store' >
+            <form wire:submit.prevent='store'>
                 @csrf
                 <div class="w-full max-w-xs form-control">
                     <x-input-label-req :value="__('Workflow Role')" />
                     <select wire:model='workflow'
                         class="@error('workflow') border-rose-500 border-2 @enderror w-full select max-w-xs select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
                         <option selected>Select an option</option>
-                        @foreach($ResponsibleRole as $key)
-                        <option value="{{$key->name}}">{{$key->name}}</option>
+                        @foreach ($ResponsibleRole as $key)
+                            <option value="{{ $key->name }}">{{ $key->name }}</option>
                         @endforeach
-                       
+
 
                     </select>
                     <x-input-error :messages="$errors->get('workflow')" class="mt-0" />
                 </div>
                 <div class="w-full max-w-xs form-control">
                     <x-input-label-req :value="__('Company Level')" />
-                    <div class="join">
+
+                    <label class="join" wire:click='wgClick'>
                         <input type="text" placeholder="Type here" wire:model='workgroup' readonly
                             class=" @error('workgroup') border-rose-500 border-2 @enderror w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-                        <label wire:click='wgClick' for=""
-                            class="border btn btn-xs btn-square join-item border-info btn-info">
+                        <label for="" class="border btn btn-xs btn-square join-item border-info btn-info">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -44,7 +44,8 @@
                             </svg>
 
                         </label>
-                    </div>
+                    </label>
+
                     <x-input-error :messages="$errors->get('workgroup')" class="mt-0" />
                 </div>
                 <div class="w-full max-w-xs form-control">
@@ -64,18 +65,17 @@
                     </div>
                     <x-input-error :messages="$errors->get('event_sub_types')" class="mt-0" />
                 </div>
-
-                <div class="px-4 m-2 overflow-y-auto border w-80 border-stone-400 h-52">
+                <div class="px-2 mx-2 overflow-y-auto border w-80 border-stone-400 h-52">
                     <div class="flex gap-2 py-1">
                         <label class="relative block ">
-                          
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5 absolute  left-0 mt-0.5 ml-2">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                                </svg>
 
-                          
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-5 h-5 absolute  left-0 mt-0.5 ml-2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                            </svg>
+
+
                             <input wire:model='search'
                                 class="block w-full py-2 pr-3 bg-white border-2 rounded-md shadow-sm input-xs placeholder:italic placeholder:text-slate-400 border-emerald-300 pl-6 focus:outline-none focus:border-emerald-500 focus:ring-emerald-500 focus:ring-1 sm:text-sm"
                                 placeholder="Search people..." type="text" name="search" />
@@ -113,10 +113,11 @@
                         @endforeach
                     </ol>
                 </div>
-                {{$People->links('livewire.miniPagination')}}
+                {{ $People->links('livewire.miniPagination') }}
                 <div class="modal-action">
                     <button type="submit" class="text-white btn btn-success btn-xs">Save
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20"
+                            fill="currentColor">
                             <path
                                 d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h5v5.586l-1.293-1.293zM9 4a1 1 0 012 0v2H9V4z" />
                         </svg>

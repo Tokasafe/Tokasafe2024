@@ -26,7 +26,7 @@
                 <div class="flex flex-wrap gap-1 ">
                     <div class="w-full max-w-xs form-control">
                         <x-input-label-req :value="__('date')" />
-                        <input type="text" placeholder="Type here" wire:model='date' id="dateManhours"
+                        <input type="text" placeholder="Type here" wire:model='date' id="month"
                             class=" @error('date') border-rose-500 border-2 @enderror z-10 capitalize w-full input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
                         <x-input-error :messages="$errors->get('date')" class="mt-0" />
                     </div>
@@ -41,28 +41,31 @@
                         </select>
                         <x-input-error :messages="$errors->get('company_category')" class="mt-0" />
                     </div>
-                    <div class="w-full max-w-xs form-control">
-                        <x-input-label-req :value="__('Company')" />
-                        <select wire:model='company'
-                            class=" @error('company') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
-                            <option value="" selected>select company</option>
-                            @foreach ($SelectCompany as $key => $value)
-                                <option value="{{ $value->name }}">{{ $value->name }}</option>
-                            @endforeach
-                        </select>
-                        <x-input-error :messages="$errors->get('company')" class="mt-0" />
-                    </div>
-                    <div class="w-full max-w-xs form-control">
-                        <x-input-label-req :value="__($label_dept)" />
-                        <select wire:model='dept'
-                            class=" @error('dept') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
-                            <option value="" selected>select {{ __('department') }}</option>
-                            @foreach ($GroupCompany as $key => $value)
-                                <option value="{{ $value->id }}">{{ $value->Department->name }}</option>
-                            @endforeach
-                        </select>
-                        <x-input-error :messages="$errors->get('dept')" class="mt-0" />
-                    </div>
+                    @if (!empty($company_category))
+                        <div class="w-full max-w-xs form-control">
+
+                            <x-input-label-req :value="__('Company')" />
+                            <select wire:model='company'
+                                class=" @error('company') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
+                                <option value="" selected>select company</option>
+                                @foreach ($SelectCompany as $key => $value)
+                                    <option value="{{ $value->name }}">{{ $value->name }}</option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('company')" class="mt-0" />
+                        </div>
+                        <div class="w-full max-w-xs form-control">
+                            <x-input-label-req :value="__($label_dept)" />
+                            <select wire:model='dept'
+                                class=" @error('dept') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
+                                <option value="" selected>select {{ __('department') }}</option>
+                                @foreach ($GroupCompany as $key => $value)
+                                    <option value="{{ $value->id }}">{{ $value->Department->name }}</option>
+                                @endforeach
+                            </select>
+                            <x-input-error :messages="$errors->get('dept')" class="mt-0" />
+                        </div>
+                    @endif
                     <div class="w-full max-w-xs form-control">
                         <x-input-label-req :value="__('Role Class')" />
                         <select wire:model='role_class'

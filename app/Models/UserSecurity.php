@@ -35,7 +35,6 @@ class UserSecurity extends Model
         $query->whereHas('Workgroup', function ($query) use ($term) {
             $query->whereHas('CompanyLevel', function ($query) use ($term) {
                 $query->where('deptORcont', 'like', '%' . $term . '%');
-                $query->where('deptORcont', 'like', '%' . $term . '%');
             });
         });
     }

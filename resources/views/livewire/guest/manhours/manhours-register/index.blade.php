@@ -26,6 +26,17 @@
                 disableMobile: "true",
                 dateFormat: "d-m-Y", //defaults to "F Y"
             });
+            flatpickr("#month", {
+                disableMobile: "true",
+                plugins: [
+                    new monthSelectPlugin({
+                        shorthand: true, //defaults to false
+                        dateFormat: "M-Y", //defaults to "F Y"
+                        altFormat: "F Y", //defaults to "F Y"
+                        theme: "dark" // defaults to "light"
+                    })
+                ]
+            });
             $("#rangeDate").flatpickr({
                 mode: 'range',
                 dateFormat: "d-M-Y", //defaults to "F Y"

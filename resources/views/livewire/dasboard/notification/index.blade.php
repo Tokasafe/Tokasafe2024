@@ -40,8 +40,7 @@
                                     <small class="text-gray-600 text-xs mx-2">
                                         <span class="font-bold"
                                             href="#">{{ $notification->data['lookup_name'] }}</span>
-                                        {{ $notification->data['info'] }} <span
-                                            class="font-semibold text-teal-500">{{ $notification->data['bahaya'] }}</span>
+                                        {{ $notification->data['info'] }} 
                                         <span class="font-bold text-blue-500"
                                             href="#">{{ $notification->data['reference'] }}</span><br><small
                                             class="font-bold">{{ date(' d-M-y h:i:sa', strtotime($notification->updated_at)) }}</small>
@@ -73,8 +72,7 @@
                                             class="  py-3 border-b  ">
                                             <span class="font-bold"
                                                 href="#">{{ $notification->data['lookup_name'] }}</span>
-                                            {{ $notification->data['info'] }} <span
-                                                class="font-semibold text-teal-500">{{ $notification->data['bahaya'] }}</span>
+                                            {{ $notification->data['info'] }} 
                                             <span class="font-bold text-blue-500"
                                                 href="#">{{ $notification->data['reference'] }}</span> <br><small
                                                 class="font-bold">{{ date('d-M-y h:i:sa', strtotime($notification->updated_at)) }}</small>
