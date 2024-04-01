@@ -65,7 +65,7 @@
                     </div>
                     <x-input-error :messages="$errors->get('event_sub_types')" class="mt-0" />
                 </div>
-                <div class="px-4 mx-2 overflow-y-auto border w-80 border-stone-400 h-52">
+                <div class="px-2 mx-2 overflow-y-auto border w-80 border-stone-400 h-52">
                     <div class="flex gap-2 py-1">
                         <label class="relative block ">
 
