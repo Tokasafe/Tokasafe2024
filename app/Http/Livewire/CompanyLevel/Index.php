@@ -31,24 +31,24 @@ class Index extends Component
         if (!empty($this->searchLevel)) {
             if ($this->searchLevel === 'department') {
                 $this->DeptCont = Department::get();
-                $main = CompanyLevel::with(['BussinessUnit'])->where('level', $this->searchLevel)->bussinesunit(trim($this->searchBU))->deptcont($this->searchDeptCont)->paginate(5);
+                $main = CompanyLevel::with(['BussinessUnit'])->where('level', $this->searchLevel)->bussinesunit(trim($this->searchBU))->deptcont($this->searchDeptCont)->paginate(25);
                 $this->table_name = 'Department';
             } else {
                 $this->DeptCont = Companies::where('category_company', 2)->get();
-                $main = CompanyLevel::with(['BussinessUnit'])->where('level', $this->searchLevel)->bussinesunit(trim($this->searchBU))->deptcont($this->searchDeptCont)->paginate(5);
+                $main = CompanyLevel::with(['BussinessUnit'])->where('level', $this->searchLevel)->bussinesunit(trim($this->searchBU))->deptcont($this->searchDeptCont)->paginate(25);
                 $this->table_name = 'Contractor';
             }
 
         } else {
-            $main = CompanyLevel::with(['BussinessUnit'])->bussinesunit(trim($this->searchBU))->deptcont($this->searchDeptCont)->paginate(5);
+            $main = CompanyLevel::with(['BussinessUnit'])->bussinesunit(trim($this->searchBU))->deptcont($this->searchDeptCont)->paginate(25);
             $this->table_name = 'Department / Contractor';
             $this->Dept = Department::get();
             $this->Cont = Companies::where('category_company', 2)->get();
 
         }
         return view('livewire.company-level.index', [
-            'B_unit' => Companies::where('category_company', 1)->get(),
-            'Contractor' => Companies::where('category_company', 2)->get(),
+            'B_unit' => Companies::where('category_company', 1)->orderBy('name','asc')->get(),
+            'Contractor' => Companies::where('category_company', 2)->orderBy('name','asc')->get(),
             'CompanyLevel' => $main,
         ])->extends('navigation.homebase', ['header' => 'company level'])->section('content');
     }
@@ -62,7 +62,8 @@ class Index extends Component
     {
         $this->IdData = $id;
         $this->bu_name = CompanyLevel::whereId($id)->first()->BussinessUnit->name;
-        $this->contractor_name = CompanyLevel::whereId($id)->first()->Contractor->name;
+        $this->contractor_name = CompanyLevel::whereId($id)->first()->deptORcont;
+       
     }
     public function deleteFileCompanyLevel()
     {

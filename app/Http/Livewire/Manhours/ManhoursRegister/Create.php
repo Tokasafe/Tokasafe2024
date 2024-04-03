@@ -19,7 +19,7 @@ class Create extends Component
     public function render()
     {
         if ($this->company_category) {
-            $this->SelectCompany = Companies::where('category_company', $this->company_category)->get();
+            $this->SelectCompany = Companies::where('category_company', $this->company_category)->orderBy('name','ASC')->get();
             $this->category = CompanyCategory::whereId($this->company_category)->first()->name;
             if ($this->company_category==1) {
                 $this->label_dept = 'department';
@@ -38,7 +38,7 @@ class Create extends Component
         }
         return view('livewire.manhours.manhours-register.create', [
             'KategoryCompany' => CompanyCategory::get(),
-            'Company' => Companies::get(),
+            'Company' => Companies::orderBy('name','ASC')->get(),
             'GroupCompany' => GroupDepartment::with(['Department', 'Group'])->get(),
         ]);
     }

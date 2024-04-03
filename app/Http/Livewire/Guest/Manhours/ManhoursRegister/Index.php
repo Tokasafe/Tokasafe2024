@@ -61,7 +61,7 @@ class Index extends Component
            
         }
         return view('livewire.guest.manhours.manhours-register.index',[
-            'Company'=>Companies::whereIn('name', $this->namecompanies)->get(),
+            'Company'=>Companies::whereIn('name', $this->namecompanies)->orderBy('name','DESC')->get(),
             'Dept'=>Department::get(),
             'CompanyCategory'=>CompanyCategory::get(),
             'ManhoursRegister'=> ManhoursRegister::company(trim($this->searchCompany))->dateRange([trim($this->tglMulai), trim($this->endDate)])->whereIn('company',$this->namecompanies)->orderBy('date','DESC')->orderBy('company','DESC')->paginate(20)

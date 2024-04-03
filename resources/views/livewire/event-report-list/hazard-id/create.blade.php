@@ -50,10 +50,10 @@
                         </div>
                         <div class="w-full max-w-xs form-control">
                             <x-input-label-req :value="__('nama_pelapor')" />
-                            <div class="join">
-                                <input type="text" placeholder="Type here" wire:model='nama_pelapor'
-                                    class=" @error('nama_pelapor') border-rose-500 border-2 @enderror w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-                                <label wire:click='reportByClick' for=""
+                            <label class="join" wire:click='reportByClick'>
+                                <input type="text" placeholder="Type here" wire:model='nama_pelapor' readonly
+                                    class=" @error('nama_pelapor') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                                <label  for=""
                                     class="border btn btn-xs btn-square join-item border-info btn-info">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -63,14 +63,14 @@
 
 
                                 </label>
-                            </div>
+                            </label>
                             <x-input-error :messages="$errors->get('nama_pelapor')" class="mt-0" />
                         </div>
                         <div class="w-full max-w-xs form-control">
                             <x-input-label-req :value="__('tanggal_kejadian')" />
                             <input type="text" id="tglLapor" placeholder="Type here" wire:model='tanggal_kejadian'
                                 readonly
-                                class=" @error('tanggal_kejadian') border-rose-500 border-2 @enderror w-full input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                                class=" @error('tanggal_kejadian') border-rose-500 border-2 @enderror  w-full input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
                             <x-input-error :messages="$errors->get('tanggal_kejadian')" class="mt-0" />
                         </div>
                         <div class="w-full max-w-xs form-control">
@@ -81,10 +81,10 @@
                         </div>
                         <div class="w-full max-w-xs form-control">
                             <x-input-label-req :value="__('rw')" />
-                            <div class="join">
+                            <label class="join " wire:click='wgClick'>
                                 <input type="text" placeholder="Type here" wire:model='workgroup' readonly
-                                    class=" @error('workgroup') border-rose-500 border-2 @enderror w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-                                <label wire:click='wgClick' for=""
+                                    class=" @error('workgroup') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                                <label  for=""
                                     class="border btn btn-xs btn-square join-item border-info btn-info">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -93,16 +93,16 @@
                                     </svg>
 
                                 </label>
-                            </div>
+                            </label>
                             <x-input-error :messages="$errors->get('workgroup')" class="mt-0" />
                         </div>
 
                         <div class="w-full max-w-xs form-control">
                             <x-input-label-req :value="__('pengawas_area')" />
-                            <div class="join">
+                            <label  wire:click='reportToClick' class="join">
                                 <input type="text" placeholder="Type here" wire:model='pengawas_area'
-                                    class=" @error('pengawas_area') border-rose-500 border-2 @enderror w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-                                <label wire:click='reportToClick' for=""
+                                    class=" @error('pengawas_area') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                                <label for=""
                                     class="border btn btn-xs btn-square join-item border-info btn-info">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -112,7 +112,7 @@
 
 
                                 </label>
-                            </div>
+                            </label>
                             <x-input-error :messages="$errors->get('pengawas_area')" class="mt-0" />
                         </div>
                         <div class="w-full max-w-xs form-control">

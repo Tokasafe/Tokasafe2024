@@ -21,13 +21,13 @@ class Create extends Component
     ];
     public function render()
     {
-        $this->BussinessUnit = Companies::where('category_company', 1)->get();
+        $this->BussinessUnit = Companies::where('category_company', 1)->orderBy('name','asc')->get();
         if ($this->level === 'department') {
             $this->Option = Department::get();
             $this->LabelOption = 'Department';
         } else {
 
-            $this->Option = Companies::where('category_company', 2)->get();
+            $this->Option = Companies::where('category_company', 2)->orderBy('name','asc')->get();
             $this->LabelOption = 'Contractor';
         }
         return view('livewire.company-level.create', [
@@ -36,12 +36,14 @@ class Create extends Component
     public function storeCompanyLevel()
     {
 
+        
+
         $this->validate([
             'dept_or_group' => 'required',
             'bussiness_unit' => 'required',
             'level' => 'required',
         ]);
-
+        
         CompanyLevel::create([
             'bussiness_unit' => $this->bussiness_unit,
             'deptORcont' => $this->dept_or_group,

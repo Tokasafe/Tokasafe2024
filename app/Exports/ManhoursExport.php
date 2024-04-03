@@ -29,7 +29,7 @@ class ManhoursExport implements FromQuery, WithMapping, WithHeadings
             $manhour->dept,
             $manhour->group,
             $manhour->role_class,
-            $manhour->manhour,
+           (int) $manhour->manhour,
             $manhour->manpower,
         ];
     }

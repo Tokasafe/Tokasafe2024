@@ -155,7 +155,7 @@
                   </svg>
                   
                 <select wire:model='searchDept' class="select select-bordered placeholder:italic placeholder:text-slate-400 select-success select-xs w-full max-w-xs pl-6 focus:outline-none rounden-sm focus:ring-success focus:ring-1">
-                    <option value="" selected class="text-gray-400">Select an company</option>
+                    <option value="" selected class="text-gray-400">Select an Department</option>
                     @foreach($Dept as $key => $value)
                         <option value="{{$value->name}}">{{$value->name}}</option>
                     @endforeach
@@ -204,7 +204,7 @@
                         <td>{{$item->dept}}</td>
                         <td>{{$item->group}}</td>
                         <td>{{$item->role_class}}</td>
-                        <td>{{$item->manhour}}</td>
+                        <td>{{(int)$item->manhour}}</td>
                         <td>{{$item->manpower}}</td>
                         <td>
                             <div class="flex flex-row justify-center gap-1">

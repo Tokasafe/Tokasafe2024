@@ -20,11 +20,10 @@
                 </div>
                 <div class="w-full max-w-xs px-4 form-control">
                     <x-input-label-req :value="__('Company Level')" />
-                    <div class="join">
+                    <label class="join" wire:click='wgClick'>
                         <input type="text" placeholder="Type here" wire:model='workgroup' readonly
                             class=" @error('workgroup') border-rose-500 border-2 @enderror w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-                        <label wire:click='wgClick' for=""
-                            class="border btn btn-xs btn-square join-item border-info btn-info">
+                        <label for="" class="border btn btn-xs btn-square join-item border-info btn-info">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -32,7 +31,7 @@
                             </svg>
 
                         </label>
-                    </div>
+                    </label>
                     <x-input-error :messages="$errors->get('workgroup')" class="mt-0" />
                 </div>
                 <div class="w-full max-w-xs px-4 form-control">
@@ -114,5 +113,5 @@
             </form>
         </div>
     </div>
-    {{-- @include('livewire.security-user.modal') --}}
+    @include('livewire.security-user.modal')
 </div>
