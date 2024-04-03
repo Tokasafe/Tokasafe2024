@@ -133,11 +133,11 @@
                         </div>
                         <div class="w-full max-w-xs form-control">
                             <x-input-label-req :value="__('nama_pelapor')" />
-                            <div class="join">
+                            <label class="join"wire:click='reportByClick'>
                                 <input type="text" placeholder="Type here" wire:model='nama_pelapor' readonly
                                     {{ $hazardClose ? 'disabled' : '' }}
                                     class=" @error('nama_pelapor') border-rose-500 border-2 @enderror w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-                                <label wire:click='reportByClick' for="" {{ $hazardClose ? 'disabled' : '' }}
+                                <label  for="" {{ $hazardClose ? 'disabled' : '' }}
                                     class="border btn btn-xs btn-square join-item border-info btn-info">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -145,7 +145,7 @@
                                             d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
                                 </label>
-                            </div>
+                            </label>
                             <x-input-error :messages="$errors->get('nama_pelapor')" class="mt-0" />
                         </div>
                         <div class="w-full max-w-xs form-control">
@@ -164,11 +164,11 @@
                         </div>
                         <div class="w-full max-w-xs form-control">
                             <x-input-label-req :value="__('rw')" />
-                            <div class="join">
+                            <label class="join" wire:click='wgClick'>
                                 <input type="text" placeholder="Type here" wire:model='workgroup' readonly
                                     {{ $hazardClose ? 'disabled' : '' }}
                                     class=" @error('workgroup') border-rose-500 border-2 @enderror w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-                                <label wire:click='wgClick' for="" {{ $hazardClose ? 'disabled' : '' }}
+                                <label  for="" {{ $hazardClose ? 'disabled' : '' }}
                                     class="border btn btn-xs btn-square join-item border-info btn-info">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -176,16 +176,16 @@
                                             d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z" />
                                     </svg>
                                 </label>
-                            </div>
+                            </label>
                             <x-input-error :messages="$errors->get('workgroup')" class="mt-0" />
                         </div>
                         <div class="w-full max-w-xs form-control">
                             <x-input-label-req :value="__('pengawas_area')" />
-                            <div class="join">
+                            <label class="join"wire:click='reportToClick'>
                                 <input type="text" placeholder="Type here" wire:model='pengawas_area' readonly
                                     {{ $hazardClose ? 'disabled' : '' }}
                                     class=" @error('pengawas_area') border-rose-500 border-2 @enderror w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-                                <label wire:click='reportToClick' for="" {{ $hazardClose ? 'disabled' : '' }}
+                                <label  for="" {{ $hazardClose ? 'disabled' : '' }}
                                     class="border btn btn-xs btn-square join-item border-info btn-info">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -193,7 +193,7 @@
                                             d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
                                 </label>
-                            </div>
+                            </label>
                             <x-input-error :messages="$errors->get('pengawas_area')" class="mt-0" />
                         </div>
                         <div class="w-full max-w-xs form-control">

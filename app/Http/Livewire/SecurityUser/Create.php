@@ -34,14 +34,17 @@ class Create extends Component
 
     public function render()
     {
+        if (empty($this->selectedWorkgroup)) {
+           $this->workgroup="";
+        }
         if (!empty($this->radio_select)) {
             if ($this->radio_select === 'companyLevel') {
                 $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_workgroup))->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
             }
             if ($this->radio_select === 'workgroup') {
-                if ($this->showWG == true) {
+               
                     $this->ModalWorkgroup = Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit',])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
-                }
+                
             }
         } else {
 
@@ -74,15 +77,17 @@ class Create extends Component
     }
     public function btnsave()
     {
-        $this->wgClickClose();
+        $this->openModalWG = '';
     }
     public function wgClick()
     {
         $this->openModalWG = 'modal-open';
     }
+  
    
     public function wgClickClose()
     {
+        
         $this->resetPage();
         $this->openModalWG = '';
         $this->selectedWorkgroup=[];

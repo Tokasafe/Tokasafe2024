@@ -28,8 +28,8 @@ class Create extends Component
     public function clearFields()
     {
         $this->companyLevel_id = '';
-        $this->role = '';
-        $this->level = '';
+        // $this->role = '';
+        // $this->level = '';
     }
     public function render()
     {

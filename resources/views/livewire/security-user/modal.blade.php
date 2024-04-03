@@ -1,8 +1,8 @@
 <div>
     {{-- Modal Workgroup --}}
-    <div class="modal @if (!empty($openModalWG)) modal-open @endif ">
+    <div class="modal  @if (!empty($openModalWG)) modal-open @endif ">
         {{--   --}}
-        <div class="h-auto sm:w-127 modal-box">
+        <div class="h-auto  modal-box">
             <h3 class="text-lg font-bold text-center text-emerald-600">Wokrgroup!</h3>
             <div class="grid m-2 justify-items-stretch">
 
@@ -21,7 +21,7 @@
 
 
                             </span>
-                            <input wire:model='search_workgroup' 
+                            <input wire:model='search_workgroup'
                                 class="block w-full py-2 pr-3 bg-white border-2  rounded-md shadow-sm input-xs placeholder:italic placeholder:text-slate-400 border-emerald-300 pl-9 focus:outline-none focus:border-emerald-500 focus:ring-emerald-500 focus:ring-1 sm:text-sm"
                                 placeholder="Search For..." type="text" name="search" />
                         </label>
@@ -48,48 +48,55 @@
 
                 </div>
             </div>
-            <div class="flex flex-col border-2 divide-x lg:flex-row divide-emerald-500 border-emerald-500">
-                <div class=" basis-1/2">
-                    <p class="font-semibold text-center border-y-2 border-emerald-500">Company Level</p>
-                    <div class="h-32 overflow-y-auto lg:h-72">
-                        <ol class="ml-4 list-decimal cursor-pointer">
-                            @foreach ($CompanyLevel as $index => $dept)
-                                <li wire:click="cari('{{ $dept->id }}')" class="text-xs hover:bg-cyan-200">
-                                    {{ $dept->BussinessUnit->name }}-{{ $dept->deptORcont }}</li>
-                            @endforeach
-                        </ol>
-                    </div>
+            <table class="table table-zebra w-full">
+                <thead class="bg-emerald-500">
+                    <tr class="text-center">
+                        <td class="border-2 border-success">Company Level</td>
+                        <td class="border-2 border-success"> Workgroup</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border-2 border-success ">
+                            <ol class="ml-4 list-decimal cursor-pointer h-32 overflow-y-auto lg:h-60">
+                                @foreach ($CompanyLevel as $index => $dept)
+                                    <li wire:click="cari('{{ $dept->id }}')" class="text-xs hover:text-orange-500">
+                                        {{ $dept->BussinessUnit->name }}-{{ $dept->deptORcont }}</li>
+                                @endforeach
+                            </ol>
 
-                </div>
-                <div class="flex flex-col capitalize cursor-pointer basis-4/5">
-                    <p class="font-semibold text-center border-y-2 border-emerald-500">Workgroup</p>
-                    <div class="h-32 overflow-y-auto lg:h-72">
-                        <table class="table table-zebra table-xs">
-                            @foreach ($ModalWorkgroup as $index => $workgroup)
-                                <tr>
-                                    <td class="text-xs">
-                                        <label class="cursor-pointer label">
-                                            <input type="checkbox" class="checkbox checkbox-xs  border-orange-400 checked:border-indigo-800 [--chkbg:theme(colors.indigo.600)] [--chkfg:orange]"
+                        </td>
+                        <td class="border-2 border-success">
+
+                            <ol class="ml-4 list-decimal cursor-pointer h-32 overflow-y-auto lg:h-60">
+                                @foreach ($ModalWorkgroup as $index => $workgroup)
+                                    <li class="text-xs  hover:text-orange-400">
+                                        <label class="cursor-pointer label p-0 gap-1">
+                                            <input type="checkbox"
+                                                class="checkbox checkbox-xs  border-orange-400 checked:border-indigo-800 [--chkbg:theme(colors.indigo.600)] [--chkfg:orange]"
                                                 wire:model='selectedWorkgroup'value="{{ $workgroup->id }}" />
                                             <span class=""
                                                 wire:click="workGroup('{{ $workgroup->companyLevel->BussinessUnit->name }}','{{ $workgroup->CompanyLevel->deptORcont }}')">
                                                 {{ $workgroup->CompanyLevel->BussinessUnit->name }}-{{ $workgroup->CompanyLevel->deptORcont }}-{{ $workgroup->job_class }}
                                             </span>
                                         </label>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </table>
-                    </div>
+                                    </li>
+                                @endforeach
+                            </ol>
 
-                </div>
-            </div>
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
             <div class="modal-action">
-                <label wire:click='btnsave' class="btn btn-xs btn-success">{{__('Save')}}!</label>
+                <label wire:click='btnsave' class="btn btn-xs btn-success">{{ __('Save') }}!</label>
                 <label wire:click='wgClickClose' class="btn btn-xs btn-error">Close!</label>
             </div>
         </div>
     </div>
+
+
     <div class="modal @if (!empty($openModalEST)) modal-open @endif ">
         <div class="modal-box">
             <button wire:click='EventSubtypeClose'

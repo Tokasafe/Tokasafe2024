@@ -13,7 +13,7 @@
     <!-- Put this part before </body> tag -->
     <input type="checkbox" id="addPC" class="modal-toggle" />
     <div class="modal ">
-        <div class="w-auto sm:w-126 modal-box">
+        <div class="w-auto sm:w-96 h-auto modal-box">
             <div class="divider divider-accent m-0">Add User Security!</div>
             <form wire:submit.prevent='store'>
                 @csrf
@@ -65,7 +65,7 @@
                     </div>
                     <x-input-error :messages="$errors->get('event_sub_types')" class="mt-0" />
                 </div>
-                <div class="px-2 mx-2 overflow-y-auto border w-80 border-stone-400 h-52">
+                <div class=" my-1 overflow-y-auto border  border-stone-400 h-52 w-full max-w-xs form-control">
                     <div class="flex gap-2 py-1">
                         <label class="relative block ">
 
@@ -113,8 +113,9 @@
                         @endforeach
                     </ol>
                 </div>
-                {{ $People->links('livewire.miniPagination') }}
+                <div class="mx-4">{{ $People->links('livewire.miniPagination') }}</div>
                 <div class="modal-action">
+                    
                     <button type="submit" class="text-white btn btn-success btn-xs">Save
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20"
                             fill="currentColor">

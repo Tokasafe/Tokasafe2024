@@ -35,12 +35,12 @@
                 <div>
                     <p class="text-sm leading-5 text-gray-700">
                         Showing
-                        <span id="first" class="font-medium">{{ $paginator->firstItem() }}</span>
+                        <span id="first" class="font-thin">{{ $paginator->firstItem() }}</span>
                         to
-                        <span id="last" class="font-medium">{{ $paginator->lastItem() }}</span>
-                        of
-                        <span id="total" class="font-medium">{{ $paginator->total() }}</span>
-                        results
+                        <span id="last" class="font-thin">{{ $paginator->lastItem() }}</span>
+                        {{-- of
+                        <span id="total" class="font-thin">{{ $paginator->total() }}</span>
+                        results --}}
                     </p>
                 </div>
                 <div>
