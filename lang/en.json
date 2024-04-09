@@ -1,6 +1,8 @@
 {
     "english":"english",
     "indonesia":"Indonesia",
+    "pagination.previous":"<< Previous",
+    "pagination.next":"Next >>",
     "People":"People",
     "bahasa":"Choose Language",
     "department":"Department",

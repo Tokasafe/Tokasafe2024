@@ -48,7 +48,7 @@ class Index extends Component
             }
         }
 
-        $MR = ManhoursRegister::orderBy('date', 'DESC')->orderBy('company', 'DESC')->company(trim($this->searchCompany))->companyCategory(trim($this->searchCompanyCategory))->dept(trim($this->searchDept))->dateRange([trim($this->tglMulai), trim($this->endDate)])->paginate(20);
+        $MR = ManhoursRegister::orderBy('date', 'DESC')->orderBy('company', 'ASC')->company(trim($this->searchCompany))->companyCategory(trim($this->searchCompanyCategory))->dept(trim($this->searchDept))->dateRange([trim($this->tglMulai), trim($this->endDate)])->paginate(20);
 
         return view('livewire.manhours.manhours-register.index', [
             'Company' => Companies::searchcategory(trim($this->searchCompanyCategory))->orderBy('name','asc')->get(),
@@ -94,7 +94,7 @@ class Index extends Component
     }
     public function updatedSelectAll($value)
     {
-        $main = ManhoursRegister::company(trim($this->searchCompany))->companyCategory(trim($this->searchCompanyCategory))->dept(trim($this->searchDept))->dateRange([trim($this->tglMulai), trim($this->endDate)])->pluck('id');
+        $main = ManhoursRegister::orderBy('date', 'DESC')->orderBy('company', 'ASC')->company(trim($this->searchCompany))->companyCategory(trim($this->searchCompanyCategory))->dept(trim($this->searchDept))->dateRange([trim($this->tglMulai), trim($this->endDate)])->pluck('id');
         if ($value) {
             $this->selectedManhours = $main;
         } else {

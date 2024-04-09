@@ -87,6 +87,8 @@
     "Also_Assign_To":"Juga Tetapkan Ke",
     "add_new_person":"Tambahkan Orang Baru",
     "Action":"Aksi",
+    "pagination.previous":"<< Sebelumnya",
+    "pagination.next":"Berikutnya >>",
     "date_range":"rentang tanggal",
     "month":"Bulan",
     "Employer":"Pemberi Pekerjaan",

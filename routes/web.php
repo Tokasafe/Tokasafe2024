@@ -40,6 +40,7 @@ use App\Http\Livewire\Guest\EventReportList\Hazard\Detail;
 use App\Http\Livewire\Guest\EventReportList\Hazard\Index as HazardIndexGuest;
 use App\Http\Livewire\Guest\Manhours\ManhoursRegister\Index as ManhoursManhoursRegisterIndex;
 use App\Http\Livewire\Manhours\ManhoursRegister\Index as ManhoursRegisterIndex;
+use App\Http\Livewire\Manhours\TableExcel;
 use App\Http\Livewire\RoleUser\Index as RoleUserIndex;
 use App\Http\Livewire\User\Index as UserIndex;
 use Illuminate\Http\Request;
@@ -61,6 +62,7 @@ Route::get('locale/{locale}', function ($locale) {
 })->name('locale');
 
 Route::get('/', AllInjuryIndex::class)->name('dashboard');
+Route::get('manhours/tableExcel',TableExcel::class)->name('TableExcel');
 
 Route::middleware(['auth','user-role:1'])->group(function()
 {

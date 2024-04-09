@@ -141,10 +141,10 @@ class Create extends Component
             'Likelihood' => RiskLikelihood::get(),
         ]);
     }
-    public function paginationView()
-    {
-        return 'livewire.pagination';
-    }
+    // public function paginationView()
+    // {
+    //     return 'livewire.pagination';
+    // }
     // FUNCTION BTN MODAL
     public function wgClick()
     {

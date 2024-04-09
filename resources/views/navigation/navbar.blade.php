@@ -473,6 +473,10 @@
                         </form>
                     </div>
                     <div class="dropdown dropdown-end ">
+                        <label tabindex="0" class="btn btn-ghost btn-sm btn-circle avatar">
+                            <div class="w-6 rounded-full {{ app()->getLocale() == 'id' ? ' fi fi-id' : 'fi fi-gb' }}">
+                            </div>
+                        </label>
                         <ul tabindex="0"
                             class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
                             <li>

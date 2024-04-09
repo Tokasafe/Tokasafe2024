@@ -24,7 +24,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.department-group.index', [
-            "DeptGroup" => GroupDepartment::with(['Group', 'Department'])->search(trim($this->searchDepartment))->group(trim($this->searchGroup))->paginate(5),
+            "DeptGroup" => GroupDepartment::with(['Group', 'Department'])->search(trim($this->searchDepartment))->group(trim($this->searchGroup))->paginate(25),
             'Group' => DeptGroup::get(),
             'Department' => Department::get(),
         ])->extends('navigation.homebase', ['header' => 'Department Group'])->section('content');

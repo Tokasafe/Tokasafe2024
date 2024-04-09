@@ -2,6 +2,7 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
@@ -35,6 +36,21 @@ module.exports = {
         ],
     },
     theme: {
+
+        pagination: theme => ({
+            // Customize the color only. (optional)
+            color: theme('colors.teal.600'),
+
+            // Customize styling using @apply. (optional)
+            wrapper: 'flex justify-center list-reset',
+
+            // Customize styling using CSS-in-JS. (optional)
+            wrapper: {
+                'display': 'flex',
+                'justify-items': 'center',
+                '@apply list-reset': {},
+            },
+        }),
         screens: {
             'sm': '640px',
             // => @media (min-width: 640px) { ... }
@@ -68,7 +84,10 @@ module.exports = {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
         },
+
     },
 
-    plugins: [require("daisyui")],
+    plugins: [
+        require("daisyui"),
+    ],
 };
