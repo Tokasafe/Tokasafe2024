@@ -65,8 +65,8 @@
                     </div>
                     <x-input-error :messages="$errors->get('event_sub_types')" class="mt-0" />
                 </div>
-                <div class=" my-1 overflow-y-auto border  border-stone-400 h-52 w-full max-w-xs form-control">
-                    <div class="flex gap-2 py-1">
+                <div class=" my-1  overflow-y-auto border  border-stone-400 h-52 w-80 mr-2">
+                    <div class="flex  py-1">
                         <label class="relative block ">
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -113,7 +113,7 @@
                         @endforeach
                     </ol>
                 </div>
-                <div class="mx-4">{{ $People->links('livewire.miniPagination') }}</div>
+                <div class="w-80">{{ $People->links('livewire.miniPagination') }}</div>
                 <div class="modal-action">
                     
                     <button type="submit" class="text-white btn btn-success btn-xs">Save

@@ -21,13 +21,13 @@ class Index extends Component
     ];
     public function render()
     {
-        return view('livewire.security-user.index', [
+        return view('livewire.security-user.index')->with([
             'UserSecurity' => UserSecurity::with([
                 'People',
                 'eventsubtype',
                 'Workgroup.CompanyLevel',
                 'Workgroup.CompanyLevel.BussinessUnit',
-            ])->searchperson(trim($this->searchPerson))->searchwokrgroup(trim($this->searchPerson))->paginate(5),
+            ])->searchperson(trim($this->searchPerson))->searchwokrgroup(trim($this->searchPerson))->paginate(10),
         ])->extends('navigation.homebase', ['header' => 'Security User'])->section('content');
     }
     public function update_UserSecurity($id)
