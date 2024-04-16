@@ -158,6 +158,7 @@ class Create extends Component
     public function reportByClick()
     {
         $this->openModalreportBy = 'modal-open';
+        
     }
     public function reportByClickClose()
     {
@@ -172,6 +173,7 @@ class Create extends Component
     {
         $this->openModalreportTo = '';
         $this->clearSearchWg();
+        $this->resetPage();
     }
     public function responsibleClick()
     {

@@ -65,8 +65,9 @@
                     </div>
                     <x-input-error :messages="$errors->get('event_sub_types')" class="mt-0" />
                 </div>
-                <div class=" my-1 overflow-y-auto border  border-stone-400 h-52 w-full max-w-xs form-control">
-                    <div class="flex gap-2 py-1">
+                <div class=" my-1  overflow-y-auto border  border-stone-400 h-52 w-80 mr-2">
+                    <div class="grid justify-items-stretch drop-shadow-md sticky top-0 z-30 bg-base-100 py-1">
+                       <div class="justify-self-center flex gap-1">
                         <label class="relative block ">
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -77,7 +78,7 @@
 
 
                             <input wire:model='search'
-                                class="block w-full py-2 pr-3 bg-white border-2 rounded-md shadow-sm input-xs placeholder:italic placeholder:text-slate-400 border-emerald-300 pl-6 focus:outline-none focus:border-emerald-500 focus:ring-emerald-500 focus:ring-1 sm:text-sm"
+                                class="block w-full py-2 pr-4 bg-white border-2 rounded-md shadow-sm input-xs placeholder:italic placeholder:text-slate-400 border-emerald-300 pl-7 focus:outline-none focus:border-emerald-500 focus:ring-emerald-500 focus:ring-1 sm:text-sm"
                                 placeholder="Search people..." type="text" name="search" />
                         </label>
                         <label wire:click='clearSelect' for=""
@@ -97,6 +98,7 @@
                                 </g>
                             </svg>
                         </label>
+                       </div>
                     </div>
                     <ol class="max-w-xs list-decimal cursor-pointer">
                         @foreach ($People as $index => $person)
@@ -113,7 +115,7 @@
                         @endforeach
                     </ol>
                 </div>
-                <div class="mx-4">{{ $People->links('livewire.miniPagination') }}</div>
+                <div class="w-80">{{ $People->links('livewire.miniPagination') }}</div>
                 <div class="modal-action">
                     
                     <button type="submit" class="text-white btn btn-success btn-xs">Save

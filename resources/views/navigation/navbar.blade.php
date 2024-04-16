@@ -1,3 +1,5 @@
+
+
 <div class="flex flex-col sticky top-0 z-30  drop-shadow-lg">
     <div class="navbar bg-gradient-to-r  from-slate-600 via-slate-400 to-slate-300  w-full">
         <div class="navbar-start">
@@ -458,8 +460,14 @@
                 @auth
                     @livewire('dasboard.notification.index')
                     <div class="dropdown dropdown-end">
-                        <label tabindex="0" class="font-semibold text-emerald-600 btn btn-ghost btn-xs">
-                            {{ Auth::user()->name }}</label>
+                        <div class="flex flex-col ">
+                            <label tabindex="0" class="font-semibold text-emerald-600 btn btn-ghost btn-xs">
+                                {{ Auth::user()->name }}</label>
+                                <div class="self-center p-0 hidden sm:block">
+                                    @livewire('time.index')
+                                </div>
+                        </div>
+
                         <form method="POST" action="{{ route('logout') }}">
                             <ul tabindex="0"
                                 class="menu menu-sm dropdown-content mt-3 z-20 p-2 shadow bg-base-100 rounded-box w-52">

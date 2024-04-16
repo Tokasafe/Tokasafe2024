@@ -21,7 +21,8 @@ class Index extends Component
     ];
     public function render()
     {
-        return view('livewire.security-user.index', [
+      
+        return view('livewire.security-user.index')->with([
             'UserSecurity' => UserSecurity::with([
                 'People',
                 'eventsubtype',
@@ -29,6 +30,8 @@ class Index extends Component
                 'Workgroup.CompanyLevel.BussinessUnit',
             ])->searchperson(trim($this->searchPerson))->searchwokrgroup(trim($this->searchPerson))->paginate(5),
         ])->extends('navigation.homebase', ['header' => 'Security User'])->section('content');
+
+        $this->resetPage('userSecurityPage');
     }
     public function update_UserSecurity($id)
     {

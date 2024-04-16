@@ -31,7 +31,7 @@ class Create extends Component
     public $CompanyLevel;
     public $showWG = true;
     public $ModalWorkgroup = [];
-
+    
     public function render()
     {
         if (empty($this->selectedWorkgroup)) {
@@ -51,7 +51,7 @@ class Create extends Component
             $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
         }
         return view('livewire.security-user.create', [
-            'People' => People::search(trim($this->search))->paginate(10),
+            'People' => People::search(trim($this->search))->paginate(500),
             'ResponsibleRole' => ResponsibleRole::get(),
             'SubType' => EventSubType::with('EventType')->get(),
         ]);
@@ -160,4 +160,5 @@ class Create extends Component
     {
         $this->resetPage();
     }
+    
 }
