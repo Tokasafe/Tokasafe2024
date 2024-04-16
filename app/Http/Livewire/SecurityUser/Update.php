@@ -71,7 +71,7 @@ class Update extends Component
         }
 
         return view('livewire.security-user.update', [
-            'People' => People::search(trim($this->search))->paginate(5),
+            'Orang' => People::search(trim($this->search))->paginate(500, ['*'], 'commentsPage'),
             'ResponsibleRole' =>ResponsibleRole::get(),
             'SubType'=>EventSubType::with('EventType')->get()
         ]);

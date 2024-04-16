@@ -51,6 +51,7 @@
             console.error("Service workers are not supported.");
         }
     </script>
+
     @stack('scripts')
 </body>
 

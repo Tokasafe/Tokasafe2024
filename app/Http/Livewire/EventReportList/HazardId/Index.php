@@ -69,7 +69,7 @@ class Index extends Component
                 'Hazard.EventSubType',
                 'Hazard.Workgroup.CompanyLevel.BussinessUnit',
                 'WorkflowStep.StatusCode',
-            ])->dateRange([trim($this->tglMulai), trim($this->endDate)])->month(trim($this->month))->reference(trim($this->search_eventsubtype))->workgroup(trim($this->search_wg))->latest()->paginate(10),
+            ])->dateRange([trim($this->tglMulai), trim($this->endDate)])->month(trim($this->month))->reference(trim($this->search_eventsubtype))->workgroup(trim($this->search_wg))->latest()->paginate(10, ['*'], 'panelHazardIdPage'),
             'EventSubType' => EventSubType::where('eventType_id', 1)->get(),
             'Workgroup' => Workgroup::with([
                 'CompanyLevel',
