@@ -26,7 +26,7 @@
                 @include('navigation.navbar')
                 <!-- Page content here -->
                 <main>
-                    <div class="pt-1 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <div class="pt-1 mx-auto max-w-8xl sm:px-6 lg:px-8">
                         @yield('content')
                     </div>
                 </main>
