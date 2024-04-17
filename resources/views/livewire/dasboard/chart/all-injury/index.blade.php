@@ -127,15 +127,15 @@
 
             <div class="px-4  ">
                 <!-- Chart -->
-                <div class="relative sm:h-auto sm:w-auto bg-stone-200 rounded-sm">
+                @livewire('dasboard.chart.kpi.index')
+                <div class="relative sm:h-auto sm:w-auto bg-stone-200 rounded-sm mt-2">
                     <canvas id="all_injuryChart"></canvas>
                 </div>
             </div>
             <div class="m-4 self-center">
-                @livewire('dasboard.chart.key-state.index')
             </div>
             <div class="mx-8 lg:mx-0">
-                @livewire('dasboard.chart.kpi.index')
+                @livewire('dasboard.chart.key-state.index')
             </div>
             <div class="grid sm:grid-cols-2 grid-rows-4 gap-2 m-4">
                 <div class="bg-blue-400">01</div>
@@ -144,10 +144,7 @@
                 <div class="bg-yellow-400">09</div>
               </div>
         </div>
-        <div class=" flex-none sm:mt-14 px-4">
-
-           
-
+        <div class=" flex-none sm:mt-14 px-4 ">
             <div class="w-full join p-2">
                 <input class="font-semibold text-sm join-item input input-sm input-primary w-full focus:outline-none focus:border-primary focus:ring-primary focus:ring-0"
                     value="Hazard Report" readonly />

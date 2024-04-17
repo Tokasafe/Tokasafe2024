@@ -37,7 +37,7 @@ module.exports = {
     },
     theme: {
 
-        
+
         screens: {
             'sm': '640px',
             // => @media (min-width: 640px) { ... }
@@ -55,12 +55,16 @@ module.exports = {
 
             '2xl': '1536px',
             // => @media (min-width: 1536px) { ... }
+
         },
         fontFamily: {
             sans: ['Graphik', 'sans-serif'],
             serif: ['Merriweather', 'serif'],
         },
         extend: {
+            maxWidth: {
+                '8xl': '85rem',
+            },
             spacing: {
                 '125': '18rem',
                 '126': '23rem',
