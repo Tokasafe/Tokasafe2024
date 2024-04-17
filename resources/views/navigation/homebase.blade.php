@@ -13,7 +13,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.11.0/css/flag-icons.min.css" />
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+    <link rel="stylesheet" href="/css/app.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -27,6 +28,7 @@
                 <!-- Page content here -->
                 <main>
                     <div class="pt-1 mx-auto max-w-8xl sm:px-6 lg:px-8">
+                        
                         @yield('content')
                     </div>
                 </main>
@@ -34,6 +36,7 @@
             @include('navigation.sidebar')
         </div>
     </div>
+    <script src="/js/app.js"></script>
     <script src="{{ asset('/sw.js') }}"></script>
     <script>
         if ("serviceWorker" in navigator) {
