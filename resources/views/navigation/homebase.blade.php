@@ -5,10 +5,8 @@
 
 
     @stack('styles')
-    <meta name="theme-color" content="#10b981" />
-    <link rel="apple-touch-icon" href="{{ asset('icons.png') }}">
-    <link rel="manifest" href="{{ asset('/manifest.json') }}">
-
+  
+   
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -16,6 +14,7 @@
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     <link rel="stylesheet" href="/css/app.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    @laravelPWA
 </head>
 
 <body class="static antialiased">
@@ -28,7 +27,7 @@
                 <!-- Page content here -->
                 <main>
                     <div class="pt-1 mx-auto max-w-8xl sm:px-6 lg:px-8">
-                        
+
                         @yield('content')
                     </div>
                 </main>
@@ -37,24 +36,9 @@
         </div>
     </div>
     <script src="/js/app.js"></script>
-    <script src="{{ asset('/sw.js') }}"></script>
-    <script>
-        if ("serviceWorker" in navigator) {
-            // Register a service worker hosted at the root of the
-            // site using the default scope.
-            navigator.serviceWorker.register("/sw.js").then(
-                (registration) => {
-                    console.log("Service worker registration succeeded:", registration);
-                },
-                (error) => {
-                    console.error(`Service worker registration failed: ${error}`);
-                },
-            );
-        } else {
-            console.error("Service workers are not supported.");
-        }
-    </script>
-
+    {{-- <script src="{{ asset('/sw.js') }}"></script> --}}
+   
+    {{-- @vite(['resources/js/app.js']) --}}
     @stack('scripts')
 </body>
 
