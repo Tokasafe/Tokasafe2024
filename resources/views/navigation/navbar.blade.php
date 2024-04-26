@@ -460,12 +460,13 @@
                 @auth
                     @livewire('dasboard.notification.index')
                     <div class="dropdown dropdown-end">
-                        <div class="flex flex-col ">
-                            <label tabindex="0" class="font-semibold text-emerald-600 btn btn-ghost btn-xs">
-                                {{ Auth::user()->name }}</label>
+                        <div class=" ">
+                            <label tabindex="0" class="font-semibold btn btn-ghost btn-xs flex flex-col">
                                 <div class="self-center p-0 hidden sm:block">
-                                    @livewire('time.index')
+                                     <h1 class="text-emerald-600 ">{{ Auth::user()->name }}</h1>
+                                    <small>@livewire('time.index')</small>
                                 </div>
+                            </label>
                         </div>
 
                         <form method="POST" action="{{ route('logout') }}">

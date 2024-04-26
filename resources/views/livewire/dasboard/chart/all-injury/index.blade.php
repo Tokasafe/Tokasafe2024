@@ -12,7 +12,6 @@
         <script src=" \js\flatpickr\monthSelect\index.js"></script>
         <script src=" \js\apexcharts.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-        <script></script>
         <script>
             flatpickr("#tanggal", {
                 disableMobile: "true",
@@ -64,7 +63,6 @@
                 }
             })
         </script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script>
             var options = {
                 chart: {
@@ -73,70 +71,61 @@
                     stacked: false
                 },
                 dataLabels: {
-                    enabled: false
+                    enabled: false,
+                    enabledOnSeries: [4]
                 },
-                colors: ['#99C2A2', '#C5EDAC', '#66C7F4'],
-                series: [
-
-                    {
-                        name: 'Column A',
+                colors: ['#F11C3F', '#F9C01E', '#F1FC0F', '#03B301', '#0198B3', '#FF1919'],
+                series: [{
+                        name: 'LTI',
                         type: 'column',
-                        data: [21.1, 23, 33.1, 34, 44.1, 44.9, 56.5, 58.5]
-                    },
-                    {
-                        name: "Column B",
-                        type: 'column',
-                        data: [10, 19, 27, 26, 34, 35, 40, 38]
-                    },
-                    {
-                        name: "Line C",
-                        type: 'line',
                         data: [1.4, 2, 2.5, 1.5, 2.5, 2.8, 3.8, 4.6]
+                    }, {
+                        name: 'RDI',
+                        type: 'column',
+                        data: [1.1, 1, 1.1, 4, 4.1, 2.9, 3.5, 4.5]
                     },
+                    {
+                        name: 'MTI',
+                        type: 'column',
+                        data: [1, 3, 3, 2, 5, 4, 2, 1]
+                    },
+                    {
+                        name: 'FAI',
+                        type: 'column',
+                        data: [2, 3, 3, 1, 2, 1, 3, 4]
+                    }, {
+                        name: 'LTIFR',
+                        type: 'line',
+                        data: [0, 0, 1, 1, 1, 0.4, 0, 0]
+                    }, {
+                        name: 'LTIFR_Target',
+                        type: 'line',
+                        data: [0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15]
+                    }
                 ],
                 stroke: {
-                    width: [4, 4, 4]
+                    width: [2, 2, 2, 2, 2, 2],
+                    dashArray: [0, 0, 0, 0, 0, 2],
                 },
                 plotOptions: {
                     bar: {
-                        columnWidth: "20%"
+                        columnWidth: "30%"
                     }
                 },
                 xaxis: {
                     categories: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]
                 },
-                yaxis: [{
-                        seriesName: 'Column A',
-                        axisTicks: {
-                            show: true
-                        },
-                        axisBorder: {
-                            show: true,
-                        },
-                        title: {
-                            text: "Columns"
-                        }
-                    },
-                    {
-                        seriesName: 'Column A',
+                yaxis: {
+                    min: 0,
+
+                    labels: {
                         show: false
-                    }, {
-                        opposite: true,
-                        seriesName: 'Line C',
-                        axisTicks: {
-                            show: true
-                        },
-                        axisBorder: {
-                            show: true,
-                        },
-                        title: {
-                            text: "Line"
-                        }
                     }
-                ],
+                },
+
                 tooltip: {
-                    shared: false,
-                    intersect: true,
+                    shared: true,
+                    intersect: false,
                     x: {
                         show: false
                     }
@@ -180,7 +169,9 @@
                     }
                 }],
                 plotOptions: {
+
                     bar: {
+                        columnWidth: "30%",
                         horizontal: false,
                         borderRadius: 10,
                         dataLabels: {
@@ -194,15 +185,25 @@
                         }
                     },
                 },
+                colors: ['#F11C3F', '#F9C01E'],
                 xaxis: {
                     type: 'datetime',
                     categories: ['01/01/2011 GMT', '01/02/2011 GMT', '01/03/2011 GMT', '01/04/2011 GMT',
                         '01/05/2011 GMT', '01/06/2011 GMT'
                     ],
                 },
-                legend: {
-                    position: 'right',
-                    offsetY: 40
+                title: {
+                    text: 'OHS Incident Responsible By Department  and Contractors in 2023',
+                    align: 'left',
+
+                    offsetX: 0,
+                    offsetY: 0,
+                    floating: false,
+                    style: {
+                        fontSize: '10px',
+                        fontWeight: 'bold',
+                        fontFamily: undefined,
+                    },
                 },
                 fill: {
                     opacity: 1
@@ -214,12 +215,13 @@
         </script>
         <script>
             var options = {
+
                 series: [{
-                        name: "High - 2013",
+                        name: "Total Lead",
                         data: [28, 29, 33, 36, 32, 32, 33]
                     },
                     {
-                        name: "Low - 2013",
+                        name: "Incident",
                         data: [12, 11, 14, 18, 17, 13, 13]
                     }
                 ],
@@ -238,16 +240,22 @@
                         show: false
                     }
                 },
-                colors: ['#77B6EA', '#545454'],
+                colors: ['#F11C3F', '#F9C01E'],
                 dataLabels: {
                     enabled: true,
                 },
                 stroke: {
-                    curve: 'smooth'
+                    width: [3, 3],
+                    curve: 'straight'
                 },
+
                 title: {
-                    text: 'Average High & Low Temperature',
-                    align: 'left'
+                    text: '12 Mths Lagging & Leading Indicator',
+                    align: 'left',
+                    style: {
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                    }
                 },
                 grid: {
                     borderColor: '#e7e7e7',
@@ -265,13 +273,56 @@
                         text: 'Month'
                     }
                 },
-                yaxis: {
-                    title: {
-                        text: 'Temperature'
+                yaxis: [{
+                        seriesName: 'Total Lead',
+                        axisTicks: {
+                            show: true,
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: '#F11C3F'
+                        },
+                        labels: {
+                            style: {
+                                colors: '#F11C3F',
+                            }
+                        },
+                        title: {
+                            text: 'Total Lead',
+                            style: {
+                                color: '#F11C3F',
+                                fontSize: '12px',
+                                fontWeight: 'bold',
+                                fontFamily: undefined,
+                            }
+                        },
                     },
-                    min: 5,
-                    max: 40
-                },
+                    {
+                        opposite: true,
+                        seriesName: 'Incident',
+                        axisTicks: {
+                            show: true,
+                        },
+                        axisBorder: {
+                            show: true,
+                            color: '#F9C01E'
+                        },
+                        labels: {
+                            style: {
+                                colors: '#F9C01E',
+                            }
+                        },
+                        title: {
+                            text: 'Incident',
+                            style: {
+                                color: '#F9C01E',
+                                fontSize: '12px',
+                                fontWeight: 'bold',
+                                fontFamily: undefined,
+                            }
+                        },
+                    }
+                ],
                 legend: {
                     position: 'top',
                     horizontalAlign: 'right',
@@ -288,18 +339,20 @@
             var options = {
                 series: [44, 15],
                 chart: {
-                    height: 350,
+
                     width: 380,
                     type: 'donut',
                 },
+                colors: ['#F11C3F', '#F9C01E'],
                 plotOptions: {
                     pie: {
-                        startAngle: -90,
-                        endAngle: 270
+                        startAngle: 0,
+                        endAngle: 360,
+                        
                     }
                 },
                 dataLabels: {
-                    enabled: false
+                    enabled: true
                 },
                 fill: {
                     type: 'gradient',
@@ -366,6 +419,7 @@
                     offsetX: 0,
                     offsetY: 50
                 },
+                colors: ['#F11C3F', '#F9C01E'],
             };
 
             var chart = new ApexCharts(document.querySelector("#chartColumne"), options);
@@ -383,7 +437,7 @@
                 <div class="px-4  ">
                     <!-- Chart -->
                     @livewire('dasboard.chart.kpi.index')
-                    <div class="relative sm:h-auto sm:w-full  bg-stone-200 rounded-sm mt-2">
+                    <div class="relative   bg-zinc-400 rounded-sm mt-2">
                         <div class="" id="chart"></div>
                     </div>
                 </div>
@@ -392,21 +446,24 @@
                 <div class="mx-8 lg:mx-0">
                     @livewire('dasboard.chart.key-state.index')
                 </div>
-                <div class="grid sm:grid-cols-2 grid-rows-4 gap-2 m-4">
-                    <div id="chartLine"></div>
-                    <div id="chartStackedColumns"></div>
-                    <div id="chartDonute"></div>
-                    <div id="chartColumne"></div>
+                <div class="grid sm:grid-cols-2  gap-2 m-4">
+                    <div class="bg-zinc-400" id="chartLine"></div>
+                    <div class="bg-zinc-400"id="chartStackedColumns"></div>
+                    <div class="bg-zinc-400"id="chartDonute"></div>
+                    <div class="bg-zinc-400"id="chartColumne"></div>
                 </div>
             </div>
-            <div class=" flex-none sm:mt-14 px-4 ">
-                <div class="w-full join p-2">
-                    <input
-                        class="font-semibold text-sm join-item input input-sm input-primary w-full focus:outline-none focus:border-primary focus:ring-primary focus:ring-0"
-                        value="Hazard Report" readonly />
-                    <div class="join-item"> @livewire('event-report-list.hazard-id.create')</div>
-                </div>
+            <div class=" flex-none sm:mt-14 ">
+                <div class="w-full join p-2 ">
+                    <div class="card w-full sm:w-36 bg-base-100 shadow-md text-primary-content">
+                        {{-- <div class="divider divider-info text-xs p-0">Short Menu</div> --}}
+                        <div class="card-body p-0 flex ">
+                            <div class="self-center"> @livewire('dasboard.short-link.index')</div>
+                            <div class="invisible h-0"> @livewire('event-report-list.hazard-id.create')</div>
+                        </div>
+                    </div>
 
+                </div>
             </div>
         </div>
     @endsection

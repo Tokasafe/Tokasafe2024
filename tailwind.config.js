@@ -63,7 +63,7 @@ module.exports = {
         },
         extend: {
             maxWidth: {
-                '8xl': '85rem',
+                '8xl': '100rem',
             },
             spacing: {
                 '125': '18rem',

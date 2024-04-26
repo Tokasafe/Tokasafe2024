@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\EventReportList\HazardId;
 
 use App\Models\User;
-use App\Mail\ReportBy;
 use App\Models\People;
 use Livewire\Component;
 use App\Models\HazardId;
@@ -20,14 +19,10 @@ use App\Models\PanelHazardId;
 use Livewire\WithFileUploads;
 use App\Models\RiskAssessment;
 use App\Models\RiskLikelihood;
-use App\Mail\CreateEventReport;
 use App\Models\RiskConsequence;
 use App\Notifications\ToModerator;
 use App\Notifications\ToSupervisor;
-use Illuminate\Support\Facades\Mail;
 use App\Models\WorkflowAdministration;
-use App\Notifications\NewSendToModerator;
-use App\Notifications\NewUserNotification;
 use Illuminate\Support\Facades\Notification;
 
 class Create extends Component
@@ -87,8 +82,16 @@ class Create extends Component
         $this->search_reportTo = '';
         $this->search_company = '';
     }
+    protected $listeners = [
+        'OpenModalHzd',
+    ];
+    public function OpenModalHzd($value)
+    {
+        $this->modal = $value;
+    }
     public function render()
     {
+        $this->modal;
         $this->click();
         if (!empty($this->actual_outcome)) {
             $this->actual_outcome_description = RiskConsequence::whereId($this->actual_outcome)->first()->description;
@@ -134,13 +137,25 @@ class Create extends Component
         return view('livewire.event-report-list.hazard-id.create', [
             'LocationEvent' => EventLocation::get(),
             'EventType' => EventType::get(),
-            'People' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(10),
-            'Supervisor' => People::with('Employer')->searchto(trim($this->search_reportTo))->paginate(10),
+            'People' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(10, ['*'], pageName: 'EnPeople'),
+            'Supervisor' => People::with('Employer')->searchto(trim($this->search_reportTo))->paginate(10, ['*'], 'EnSupervisor'),
             'Company' => Companies::with(['CompanyCategory'])->searchcompany(trim($this->search_company))->get(),
             'Consequence' => RiskConsequence::get(),
             'Likelihood' => RiskLikelihood::get(),
         ]);
     }
+   
+
+    public function previousPage($pageName = 'page')
+    {
+        $this->setPage(max($this->paginators[$pageName] - 1, 1), $pageName);
+    }
+
+    public function nextPage($pageName = 'page')
+    {
+        $this->setPage($this->paginators[$pageName] + 1, $pageName);
+    }
+   
     // public function paginationView()
     // {
     //     return 'livewire.pagination';
@@ -158,12 +173,12 @@ class Create extends Component
     public function reportByClick()
     {
         $this->openModalreportBy = 'modal-open';
-        
     }
     public function reportByClickClose()
     {
         $this->openModalreportBy = '';
         $this->clearSearchWg();
+       
     }
     public function reportToClick()
     {
@@ -173,7 +188,7 @@ class Create extends Component
     {
         $this->openModalreportTo = '';
         $this->clearSearchWg();
-        $this->resetPage();
+       
     }
     public function responsibleClick()
     {
@@ -289,18 +304,18 @@ class Create extends Component
             $url = "$idhazard";
             $this->statusER = $description;
             $network_username = People::whereIn('network_username', User::get('username'))->pluck('id')->toArray();
-            $id_moderator = UserSecurity::whereIn('user_id', $network_username)->where('user_id', 'NOT LIKE', auth()->user()->id)->where('event_sub_types_id',$this->event_subtype)->where('workflow', 'Moderator')->pluck('user_id')->toArray();
+            $id_moderator = UserSecurity::whereIn('user_id', $network_username)->where('user_id', 'NOT LIKE', auth()->user()->id)->where('event_sub_types_id', $this->event_subtype)->where('workflow', 'Moderator')->pluck('user_id')->toArray();
             $nameSubType = EventSubType::whereId($this->event_subtype)->first()->EventType->name;
 
             $people = People::whereIn('id', $id_moderator)->pluck('network_username')->toArray();
             $moderator = User::whereIn('username', $people)->get();
             $reportTo = People::where('id', $this->pengawas_area_id)->first()->network_username;
-        
+
             if ($reportTo) {
                 $pengawas = User::where('username', $reportTo)->get();
-                
+
                 $offerDataSpv = [
-                    'name' =>'Report By' . ' ' . $this->nama_pelapor,
+                    'name' => 'Report By' . ' ' . $this->nama_pelapor,
                     'subject' => $nameSubType,
                     'body' => $this->rincian_bahaya,
                     'thanks' => 'Thank you',
@@ -312,7 +327,7 @@ class Create extends Component
                 Notification::send($pengawas, new ToSupervisor($offerDataSpv));
             }
             $offerData = [
-                'name' =>'Report By' . ' ' . $this->nama_pelapor,
+                'name' => 'Report By' . ' ' . $this->nama_pelapor,
                 'subject' => $nameSubType,
                 'body' => $this->rincian_bahaya,
                 'thanks' => 'Thank you',
