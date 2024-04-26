@@ -29,7 +29,7 @@ class Details extends Component
     public $radio_select;
     public $waktu;
     public $lokasi;
-    public $search_reportTo='';
+    public $search_reportTo = '';
     public $pengawas_area;
     public $pengawas_area_id;
     public $nama_pelapor;
@@ -70,7 +70,7 @@ class Details extends Component
     {
         $model = HazardId::find($id);
         if ($model === null) {
-           abort(404);
+            abort(404);
         }
 
         $HazardId = HazardId::whereId($id)->first();
@@ -79,10 +79,9 @@ class Details extends Component
         $c = $HazardId->Workgroup->job_class;
 
         $this->data_id = $HazardId->id;
-        $close = PanelHazardId::where('hazard_id',$this->data_id)->first()->WorkflowStep->name;
-        if ($close ==='Closed' || $close ==='Cancelled') {
+        $close = PanelHazardId::where('hazard_id', $this->data_id)->first()->WorkflowStep->name;
+        if ($close === 'Closed' || $close === 'Cancelled') {
             $this->hazardClose = $close;
-            
         }
         $this->event_subtype = $HazardId->event_subtype;
         $this->nama_pelapor = $HazardId->People->lookup_name;
@@ -106,7 +105,7 @@ class Details extends Component
         $this->reference = $HazardId->reference;
         //    dd($this->pengawas_area_id);
     }
-
+   
     public function render()
     {
 
@@ -144,13 +143,22 @@ class Details extends Component
             'LocationEvent' => EventLocation::get(),
             'EventType' => EventType::get(),
             'EventSubType' => EventSubType::with('EventType')->where('eventType_id', 1)->get(),
-            'People' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(10),
-            'Supervisor' => People::with('Employer')->searchto(trim($this->search_reportTo))->paginate(10),
+            'People' => People::with('Employer')->search(trim($this->search_reportBy))->paginate( 10,  ['*'], 'dtPeople'),
+            'Supervisor' => People::with('Employer')->searchto(trim($this->search_reportTo))->paginate( 10,  ['*'], 'dtSupervisor'),
             'Company' => Companies::with(['CompanyCategory'])->searchcompany(trim($this->search_company))->get(),
             'Consequence' => RiskConsequence::get(),
             'Likelihood' => RiskLikelihood::get(),
         ])->extends('navigation.homebase', ['header' => 'Hazard report', 'title' => 'hazard', 'h1' => $this->data_id])->section('content');
     } // FUNCTION BTN MODAL
+    public function previousPage($pageName = 'page')
+    {
+        $this->setPage(max($this->paginators[$pageName] - 1, 1), $pageName);
+    }
+
+    public function nextPage($pageName = 'page')
+    {
+        $this->setPage($this->paginators[$pageName] + 1, $pageName);
+    }
     public function wgClick()
     {
         $this->openModalWG = 'modal-open';
@@ -238,15 +246,13 @@ class Details extends Component
     }
     public function store()
     {
-       
+
         if (empty($this->documentation1)) {
             $file_name = $this->documentation;
-          
         } else {
 
             $file_name = $this->documentation1->getClientOriginalName();
             $this->documentation1->storeAs('public/documents', $file_name);
-            
         }
 
         $this->validate([
@@ -285,8 +291,8 @@ class Details extends Component
                 'potential_likelihood' => $this->potential_likelihood,
                 // 'tindakan_perbaikan_dilakuan' => $this->tindakan_perbaikan_dilakuan,
             ]);
-           
-            
+
+
             return redirect()->route('hazardDetails', ['id' => $this->data_id]);
         } catch (\Exception $ex) {
             session()->flash('success', 'Something goes wrong!!');
@@ -384,7 +390,7 @@ class Details extends Component
             $this->btn_e5();
         }
     }
-// FUNCTION BTN INITIAL RISK
+    // FUNCTION BTN INITIAL RISK
     public function btn_a1()
     {
         $this->potential_consequence = 5;
@@ -435,7 +441,7 @@ class Details extends Component
         $this->investigation_req_assessment = $assessment->investigation_req;
         $this->reporting_obligation_assessment = $assessment->reporting_obligation;
     }
-// BUTTON B
+    // BUTTON B
     public function btn_b1()
     {
         $this->potential_consequence = 5;
@@ -486,7 +492,7 @@ class Details extends Component
         $this->investigation_req_assessment = $assessment->investigation_req;
         $this->reporting_obligation_assessment = $assessment->reporting_obligation;
     }
-// BUTTON C
+    // BUTTON C
     public function btn_c1()
     {
         $this->potential_consequence = 5;
@@ -539,7 +545,7 @@ class Details extends Component
         $this->investigation_req_assessment = $assessment->investigation_req;
         $this->reporting_obligation_assessment = $assessment->reporting_obligation;
     }
-// BUTTON D
+    // BUTTON D
     public function btn_d1()
     {
         $this->potential_consequence = 5;
@@ -590,7 +596,7 @@ class Details extends Component
         $this->investigation_req_assessment = $assessment->investigation_req;
         $this->reporting_obligation_assessment = $assessment->reporting_obligation;
     }
-// BUTTON E
+    // BUTTON E
     public function btn_e1()
     {
         $this->potential_consequence = 5;
@@ -641,5 +647,5 @@ class Details extends Component
         $this->investigation_req_assessment = $assessment->investigation_req;
         $this->reporting_obligation_assessment = $assessment->reporting_obligation;
     }
-// 
+    // 
 }

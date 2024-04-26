@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\Manhours\ManhoursRegister;
 
 use App\Exports\ManhoursExport;
-use App\Models\AdminControlCompanyManhours;
 use App\Models\Companies;
 use App\Models\CompanyCategory;
 use App\Models\Department;

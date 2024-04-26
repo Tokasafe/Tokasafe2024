@@ -528,7 +528,7 @@
             </div>
         </form>
     </div>
-    @include('livewire.event-report-list.hazard-id.modal')
+    @include('livewire.event-report-list.hazard-id.modalDetail')
     <input type="checkbox" id="delete" class="modal-toggle" />
     <div class="modal">
         <div class="modal-box">
