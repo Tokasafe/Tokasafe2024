@@ -177,12 +177,12 @@
                                 <input type="checkbox" class="checkbox checkbox-xs border-orange-400 checked:border-indigo-800 [--chkbg:theme(colors.indigo.600)] [--chkfg:orange]" wire:model="selectAll" />
                             </label>
                         </th>
-                        <th>{{ __('Date') }}</th>
-                        <th>{{ __('Company Category') }}</th>
+                        <th>{{ __('date') }}</th>
+                        <th>{{ __('Company_Category') }}</th>
                         <th>{{ __('Company') }}</th>
-                        <th>{{ __('Department') }}</th>
-                        <th>{{ __('Dept Group') }}</th>
-                        <th>{{ __('Job Class') }}</th>
+                        <th>{{ __('department') }}</th>
+                        <th>{{ __('Under_Departemen') }}</th>
+                        <th>{{ __('Job_Class') }}</th>
                         <th>{{ __('Manhours') }}</th>
                         <th>{{ __('Manpower') }}</th>
                         <th>{{ __('Action') }}</th>
@@ -234,12 +234,12 @@
                                 <input type="checkbox" class="checkbox checkbox-xs border-orange-400 checked:border-indigo-800 [--chkbg:theme(colors.indigo.600)] [--chkfg:orange]" wire:model="selectAll" />
                             </label>
                         </th>
-                        <th>{{ __('Date') }}</th>
-                        <th>{{ __('Company Category') }}</th>
+                        <th>{{ __('date') }}</th>
+                        <th>{{ __('Company_Category') }}</th>
                         <th>{{ __('Company') }}</th>
-                        <th>{{ __('Department') }}</th>
-                        <th>{{ __('Dept Group') }}</th>
-                        <th>{{ __('Job Class') }}</th>
+                        <th>{{ __('department') }}</th>
+                        <th>{{ __('Under_Departemen') }}</th>
+                        <th>{{ __('Job_Class') }}</th>
                         <th>{{ __('Manhours') }}</th>
                         <th>{{ __('Manpower') }}</th>
                         <th>{{ __('Action') }}</th>
