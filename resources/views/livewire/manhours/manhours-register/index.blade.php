@@ -169,7 +169,7 @@
         <div class="w-auto mx-3 mt-2 overflow-x-auto rounded-sm shadow-md md:w-auto">
 
             <table class="table table-xs table-zebra-zebra">
-                <thead class="bg-primary">
+                <thead class="bg-primary text-gray-100">
                     <tr class="text-center">
                         <th>#</th>
                         <th>
@@ -226,7 +226,7 @@
                     </tr>
                 @endforelse
                 </tbody>
-                <tfoot class="bg-primary">
+                <tfoot class="bg-primary text-gray-100">
                     <tr class="text-center">
                         <th>#</th>
                         <th>

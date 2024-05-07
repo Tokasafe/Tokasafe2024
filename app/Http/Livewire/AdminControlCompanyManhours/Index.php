@@ -18,16 +18,17 @@ class Index extends Component
     {
         return view('livewire.admin-control-company-manhours.index', [
             'Company' => Companies::get(),
-            'User' => User::with(['companies','Roles'])->SearchUsers(trim($this->searchUser))->searchcompany(trim($this->searchCompany))->paginate(10),
+            'User' => User::with(['companies', 'Roles'])->SearchUsers(trim($this->searchUser))->searchcompany(trim($this->searchCompany))->paginate(20),
         ])->extends('navigation.homebase', ['header' => 'Control Company Manhours'])->section('content');
     }
     public function update_company($id, $company)
     {
         $this->id_ACCM = AdminControlCompanyManhours::where('user_id', $id)->where('companies_id', $company)->first()->id;
         $this->user_id = $id;
-        $this->company_id =$company;
+        $this->company_id = $company;
     }
-    public function update(){
+    public function update()
+    {
         $this->validate([
             'user_id' => 'required',
             'company_id' => 'required',

@@ -1,4 +1,5 @@
 <div>
+    @include('toast.toast')
     <!-- Open the modal using ID.showModal() method -->
     <label for="manhoursRegister"
         class="btn btn-sm btn-square btn-info tooltip-info tooltip-top tooltip"data-tip="Create">
@@ -106,9 +107,9 @@
                 @csrf
                 <div class="w-full max-w-xs form-control">
                     <x-input-label-req :value="__('File Name')" />
-                    <input type="file" placeholder="Type here" wire:model='fileImport' required`
-                        class=" @error('fileImport') border-rose-500 border-2 @enderror w-full max-w-xs file-input file-input-bordered file-input-success file-input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-                    <x-input-error :messages="$errors->get('fileImport')" class="mt-0" />
+                    <input type="file" placeholder="Type here" wire:model='files'
+                        class=" @error('files') border-rose-500 border-2 @enderror w-full max-w-xs file-input file-input-bordered file-input-success file-input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                    <x-input-error :messages="$errors->get('files')" class="mt-0" />
                 </div>
                 <div class="modal-action">
                     <button type="submit" class="text-white btn btn-success btn-xs" wire:target="uploadManhours"
@@ -118,7 +119,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3V15" />
                         </svg>
-                        <span wire:loading wire:target="fileImport"
+                        <span wire:loading wire:target="files"
                             class="loading loading-spinner loading-sm hidden"wire:loading.class="block"></span>
                     </button>
                     <label for="uploadManhoursRegister" wire:target="uploadManhours"
