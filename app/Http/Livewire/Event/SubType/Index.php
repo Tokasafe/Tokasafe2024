@@ -23,7 +23,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.event.sub-type.index', [
-            'SubType' => EventSubType::with(['EventType'])->searchtype(trim($this->searchEventType))->searcsubtype(trim($this->searchEventSubType))->paginate(5),
+            'SubType' => EventSubType::with(['EventType'])->searchtype(trim($this->searchEventType))->searcsubtype(trim($this->searchEventSubType))->paginate(20),
             'EventType' => EventType::get(),
         ])->extends('navigation.homebase', ['header' => 'Event Sub Type'])->section('content');
     }

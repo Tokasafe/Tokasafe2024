@@ -30,5 +30,9 @@ class EventType extends Model
     {
         return $this->belongsToMany(WorkflowTempalte::class, 'workflow_steps', 'workflow_template', 'eventTypeId');
     }
+    public function incident()
+    {
+        return $this->hasMany(IncidentReport::class);
+    }
 
 }

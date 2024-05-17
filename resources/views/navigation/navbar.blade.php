@@ -1,5 +1,3 @@
-
-
 <div class="flex flex-col sticky top-0 z-30  drop-shadow-lg">
     <div class="navbar bg-gradient-to-r  from-slate-600 via-slate-400 to-slate-300  w-full">
         <div class="navbar-start">
@@ -54,7 +52,12 @@
                                                 <a
                                                     href="{{ route('hazard') }}"class="{{ Request::is('eventReport/hazard_id*') ? ' active font-semibold ' : '' }}">{{ __('Hazard_Report') }}</a>
                                             </li>
+                                            <li>
+                                                <a
+                                                    href="{{ route('incident') }}"class="{{ Request::is('eventReport/incident*') ? ' active font-semibold ' : '' }}">{{ __('incident_Report') }}</a>
+                                            </li>
                                         </ul>
+
                                     </details>
                                 </li>
                                 <li>
@@ -116,6 +119,10 @@
                                             <li>
                                                 <a
                                                     href="{{ route('statusCode') }}"class="{{ Request::is('InControl/statusCode') ? 'active font-semibold' : '' }}">{{ __('status_code') }}</a>
+                                            </li>
+                                            <li>
+                                                <a
+                                                    href="{{ route('users') }}"class="{{ Request::is('InControl/users') ? 'active font-semibold' : '' }}">{{ __('User') }}</a>
                                             </li>
 
                                             <li>
@@ -218,6 +225,10 @@
                                                 <a
                                                     href="{{ route('hazardGuest') }}"class="{{ Request::is('user/eventReport/hazard_id*') ? ' active font-semibold ' : '' }}">{{ __('Hazard_Report') }}</a>
                                             </li>
+                                            <li>
+                                                <a
+                                                    href="{{ route('incident') }}"class="{{ Request::is('eventReport/incident*') ? ' active font-semibold ' : '' }}">{{ __('incident_Report') }}</a>
+                                            </li>
                                         </ul>
                                     </details>
                                 </li>
@@ -259,10 +270,14 @@
                                 <summary class="{{ Request::is('eventReport*') ? 'text-amber-200 font-semibold' : '' }}">
                                     Event Report
                                 </summary>
-                                <ul class=" text-xs text-center w-28 menu-xs max-w-xs">
+                                <ul class=" text-xs text-center w-32 menu-xs max-w-xs">
                                     <li>
                                         <a
                                             href="{{ route('hazard') }}"class="{{ Request::is('eventReport/hazard_id*') ? ' active font-semibold ' : '' }}">{{ __('Hazard_Report') }}</a>
+                                    </li>
+                                    <li>
+                                        <a
+                                            href="{{ route('incident') }}"class="{{ Request::is('eventReport/incident*') ? ' active font-semibold ' : '' }}">{{ __('incident_Report') }}</a>
                                     </li>
                                 </ul>
                             </details>
@@ -462,8 +477,8 @@
                     <div class="dropdown dropdown-end">
                         <div class=" ">
                             <label tabindex="0" class="font-semibold btn btn-ghost btn-xs flex flex-col">
-                                <div class="self-center p-0 hidden sm:block">
-                                     <h1 class="text-emerald-600 ">{{ Auth::user()->name }}</h1>
+                                <div class="self-center p-0 ">
+                                    <h1 class="text-emerald-600 ">{{ Auth::user()->name }}</h1>
                                     <small>@livewire('time.index')</small>
                                 </div>
                             </label>

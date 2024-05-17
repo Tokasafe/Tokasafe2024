@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="scroll-smooth" data-theme="nord" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html class="scroll-smooth" data-theme="corporate" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     @stack('styles')
@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.11.0/css/flag-icons.min.css" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
+    <script src="https://cdn.tailwindcss.com"></script>
     @laravelPWA
 </head>
 <body class="static antialiased">

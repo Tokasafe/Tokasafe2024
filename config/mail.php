@@ -39,12 +39,12 @@ return [
             'host' => env('MAIL_HOST', 'mail.archimining.com'),
             'port' => env('MAIL_PORT', 465),
             'encryption' => env('MAIL_ENCRYPTION', 'ssl'),
-            'username' => env('MAIL_USERNAME','tokasafe@archimining.com'),
-            'password' => env('MAIL_PASSWORD','Archi2024$'),
+            'username' => env('MAIL_USERNAME', 'tokasafe@archimining.com'),
+            'password' => env('MAIL_PASSWORD', 'Archi2024$'),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
-       
+
         'ses' => [
             'transport' => 'ses',
         ],
@@ -86,6 +86,33 @@ return [
             'verify_peer_name' => false,
         ],
     ],
+    /*
+    |--------------------------------------------------------------------------
+    | SMTP Host Address
+    |--------------------------------------------------------------------------
+    |
+    | Here you may provide the host address of the SMTP server used by your
+    | applications. A default option is provided that is compatible with
+    | the Mailgun mail service which will provide reliable deliveries.
+    |
+    */
+
+    'host' => env('MAIL_HOST', 'mail.archimining.com'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | SMTP Host Port
+    |--------------------------------------------------------------------------
+    |
+    | This is the SMTP port used by your application to deliver e-mails to
+    | users of the application. Like the host we have set this value to
+    | stay compatible with the Mailgun e-mail application by default.
+    |
+    */
+
+    'port' => env('MAIL_PORT', 587),
+
+    /*
 
     /*
     |--------------------------------------------------------------------------
@@ -99,9 +126,38 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'tokasafe@archimining.com'),
+        'name' => env('MAIL_FROM_NAME', 'tokasafe'),
     ],
+    /*
+    |--------------------------------------------------------------------------
+    | E-Mail Encryption Protocol
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the encryption protocol that should be used when
+    | the application send e-mail messages. A sensible default using the
+    | transport layer security protocol should provide great security.
+    |
+    */
+
+    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | SMTP Server Username
+    |--------------------------------------------------------------------------
+    |
+    | If your SMTP server requires a username for authentication, you should
+    | set it here. This will get used to authenticate with your server on
+    | connection. You may also set the "password" value below this one.
+    |
+    */
+
+    'username' => env('tokasafe@archimining.com'),
+
+    'password' => env('Archi2024$'),
+
+    /*
 
     /*
     |--------------------------------------------------------------------------

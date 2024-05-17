@@ -348,7 +348,7 @@
                     pie: {
                         startAngle: 0,
                         endAngle: 360,
-                        
+
                     }
                 },
                 dataLabels: {
@@ -457,9 +457,13 @@
                 <div class="w-full join p-2 ">
                     <div class="card w-full sm:w-36 bg-base-100 shadow-md text-primary-content">
                         {{-- <div class="divider divider-info text-xs p-0">Short Menu</div> --}}
-                        <div class="card-body p-0 flex ">
-                            <div class="self-center"> @livewire('dasboard.short-link.index')</div>
-                            <div class="invisible h-0"> @livewire('event-report-list.hazard-id.create')</div>
+                        <div class="card-body p-0  flex justify-center ">
+                            <div class="self-center">
+                                @livewire('dasboard.short-link.index')
+                                <div class="invisible h-0 p-0">
+                                    @livewire('event-report-list.hazard-id.create')
+                                </div>
+                            </div>
                         </div>
                     </div>
 

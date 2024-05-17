@@ -12,9 +12,11 @@ use App\Models\PanelHazardId;
 use App\Models\WorkflowAdministration;
 use App\Notifications\ToModerator;
 use Illuminate\Support\Facades\Notification;
+use Livewire\WithPagination;
 
 class Index extends Component
 {
+    use WithPagination;
     public $destination_1_label;
     public $destination_1;
     public $destination_2_label;

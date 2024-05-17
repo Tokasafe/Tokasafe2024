@@ -35,6 +35,8 @@ use App\Http\Livewire\EventReportList\HazardId\Index as HazardIdIndex;
 use App\Http\Livewire\Dasboard\Chart\AllInjury\Index as AllInjuryIndex;
 use App\Http\Livewire\AccessRiskAssessment\Index as AccessRiskAssessmentIndex;
 use App\Http\Livewire\AdminControlCompanyManhours\Index as AdminControlCompanyManhours;
+use App\Http\Livewire\EventReportList\Insident\Detail as InsidentDetail;
+use App\Http\Livewire\EventReportList\Insident\Index as InsidentIndex;
 use App\Http\Livewire\Guest\EventReportList\Dashboard\Index as DashboardIndex;
 use App\Http\Livewire\Guest\EventReportList\Hazard\Detail;
 use App\Http\Livewire\Guest\EventReportList\Hazard\Index as HazardIndexGuest;
@@ -62,11 +64,10 @@ Route::get('locale/{locale}', function ($locale) {
 })->name('locale');
 
 Route::get('/', AllInjuryIndex::class)->name('dashboard');
-Route::get('manhours/tableExcel',TableExcel::class)->name('TableExcel');
+Route::get('manhours/tableExcel', TableExcel::class)->name('TableExcel');
 
-Route::middleware(['auth','user-role:1'])->group(function()
-{
-    Route::get('InControl/users',UserIndex::class)->name('users');
+Route::middleware(['auth', 'user-role:1'])->group(function () {
+    Route::get('InControl/users', UserIndex::class)->name('users');
     Route::get('InControl/people', PeopleIndex::class)->name('people');
     Route::get('InControl/categorycompany', Index::class)->name('categoryCompany');
     Route::get('InControl/company', CompanyIndex::class)->name('company');
@@ -86,7 +87,7 @@ Route::middleware(['auth','user-role:1'])->group(function()
     Route::get('InControl/riskLikelihood', LikelihoodIndex::class)->name('riskLikelihood');
     Route::get('InControl/riskAssessment', AssessmentIndex::class)->name('riskAssessment');
     Route::get('InControl/AdminControlCompanyManhours', AdminControlCompanyManhours::class)->name('AdminControlCompanyManhours');
-   
+
     Route::get('InControl/securityUser', SecurityUserIndex::class)->name('securityUser');
     Route::get('InControl/port', PortIndex::class)->name('port');
     Route::get('InControl/workflowstep', RealFlowEventIndex::class)->name('workflowstep');
@@ -96,17 +97,18 @@ Route::middleware(['auth','user-role:1'])->group(function()
     Route::get('InControl/statusCode', StatusCodeIndex::class)->name('statusCode');
     Route::get('InControl/roleUser', RoleUserIndex::class)->name('roleUser');
 });
-Route::middleware(['auth','user-role:2'])->group(function()
-{
+Route::middleware(['auth', 'user-role:2'])->group(function () {
     Route::get('user/eventReport/hazard_id', HazardIndexGuest::class)->name('hazardGuest');
     Route::get('user/eventReport/hazard_id/{id}', Detail::class)->name('hazardDetailsGuest');
-    Route::get('user/manhours/manhoursRegister',ManhoursManhoursRegisterIndex::class)->name('ManhoursGuest');
+    Route::get('user/manhours/manhoursRegister', ManhoursManhoursRegisterIndex::class)->name('ManhoursGuest');
 });
-Route::middleware(['auth','user-role:1'])->group(function () {
+Route::middleware(['auth', 'user-role:1'])->group(function () {
     Route::get('eventReport/hazard_id', HazardIdIndex::class)->name('hazard');
+    Route::get('eventReport/incident', InsidentIndex::class)->name('incident');
+    Route::get('eventReport/incident/{id}', InsidentDetail::class)->name('incidentDetails');
     Route::get('eventReport/hazard_id/{id}', Details::class)->name('hazardDetails');
-    Route::get('manhours/manhoursRegister',ManhoursRegisterIndex::class)->name('manhoursRegister');
-    Route::get('eventReport', MainIndex::class)->name('eventReport');
+    Route::get('manhours/manhoursRegister', ManhoursRegisterIndex::class)->name('manhoursRegister');
+    // Route::get('eventReport', MainIndex::class)->name('eventReport');
     // Route::get('eventReport/details/{id}', Update::class)->name('eventReportRegister');
     // Route::get('eventReport/eventParticipants/{id}', ParticipanIndex::class)->name('eventParticipants');
 

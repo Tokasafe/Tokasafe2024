@@ -105,7 +105,7 @@ class Details extends Component
         $this->reference = $HazardId->reference;
         //    dd($this->pengawas_area_id);
     }
-   
+
     public function render()
     {
 
@@ -143,13 +143,15 @@ class Details extends Component
             'LocationEvent' => EventLocation::get(),
             'EventType' => EventType::get(),
             'EventSubType' => EventSubType::with('EventType')->where('eventType_id', 1)->get(),
-            'People' => People::with('Employer')->search(trim($this->search_reportBy))->paginate( 10,  ['*'], 'dtPeople'),
-            'Supervisor' => People::with('Employer')->searchto(trim($this->search_reportTo))->paginate( 10,  ['*'], 'dtSupervisor'),
+            'People' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(10,  ['*'], 'dtPeople'),
+            'Supervisor' => People::with('Employer')->searchto(trim($this->search_reportTo))->paginate(10,  ['*'], 'dtSupervisor'),
             'Company' => Companies::with(['CompanyCategory'])->searchcompany(trim($this->search_company))->get(),
             'Consequence' => RiskConsequence::get(),
             'Likelihood' => RiskLikelihood::get(),
         ])->extends('navigation.homebase', ['header' => 'Hazard report', 'title' => 'hazard', 'h1' => $this->data_id])->section('content');
-    } // FUNCTION BTN MODAL
+    }
+   
+    // FUNCTION BTN MODAL
     public function previousPage($pageName = 'page')
     {
         $this->setPage(max($this->paginators[$pageName] - 1, 1), $pageName);

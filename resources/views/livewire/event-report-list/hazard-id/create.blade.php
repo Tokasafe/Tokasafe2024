@@ -1,6 +1,6 @@
 <div>
 
-    {{-- @include('toast.toast') --}}
+    @include('toast.toast')
     <!-- The button to open modal -->
     <!-- You can open the modal using ID.showModal() method -->
     <!-- The button to open modal -->
@@ -20,7 +20,7 @@
 
 
     <div class="modal {{ $modal }}">
-        <div class="h-fit sm:w-10/12 sm:max-w-fit modal-box ">
+        <div class=" sm:w-10/12 sm:max-w-fit modal-box ">
             <button
                 class="z-10 btn btn-sm btn-circle btn-ghost absolute right-2 top-2 tooltip tooltip-left font-bold text-blue-500"
                 data-tip="{{ __('info') }}">?</button>

@@ -43,17 +43,12 @@
 
         <div>
             <div class="relative ">
-              
-               
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-4 h-4 absolute left-0 my-1.5 ml-2 font-bold">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                     </svg>
                     <input  wire:model='search' type="text"  placeholder="Search People" class="input input-bordered placeholder:italic placeholder:text-slate-400 input-success input-xs w-full max-w-xs pl-6 focus:outline-none rounden-sm focus:ring-success focus:ring-1" />
-                {{-- <input
-                    class=" w-full py-2  shadow-sm input-sm placeholder:italic placeholder:text-slate-400 input-success focus:outline-none rounden-sm focus:ring-success focus:ring-1 sm:text-sm"
-                    placeholder="Search People" type="text" name="search" /> --}}
             </div>
         </div>
     </div>
