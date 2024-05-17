@@ -290,7 +290,7 @@ class Create extends Component
                 'documentation' => $file_name
             ]);
 
-            $workflow_template_id = WorkflowStep::where('eventTypeId', 1)->orderBy('id', 'ASC')->first()->workflow_template;
+            $workflow_template_id = WorkflowStep::where('workflow_template', 1)->orderBy('id', 'ASC')->first()->workflow_template;
             $description = WorkflowAdministration::with(['StatusCode', 'ResponsibleRole'])->where('workflow_template', $workflow_template_id)->first()->description;
             $b = WorkflowAdministration::with(['StatusCode', 'ResponsibleRole'])->where('description', $description)->first()->id;
             PanelHazardId::create([

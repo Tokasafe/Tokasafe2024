@@ -24,6 +24,21 @@ Breadcrumbs::for('hazard_details', function (BreadcrumbTrail $trail,$h1) {
     $trail->parent('hazard');
     $trail->push('Hazard Detail', route('hazardDetails',$h1));
 });
+
+// Home > hazard
+Breadcrumbs::for('incident', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Incident ', route('incident'));
+});
+// Home > incident > [detail]
+Breadcrumbs::for('incident_details', function (BreadcrumbTrail $trail,$h1) {
+    $trail->parent('incident');
+    $trail->push('Incident Detail', route('incidentDetails',$h1));
+});
+
+
+
+
 // Home > hazardguest
 Breadcrumbs::for('hazardGuest', function (BreadcrumbTrail $trail) {
     $trail->parent('home');

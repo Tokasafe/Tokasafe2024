@@ -9,25 +9,25 @@ use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ManhoursRegisterImport implements ToModel,WithHeadingRow,SkipsEmptyRows
+class ManhoursRegisterImport implements ToModel, WithHeadingRow, SkipsEmptyRows
 {
     use Importable;
     /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
+     * @param array $row
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
+     */
     public function model(array $row)
     {
         return new ManhoursRegister([
-            'date'=>date('Y-m-d',strtotime($row['date'])),
-            'company_category'=>$row['company_category'],
-            'company'=>$row['company'],
-            'dept'=>$row['dept'],
-            'group'=>$row['group'],
-            'role_class'=>$row['role_class'],
-            'manhour'=>$row['manhour'],
-            'manpower'=>$row['manpower'],
+            'date' => date('Y-m-d', strtotime($row['date'])),
+            'company_category' => $row['company_category'],
+            'company' => $row['company'],
+            'dept' => $row['dept'],
+            'group' => $row['group'],
+            'role_class' => $row['role_class'],
+            'manhour' => $row['manhour'],
+            'manpower' => $row['manpower'],
         ]);
     }
     public function isEmptyWhen(array $row): bool

@@ -36,7 +36,7 @@ class Index extends Component
         return view('livewire.real-flow-event.index', [
             'Template'=>WorkflowTempalte::whereId($this->search)->paginate(2),
             'EventType' => WorkflowStep::with('EventType')->where('workflow_template', $this->search)->paginate(5),
-        ])->extends('navigation.homebase', ['header' => 'Event Register'])->section('content');
+        ])->extends('navigation.homebase', ['header' => 'Workflow Administration'])->section('content');
     }
 
     public function update_template($id)

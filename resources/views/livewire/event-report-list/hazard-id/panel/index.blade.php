@@ -17,7 +17,6 @@
     </div>
     <form wire:submit.prevent='store'>
         @csrf
-        @method('PATCH')
         @if ($userController)
             <div class="z-20 flex flex-col sm:flex-row gap-1 pb-1 px-2 bg-gray-300 shadow-md ">
                 <div class="w-full sm:max-w-max form-control">

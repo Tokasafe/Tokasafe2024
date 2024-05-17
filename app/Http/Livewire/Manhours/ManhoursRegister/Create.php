@@ -15,21 +15,19 @@ use Maatwebsite\Excel\Facades\Excel;
 class Create extends Component
 {
     use WithFileUploads;
-    public $role_class,$label_dept, $company, $company_category, $category, $date, $manhour, $manpower, $dept_name, $dept, $group, $SelectCompany = [],$fileImport;
+
+    public $role_class, $label_dept, $company, $company_category, $category, $date, $manhour, $manpower, $dept_name, $dept, $group, $SelectCompany = [], $files;
     public function render()
     {
         if ($this->company_category) {
-            $this->SelectCompany = Companies::where('category_company', $this->company_category)->orderBy('name','ASC')->get();
+            $this->SelectCompany = Companies::where('category_company', $this->company_category)->orderBy('name', 'ASC')->get();
             $this->category = CompanyCategory::whereId($this->company_category)->first()->name;
-            if ($this->company_category==1) {
+            if ($this->company_category == 1) {
                 $this->label_dept = 'department';
-            } 
-            else {
+            } else {
                 $this->label_dept = 'Under Department';
             }
-            
-        }
-        else {
+        } else {
             $this->label_dept = 'department';
         }
         if ($this->dept) {
@@ -38,13 +36,22 @@ class Create extends Component
         }
         return view('livewire.manhours.manhours-register.create', [
             'KategoryCompany' => CompanyCategory::get(),
-            'Company' => Companies::orderBy('name','ASC')->get(),
+            'Company' => Companies::orderBy('name', 'ASC')->get(),
             'GroupCompany' => GroupDepartment::with(['Department', 'Group'])->get(),
         ]);
     }
+    public function uploadManhours()
+    {
+
+        $this->validate(['files' => 'required']);
+
+        Excel::import(new ManhoursRegisterImport, $this->files);
+        session()->flash('success', "importing file has done!!");
+        $this->emit('AddManhoursRegister');
+    }
     public function store()
     {
-        
+
         $this->validate([
             'date' => 'required',
             'company_category' => 'required',
@@ -72,11 +79,5 @@ class Create extends Component
     {
         $this->manhour = '';
         $this->manpower = '';
-    }
-    public function uploadManhours(){
-        $this->validate(['fileImport' => 'required']);
-        Excel::import(new ManhoursRegisterImport,$this->fileImport);
-        session()->flash('success', "importing file has done!!");
-        $this->emit('AddManhoursRegister');
     }
 }

@@ -1,27 +1,32 @@
 <div>
     @if ($paginator->hasPages())
-    <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-between mt-2 gap-1">
-        {{-- Previous Page Link --}}
-        @if ($paginator->onFirstPage())
-            <label class=" items-center px-4  text-sm font-medium text-gray-500 btn-disabled cursor-not-allowed btn btn-xs btn-outline leading-5 rounded-md ">
-                {!! __('pagination.previous') !!}
-            </label>
-        @else
-            <label wire:click="previousPage('{{ $paginator->getPageName() }}')" rel="prev" class=" items-center px-4  text-sm font-medium text-gray-700 btn-secondary  cursor-pointer btn btn-xs btn-outline">
-                {!! __('pagination.previous') !!}
-            </label>
-        @endif
+        <nav role="navigation" aria-label="Pagination Navigation" class="flex items-center justify-between">
+            <div class="flex justify-between flex-1 ">
+                <span>
+                    @if ($paginator->onFirstPage())
+                        <button class="btn btn-outline btn-info btn-xs btn-disabled ">
+                            {!! __('pagination.previous') !!}
+                        </button>
+                    @else
+                        <span wire:click="previousPage('{{ $paginator->getPageName() }}')" wire:loading.attr="disabled" dusk="previousPage.before" class="btn btn-outline btn-info btn-xs ">
+                            {!! __('pagination.previous') !!}
+                        </span>
+                    @endif
+                </span>
+                <span>
+                    @if ($paginator->hasMorePages())
+                        <button wire:click="nextPage('{{ $paginator->getPageName() }}')" wire:loading.attr="disabled" dusk="nextPage.before" class="btn btn-outline btn-info btn-xs">
+                            {!! __('pagination.next') !!}
+                        </button>
+                    @else
+                        <button class="btn btn-outline btn-info btn-xs btn-disabled ">
+                            {!! __('pagination.next') !!}
+                        </button>
+                    @endif
+                </span>
+            </div>
 
-        {{-- Next Page Link --}}
-        @if ($paginator->hasMorePages())
-            <label wire:click="nextPage('{{ $paginator->getPageName() }}')" rel="next" class=" items-center px-4  text-sm font-medium text-gray-700 btn-secondary  cursor-pointer btn btn-xs btn-outline">
-                {!! __('pagination.next') !!}
-            </label>
-        @else
-            <label class=" items-center px-4  text-sm font-medium text-gray-500 btn-disabled cursor-not-allowed btn btn-xs btn-outline leading-5 rounded-md">
-                {!! __('pagination.next') !!}
-            </label>
-        @endif
-    </nav>
-@endif	
+           
+        </nav>
+    @endif
 </div>

@@ -5,7 +5,7 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.3",
+        "php": "^8.1.|^8.3",
         "diglactic/laravel-breadcrumbs": "^9.0",
         "directorytree/ldaprecord-laravel": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
@@ -15,6 +15,7 @@
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.12",
         "maatwebsite/excel": "^3.1",
+        "phpoffice/phpspreadsheet": "^1.29",
         "silviolleite/laravelpwa": "^2.0",
         "staudenmeir/eloquent-param-limit-fix": "^1.1",
         "vinkla/hashids": "^11.0"
@@ -30,7 +31,7 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.0",
-        "spatie/laravel-ignition": "^2.0"
+        "spatie/ignition": "^1.14"
     },
     "autoload": {
         "psr-4": {

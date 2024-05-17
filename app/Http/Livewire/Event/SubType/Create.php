@@ -34,7 +34,7 @@ class Create extends Component
     }
     public function clearFields()
     {
-        $this->eventType_id = '';
+        // $this->eventType_id = '';
         $this->name = '';
     }
 }
