@@ -46,8 +46,8 @@ class UserSecurity extends Model
     {
         return $this->belongsTo(People::class, 'user_id');
     }
-    public function eventsubtype()
+    public function event_type()
     {
-        return $this->belongsTo(eventsubtype::class,'event_sub_types_id');
+        return $this->belongsTo(EventType::class,'event_types_id');
     }
 }

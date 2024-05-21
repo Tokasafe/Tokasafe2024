@@ -4,6 +4,7 @@ namespace App\Http\Livewire\SecurityUser;
 
 use App\Models\People;
 use Livewire\Component;
+use App\Models\EventType;
 use App\Models\Workgroup;
 use App\Models\CompanyLevel;
 use App\Models\EventSubType;
@@ -15,12 +16,13 @@ class Update extends Component
 {
     use WithPagination;
     public $search = '';
-    public $openModalWG = '';
+    public $openModalWGupdate = '';
     public $selectedUser;
     public $Person = [];
+    public $selectedWorkgroup;
     public $workgroup;
     public $workgroup_id;
-    public $event_sub_types_id;
+    public $event_types_id;
     public $event_sub_types;
     public $user_id;
     public $workflow;
@@ -42,13 +44,12 @@ class Update extends Component
             $Bu = $role->Workgroup->CompanyLevel->BussinessUnit->name;
             $deptORcont = $role->Workgroup->CompanyLevel->deptORcont;
             $job_class = $role->Workgroup->job_class;
-            $eventtype = $role->eventsubtype->EventType->name;
-            $subtype = $role->eventsubtype->name;
-            $this->event_sub_types ="$eventtype-$subtype";
-            $this->event_sub_types_id =$role->event_sub_types_id;
+            $eventtype = $role->event_type->name;
+            $this->event_sub_types ="$eventtype";
+            $this->event_types_id =$role->event_types_id;
             $this->workflow = $role->workflow;
             $this->workgroup = "$Bu-$deptORcont-$job_class";
-            $this->workgroup_id = $role->workgroup_id;
+            $this->selectedWorkgroup = $role->workgroup_id;
             $this->user_id = $role->user_id;
             $this->selectedUser = $role->user_id;
             $this->openModal = 'modal-open';
@@ -73,11 +74,11 @@ class Update extends Component
         return view('livewire.security-user.update', [
             'Orang' => People::search(trim($this->search))->paginate(500, ['*'], 'commentsPage'),
             'ResponsibleRole' =>ResponsibleRole::get(),
-            'SubType'=>EventSubType::with('EventType')->get()
+            'EventTypes' => EventType::with('EventCategory')->get()
         ]);
     }
 // Workgroup Function
-    public function cari($id)
+    public function cariUpdate($id)
     {
         $this->showWG = false;
         if (!empty($id)) {
@@ -88,21 +89,21 @@ class Update extends Component
         }
 
     }
-    public function workGroup($id, $bu, $deptOrCont, $job_class)
+    public function workGroupUpdate( $bu, $deptOrCont, $job_class)
     {
 
-        $this->workgroup_id = $id;
+       
         $this->workgroup = "$bu-$deptOrCont-$job_class";
         $this->wgClickClose();
     }
 
     public function wgClick()
     {
-        $this->openModalWG = 'modal-open';
+        $this->openModalWGupdate = 'modal-open';
     }
     public function wgClickClose()
     {
-        $this->openModalWG = '';
+        $this->openModalWGupdate = '';
 
     }
     public function outModal()
@@ -115,7 +116,7 @@ class Update extends Component
         $this->openModalEST = 'modal-open';
     }
     public function subtypeClick($id, $eventType,$subtype){
-        $this->event_sub_types_id = $id;
+        $this->event_types_id = $id;
         $this->event_sub_types = "$eventType-$subtype";
         $this->EventSubtypeClose();
     }
@@ -134,11 +135,12 @@ class Update extends Component
             'event_sub_types' => 'required',
         ]);
         try {
+            
             UserSecurity::whereId($this->data_id)->update([
                 'user_id' => $this->selectedUser,
                 'workflow' => $this->workflow,
-                'workgroup_id' => $this->workgroup_id,
-                'event_sub_types_id' => $this->event_sub_types_id,
+                'workgroup_id' => $this->selectedWorkgroup,
+                'event_types_id' => $this->event_types_id,
             ]);
             session()->flash('success', 'Data Updated Successfully!!');
             $this->clearFields();

@@ -25,10 +25,10 @@ class Index extends Component
         return view('livewire.security-user.index')->with([
             'UserSecurity' => UserSecurity::with([
                 'People',
-                'eventsubtype',
+                'event_type',
                 'Workgroup.CompanyLevel',
                 'Workgroup.CompanyLevel.BussinessUnit',
-            ])->searchperson(trim($this->searchPerson))->searchwokrgroup(trim($this->searchPerson))->paginate(5),
+            ])->searchperson(trim($this->searchPerson))->searchwokrgroup(trim($this->searchPerson))->paginate(25),
         ])->extends('navigation.homebase', ['header' => 'Security User'])->section('content');
 
         $this->resetPage('userSecurityPage');

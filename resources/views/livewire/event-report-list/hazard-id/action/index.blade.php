@@ -1,14 +1,6 @@
 <div>
     @include('toast.toast')
-    @push('styles')
-        {{-- @livewireStyles() --}}
-        {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-        <link rel="stylesheet" href="../../flatpickr/dist/flatpickr.min.css">
-        <link rel="stylesheet" href="../../flatpickr/dist/plugins/monthSelect/style.css" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="../../flatpickr/dist/themes/dark.css">
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> --}}
-    @endpush
+
     @push('scripts')
         {{-- @livewireScripts() --}}
         {{-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"
@@ -87,7 +79,7 @@
                         <tr class="text-center">
                             <th>{{ $EventAction->firstItem() + $index }}</th>
                             <td>
-                                <p class="truncate w-32">{{ $item->report }}</p>
+                                <p class="w-32 truncate">{{ $item->report }}</p>
                             </td>
                             <td>{{ $item->followup_action }}</td>
                             <td>{{ $item->actionee_comments }}</td>

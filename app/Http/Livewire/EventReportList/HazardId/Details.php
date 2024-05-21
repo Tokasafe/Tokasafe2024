@@ -392,7 +392,7 @@ class Details extends Component
             $this->btn_e5();
         }
     }
-    // FUNCTION BTN INITIAL RISK
+ // FUNCTION BTN INITIAL RISK
     public function btn_a1()
     {
         $this->potential_consequence = 5;
@@ -649,5 +649,5 @@ class Details extends Component
         $this->investigation_req_assessment = $assessment->investigation_req;
         $this->reporting_obligation_assessment = $assessment->reporting_obligation;
     }
-    // 
+// 
 }
