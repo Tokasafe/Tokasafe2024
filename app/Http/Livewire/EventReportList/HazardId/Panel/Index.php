@@ -59,7 +59,8 @@ class Index extends Component
         $this->namapelapor = $statusEvent->Hazard->People->lookup_name;;
         $this->rincian_bahaya = $statusEvent->Hazard->rincian_bahaya;
 
-        $this->event_subtype = $statusEvent->Hazard->event_subtype;
+        $this->event_subtype = $statusEvent->Hazard->EventSubType->EventType->id;
+        
         $this->current_step = $statusEvent->WorkflowStep->name;
         $this->status = $statusEvent->WorkflowStep->StatusCode->name;
         $this->destination_1_label = $statusEvent->WorkflowStep->destination_1_label;
@@ -83,6 +84,9 @@ class Index extends Component
             $this->responsibleRole = WorkflowAdministration::whereId($this->getStatusId)->first()->responsible_role;
             $this->get_Id = WorkflowAdministration::whereId($this->getStatusId)->first()->status_code;
         }
+        else{
+            $this->responsibleRole=0;
+        }
         if (!empty(People::whereIn('network_username', [auth()->user()->username])->first()->id)) {
             $this->id_people = People::whereIn('network_username', [auth()->user()->username])->first()->id;
             $workflow = UserSecurity::with('People')->where('user_id', $this->id_people)->whereIn('workflow', ['Moderator', 'Event Report Manager'])->pluck('workflow')->toArray();
@@ -99,7 +103,7 @@ class Index extends Component
             $erm = '';
         }
         return view('livewire.event-report-list.hazard-id.panel.index', [
-            'People' => UserSecurity::with('People.Employer')->where('event_sub_types_id', $this->event_subtype)->workgroup(trim($this->workgroup))->flow(trim($erm))->get(),
+            'People' => UserSecurity::with('People.Employer')->where('event_types_id', $this->event_subtype)->workgroup(trim($this->workgroup))->flow(trim($erm))->get(),
             'Workflow' => WorkflowAdministration::where('name', $this->current_step)->get()
         ]);
     }

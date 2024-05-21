@@ -76,20 +76,20 @@
     @section('bradcrumbs')
         {{ Breadcrumbs::render('hazard_details', $data_id) }}
     @endsection
-    <div class="m-1  p-2 rounded-md sm:w-full ">
+    <div class="p-2 m-1 rounded-md sm:w-full ">
 
         <div class="flex flex-row pl-2 sm:pl-0">
-            <div class="w-20 text-xs text-gray-500 font-semibold ">{{ __('reference') }}</div>
-            <div class="w-40 text-xs text-gray-500 font-semibold">: {{ $reference }}</div>
+            <div class="w-20 text-xs font-semibold text-gray-500 ">{{ __('reference') }}</div>
+            <div class="w-40 text-xs font-semibold text-gray-500">: {{ $reference }}</div>
         </div>
         <div class="flex flex-row pl-2 sm:pl-0">
-            <div class="w-20 text-xs text-gray-500 font-semibold ">{{ __('date') }}</div>
-            <div class="w-40 text-xs text-gray-500 font-semibold">: {{ date('d-M-Y', strtotime($tanggal_kejadian)) }}
+            <div class="w-20 text-xs font-semibold text-gray-500 ">{{ __('date') }}</div>
+            <div class="w-40 text-xs font-semibold text-gray-500">: {{ date('d-M-Y', strtotime($tanggal_kejadian)) }}
             </div>
         </div>
         <div class="flex flex-row pl-2 sm:pl-0">
-            <div class="w-20 text-xs text-gray-500 font-semibold ">{{ __('Workgroup') }}</div>
-            <div class="text-xs text-gray-500 font-semibold ">: {{ $workgroup }}</div>
+            <div class="w-20 text-xs font-semibold text-gray-500 ">{{ __('Workgroup') }}</div>
+            <div class="text-xs font-semibold text-gray-500 ">: {{ $workgroup }}</div>
         </div>
     </div>
     @livewire('event-report-list.hazard-id.panel.index', ['id' => $data_id])
@@ -107,7 +107,7 @@
                             d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h5v5.586l-1.293-1.293zM9 4a1 1 0 012 0v2H9V4z" />
                     </svg>
                     <span wire:loading wire:target="store" wire:loading wire:loading.class="bg-rose-500"
-                        class="loading loading-spinner loading-sm hidden"></span>
+                        class="hidden loading loading-spinner loading-sm"></span>
                 </button>
                 <label {{ $hazardClose ? 'disabled' : '' }} for="delete"
                     class="btn btn-xs btn-error btn-outline">{{ __('Delete') }}!</label>
@@ -254,263 +254,21 @@
                             <x-input-error :messages="$errors->get('tindakan_perbaikan_disarankan')" class="mt-0" />
                         </div>
                     </div>
-                    <div class="divider divider-info font-semibold">{{ __('penilaian') }}</div>
-                    <div class="p-2">
-                        <div class="flex flex-col-reverse justify-center mb-2 lg:flex-row">
-                            <div class="divide-y divide-secondary basis-full divide-solid">
-                                <div class="flex flex-col items-center gap-4 m-2 sm:flex-row">
-                                    <div class="w-full max-w-xs basis-1/2 form-control">
-                                        <x-input-label-req :value="__('Actual Outcome')" />
-                                        <select wire:model='actual_outcome' {{ $hazardClose ? 'disabled' : '' }}
-                                            class="@error('actual_outcome') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
-                                            <option value="" selected>select an item</option>
-                                            @foreach ($Consequence as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <x-input-error :messages="$errors->get('actual_outcome')" class="mt-0" />
-                                    </div>
-                                    <div class=" basis-full">
-                                        <p class="text-xs text-justify">{{ $actual_outcome_description }}</p>
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col items-center gap-4 m-2 sm:flex-row">
-                                    <div class="w-full max-w-xs basis-1/2 form-control">
-                                        <x-input-label-req :value="__('Potential Consequence')" />
-                                        <select wire:model='potential_consequence'
-                                            {{ $hazardClose ? 'disabled' : '' }}
-                                            class="@error('potential_consequence') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
-                                            <option value="" selected>select an item</option>
-                                            @foreach ($Consequence as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <x-input-error :messages="$errors->get('potential_consequence')" class="mt-0" />
-                                    </div>
-                                    <div class=" basis-full">
-                                        <p class="text-xs text-justify"> {{ $potential_consequence_description }}</p>
-                                    </div>
-                                </div>
-                                <div class="flex flex-col items-center gap-4 m-2 sm:flex-row">
-                                    <div class="w-full max-w-xs basis-1/2 form-control">
-                                        <x-input-label-req :value="__('Potential Likelihood')" />
-                                        <select wire:model='potential_likelihood' {{ $hazardClose ? 'disabled' : '' }}
-                                            class="@error('potential_likelihood') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
-                                            <option value="" selected>select an item</option>
-                                            @foreach ($Likelihood as $item)
-                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <x-input-error :messages="$errors->get('potential_likelihood')" class="mt-0" />
-                                    </div>
-                                    <div class=" basis-full self-end">
-                                        <p class="text-xs text-justify"> {{ $potential_likelihood_description }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="basis-full md:basis-1/4">
-                                <div class="w-[21rem] p-2 flex justify-around  sm:w-full ">
-                                    <div class=" p-4 bg-gray-200 overflow-x-auto rounded-md shadow-md ">
-                                        <table class="table table-xs ">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-xs border border-gray-300" rowspan="4">
-                                                        <small>POSSIBILITY</small>
-                                                    </th>
-                                                </tr>
-                                                <tr class="text-center">
-
-                                                    <th class="text-xs border border-gray-300"><small>Legend</small>
-                                                    </th>
-                                                    <th class="text-xs text-white border bg-success"><small>Low</small>
-                                                    </th>
-                                                    <th class="text-xs text-white border bg-info">
-                                                        <small>Moderate</small>
-                                                    </th>
-                                                    <th class="text-xs text-white border bg-warning">
-                                                        <small>Hight</small>
-                                                    </th>
-                                                    <th class="text-xs text-white border bg-error">
-                                                        <small>Extreme</small>
-                                                    </th>
-                                                </tr>
-                                                <tr class="text-center">
-                                                    <th class="text-xs border border-gray-300" colspan="6">
-                                                        <small>Consequence</small>
-                                                    </th>
-                                                </tr>
-                                                <tr>
-                                                    <th class="text-xs border border-gray-300">
-                                                        <small>5-Catastrophinic</small>
-                                                    </th>
-                                                    <th class="text-xs border border-gray-300"><small>4-Major</small>
-                                                    </th>
-                                                    <th class="text-xs border border-gray-300">
-                                                        <small>3-Moderate</small>
-                                                    </th>
-                                                    <th class="text-xs border border-gray-300"><small>2-Minor</small>
-                                                    </th>
-                                                    <th class="text-xs border border-gray-300">
-                                                        <small>1-Insignificant</small>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-
-                                                <tr>
-                                                    <td class="border border-gray-300"><small>A-Almost Certain</small>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_a1'
-                                                            class="w-full btn btn-xs btn-error @if ($potential_consequence == 5 && $potential_likelihood == 1) border-4 border-black @endif">E</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_a2'
-                                                            class="w-full btn btn-xs btn-error @if ($potential_consequence == 4 && $potential_likelihood == 1) border-4 border-black @endif">E</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_a3'
-                                                            class="w-full btn btn-xs btn-error  @if ($potential_consequence == 3 && $potential_likelihood == 1) border-4 border-black @endif">E</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_a4'
-                                                            class="w-full btn btn-xs btn-warning @if ($potential_consequence == 2 && $potential_likelihood == 1) border-4 border-black @endif">H</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_a5'
-                                                            class="w-full btn btn-xs btn-warning @if ($potential_consequence == 1 && $potential_likelihood == 1) border-4 border-black @endif">H</label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="border border-gray-300"><small>B-Likely</small></td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_b1'
-                                                            class="w-full btn btn-xs btn-error  @if ($potential_consequence == 5 && $potential_likelihood == 2) border-4 border-black @endif">E</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_b2'
-                                                            class="w-full btn btn-xs btn-error @if ($potential_consequence == 4 && $potential_likelihood == 2) border-4 border-black @endif">E</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_b3'
-                                                            class="w-full btn btn-xs btn-warning @if ($potential_consequence == 3 && $potential_likelihood == 2) border-4 border-black @endif">H</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_b4'
-                                                            class="w-full btn btn-xs btn-warning @if ($potential_consequence == 2 && $potential_likelihood == 2) border-4 border-black @endif">H</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_b5'
-                                                            class="w-full btn btn-xs btn-info @if ($potential_consequence == 1 && $potential_likelihood == 2) border-4 border-black @endif">M</label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="border border-gray-300"><small>C-Possible</small></td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_c1'
-                                                            class="w-full btn btn-xs btn-error @if ($potential_consequence == 5 && $potential_likelihood == 3) border-4 border-black @endif">E</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_c2'
-                                                            class="w-full btn btn-xs btn-error @if ($potential_consequence == 4 && $potential_likelihood == 3) border-4 border-black @endif">E</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_c3'
-                                                            class="w-full btn btn-xs btn-warning @if ($potential_consequence == 3 && $potential_likelihood == 3) border-4 border-black @endif">H</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_c4'
-                                                            class="w-full btn btn-xs btn-info @if ($potential_consequence == 2 && $potential_likelihood == 3) border-4 border-black @endif">M</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_c5'
-                                                            class="w-full btn btn-xs btn-success @if ($potential_consequence == 1 && $potential_likelihood == 3) border-4 border-black @endif">L</label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="border border-gray-300"><small>D-Unlikely</small></td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_d1'
-                                                            class="w-full btn btn-xs btn-error @if ($potential_consequence == 5 && $potential_likelihood == 4) border-4 border-black @endif">E</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_d2'
-                                                            class="w-full btn btn-xs btn-warning @if ($potential_consequence == 4 && $potential_likelihood == 4) border-4 border-black @endif">H</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_d3'
-                                                            class="w-full btn btn-xs btn-info @if ($potential_consequence == 3 && $potential_likelihood == 4) border-4 border-black @endif">M</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_d4'
-                                                            class="w-full btn btn-xs btn-success @if ($potential_consequence == 2 && $potential_likelihood == 4) border-4 border-black @endif">L</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_d5'
-                                                            class="w-full btn btn-xs btn-success @if ($potential_consequence == 1 && $potential_likelihood == 4) border-4 border-black @endif">L</label>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="border border-gray-300"><small>E-Rare</small></td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_e1'
-                                                            class="w-full btn btn-xs btn-warning @if ($potential_consequence == 5 && $potential_likelihood == 5) border-4 border-black @endif">H</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_e2'
-                                                            class="w-full btn btn-xs btn-warning @if ($potential_consequence == 4 && $potential_likelihood == 5) border-4 border-black @endif">H</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_e3'
-                                                            class="w-full btn btn-xs btn-info @if ($potential_consequence == 3 && $potential_likelihood == 5) border-4 border-black @endif">M</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_e4'
-                                                            class="w-full btn btn-xs btn-success @if ($potential_consequence == 2 && $potential_likelihood == 5) border-4 border-black @endif">L</label>
-                                                    </td>
-                                                    <td class="border border-gray-300"><label
-                                                            {{ $hazardClose ? 'disabled' : '' }} wire:click='btn_e5'
-                                                            class="w-full btn btn-xs btn-success @if ($potential_consequence == 1 && $potential_likelihood == 5) border-4 border-black @endif">L</label>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex flex-col items-center border-b sm:flex-row">
-                            <div class="text-xs font-semibold basis-1/4 ">{{ __('risk_rank') }}</div>
-                            <div class="text-xs basis-3/4">: {{ $name_assessment }}</div>
-                        </div>
-                        <div class="flex flex-col items-center border-b sm:flex-row">
-                            <div class="text-xs font-semibold basis-1/4 ">{{ __('notify') }}</div>
-                            <div class="text-xs basis-3/4">: {{ $notes_assessment }}</div>
-                        </div>
-                        <div class="flex flex-col items-center border-b sm:flex-row">
-                            <div class="text-xs font-semibold basis-1/4 ">{{ __('deadline') }}</div>
-                            <div class="text-xs basis-3/4">: {{ $reporting_obligation_assessment }}</div>
-                        </div>
-                        <div class="flex flex-col items-center border-b sm:flex-row">
-                            <div class="text-xs font-semibold basis-1/4 ">{{ __('Coordinator') }}</div>
-                            <div class="text-xs basis-3/4">: {{ $investigation_req_assessment }}</div>
-                        </div>
-                    </div>
-                    <div class="flex flex-wrap justify-center gap-2 sm:justify-normal my-4">
-                        <div class="w-full border border-accent p-4">
-                            <div class="divider divider-accent font-semibold">Tindakan Perbaikan</div>
+                    @include('livewire.event-report-list.hazard-id.tablePenilaian')
+                    <div class="flex flex-wrap justify-center gap-2 my-4 sm:justify-normal">
+                        <div class="w-full p-4 border border-accent">
+                            <div class="font-semibold divider divider-accent">Tindakan Perbaikan</div>
                             @livewire('event-report-list.hazard-id.action.index', ['id' => $data_id])
                         </div>
                     </div>
-                    <div class="flex flex-wrap justify-center gap-2 sm:justify-normal my-4">
-                        <div class="w-full border border-accent p-4">
-                            <div class="divider divider-accent font-semibold">{{ __('documentation') }}</div>
+                    <div class="flex flex-wrap justify-center gap-2 my-4 sm:justify-normal">
+                        <div class="w-full p-4 border border-accent">
+                            <div class="font-semibold divider divider-accent">{{ __('documentation') }}</div>
 
                             @livewire('event-report-list.hazard-id.document.index', ['id' => $data_id])
                         </div>
                     </div>
-                    <div class="flex flex-wrap justify-center gap-2 sm:justify-normal my-4">
+                    <div class="flex flex-wrap justify-center gap-2 my-4 sm:justify-normal">
                         <div class="w-full max-w-xs sm:max-w-screen-2xl form-control ">
                             <x-input-label-req :value="__('komentar')" />
                             <textarea placeholder="Bio" wire:model='komentar' {{ $hazardClose ? 'disabled' : '' }}
@@ -532,7 +290,7 @@
     <input type="checkbox" id="delete" class="modal-toggle" />
     <div class="modal">
         <div class="modal-box">
-            <p class="py-4 text-center text-2xl font-bold">{{ __('ars') }} : {{ $reference }} ?</p>
+            <p class="py-4 text-2xl font-bold text-center">{{ __('ars') }} : {{ $reference }} ?</p>
             <div class="modal-action">
                 <label wire:click='deleted' class="btn btn-xs btn-success">{{ __('Yes') }}</label>
                 <label for="delete" class="btn btn-xs btn-error">{{ __('No') }}</label>

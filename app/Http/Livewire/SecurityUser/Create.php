@@ -4,6 +4,7 @@ namespace App\Http\Livewire\SecurityUser;
 
 use App\Models\CompanyLevel;
 use App\Models\EventSubType;
+use App\Models\EventType;
 use App\Models\People;
 use App\Models\ResponsibleRole;
 use App\Models\UserSecurity;
@@ -21,7 +22,7 @@ class Create extends Component
     public $openModalEST = '';
     public $selectedUser = [];
     public $selectedWorkgroup = [];
-    public $event_sub_types_id;
+    public $event_types_id;
     public $event_sub_types;
     public $workgroup;
     public $radio_select;
@@ -53,7 +54,7 @@ class Create extends Component
         return view('livewire.security-user.create', [
             'People' => People::search(trim($this->search))->paginate(500),
             'ResponsibleRole' => ResponsibleRole::get(),
-            'SubType' => EventSubType::with('EventType')->get(),
+            'EventTypes' => EventType::with('EventCategory')->get()
         ]);
     }
     // Workgroup Function
@@ -92,15 +93,15 @@ class Create extends Component
         $this->openModalWG = '';
         $this->selectedWorkgroup=[];
     }
-    public function subtypeClick($id, $eventType, $subtype)
-    {
-        $this->event_sub_types_id = $id;
-        $this->event_sub_types = "$eventType-$subtype";
-        $this->EventSubtypeClose();
-    }
     public function EventSubtypeClick()
     {
         $this->openModalEST = 'modal-open';
+    }
+    public function subtypeClick($id, $eventType)
+    {
+        $this->event_types_id = $id;
+        $this->event_sub_types = "$eventType";
+        $this->EventSubtypeClose();
     }
     public function EventSubtypeClose()
     {
@@ -127,7 +128,7 @@ class Create extends Component
                     'user_id' => $this->selectedUser[$key],
                     'workflow' => $this->workflow,
                     'workgroup_id' => $this->selectedWorkgroup[$wg],
-                    'event_sub_types_id' => $this->event_sub_types_id,
+                    'event_types_id' => $this->event_types_id,
                 ]);
             }
         }

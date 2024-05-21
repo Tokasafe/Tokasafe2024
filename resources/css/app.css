@@ -2,13 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-.wrapper .active { color: red; }
-.tab_item { display: none; }
-.tab_item:first-child { display: block; }
 
 @layer base {
     html {
-      font-family: "Proxima Nova", system-ui, sans-serif;
+        font-family: "Proxima Nova", system-ui, sans-serif;
     }
-  }
-
+    
+}

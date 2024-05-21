@@ -99,26 +99,26 @@
     @endpush
     @include('toast.toast')
     <div class="m-4">
-        <div class="flex flex-col sm:flex-row sm:justify-between  gap-2">
-            <div class=" max-w-xs">@livewire('event-report-list.insident.create')</div>
+        <div class="flex flex-col gap-2 sm:flex-row sm:justify-between">
+            <div class="max-w-xs ">@livewire('event-report-list.insident.create')</div>
 
-            <div class="join flex flex-col sm:flex-row gap-1 sm:gap-0 ">
+            <div class="flex flex-col gap-1 join sm:flex-row sm:gap-0 ">
                 <div class="relative flex items-center max-w-xs join-item ">
                     <input id="5" type="text"
-                        class="peer relative  input input-bordered input-xs w-full max-w-xs  focus:ring-1 focus:outline-none  focus:drop-shadow-lg"
+                        class="relative w-full max-w-xs peer input input-bordered input-xs focus:ring-1 focus:outline-none focus:drop-shadow-lg"
                         placeholder="search" />
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                        class="w-4 h-4 opacity-70 absolute right-2">
+                        class="absolute w-4 h-4 opacity-70 right-2">
                         <path fill-rule="evenodd"
                             d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
                             clip-rule="evenodd" />
                     </svg>
                 </div>
-                <div class="relative flex items-center max-w-xs join-item w-full">
+                <div class="relative flex items-center w-full max-w-xs join-item">
                     <input id="rangeDate" type="text"
-                        class="peer relative  input input-bordered input-xs w-full focus:ring-1 focus:outline-none  focus:drop-shadow-lg" />
+                        class="relative w-full peer input input-bordered input-xs focus:ring-1 focus:outline-none focus:drop-shadow-lg" />
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                        class="w-4 h-4 opacity-70 absolute right-2">
+                        class="absolute w-4 h-4 opacity-70 right-2">
                         <path fill-rule="evenodd"
                             d="M4 1.75a.75.75 0 0 1 1.5 0V3h5V1.75a.75.75 0 0 1 1.5 0V3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2V1.75ZM4.5 6a1 1 0 0 0-1 1v4.5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-7Z"
                             clip-rule="evenodd" />
@@ -153,7 +153,13 @@
                         <td>{{ $value->Incident->workgroup->CompanyLevel->BussinessUnit->name }}-{{ $value->Incident->workgroup->CompanyLevel->deptORcont }}-{{ $value->Incident->workgroup->job_class }}
                         </td>
                         <td>{{ $value->Incident->task }}</td>
-                        <td>{{ $value->Incident->repportBy->lookup_name }}</td>
+                        <td>
+                            @if (!empty($Incident_Action->where('incident_report_id', $value->Incident->id)->first()->incident_report_id))
+                                    {{ $Incident_Action->where('incident_report_id', $value->Incident->id)->count('dueDate') }}/{{ $Incident_Action->where('incident_report_id', $value->Incident->id)->whereNull('completion_date')->count() }}
+                                @else
+                                    0/0
+                                @endif
+                        </td>
                         <td
                             class="
                     {{ $value->WorkflowStep->StatusCode->name === 'Submitted' ? 'bg-cyan-500 text-white font-semibold' : '' }}

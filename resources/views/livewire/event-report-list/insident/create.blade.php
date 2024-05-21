@@ -14,9 +14,9 @@
         <div class="modal-box sm:w-11/12 sm:max-w-5xl">
 
             <div
-                class="divider divider-accent text-1xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500">
+                class="font-extrabold text-transparent divider divider-accent text-1xl bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
                 {{ __('reportIncident') }}</div>
-            <div class="h-80  overflow-auto">
+            <div class="overflow-auto h-80">
                 <form wire:submit.prevent='store'>
                     @csrf
                     <div class="flex flex-wrap gap-1">
@@ -131,13 +131,13 @@
                                     class="radio-xs peer/yes checked:bg-rose-500 radio" type="radio" name="status"
                                     value="Yes" />
                                 <label for="yes"
-                                    class="peer-checked/yes:text-rose-500 text-xs font-semibold">{{ __('Yes') }}</label>
+                                    class="text-xs font-semibold peer-checked/yes:text-rose-500">{{ __('Yes') }}</label>
 
                                 <input wire:model.live="potential_lti" name="radio-10" id="no"
                                     class="radio-xs peer/no checked:bg-sky-500 radio" type="radio" name="status"
                                     value="No" />
                                 <label for="no"
-                                    class="peer-checked/no:text-sky-500 text-xs font-semibold">{{ __('No') }}</label>
+                                    class="text-xs font-semibold peer-checked/no:text-sky-500">{{ __('No') }}</label>
 
                             </fieldset>
                             <x-input-error :messages="$errors->get('potential_lti')" class="mt-0" />
@@ -151,7 +151,7 @@
                                 <option value="Level 2">Level 2</option>
                                 <option value="Level 3">Level 3</option>
                             </select>
-                            <x-input-error :messages="$errors->get('env_incident')" class="mt-0" />
+                            <x-input-error :messages="$errors->get('env_incident')" class="mt-0 " />
                         </div>
                         <div class="w-full max-w-md form-control">
                             <x-input-label-req :value="__('tugas')" />
@@ -165,24 +165,16 @@
                                 <x-input-label :value="__('documentation')" />
                                 <input type="file" wire:model='documentation'
                                     class=" @error('documentation') border-rose-500 border-2 @enderror peer relative file-input file-input-bordered file-input-primary w-full  file-input-xs  focus:outline-none  focus:ring-success focus:ring-1" />
-                                <span class=" absolute right-2 mt-1" wire:loading wire:target="documentation"
+                                <span class="absolute mt-1 right-2" wire:loading wire:target="documentation"
                                     wire:loading.class="loading loading-dots loading-xs text-neutral"></span>
                                 <x-input-error :messages="$errors->get('documentation')" class="mt-0" />
                             </div>
                             @if ($documentation)
                                 <div class="flex-none w-10 ">
-                                    <div class="p-2 mt-3">
-                                        <i
-                                            class="{{ $fileUpload === 'jpg' ? 'fa-sharp fa-regular fa-file-image fa-2xl' : '' }}
-                                        {{ $fileUpload === 'PNG' ? 'fa-sharp fa-regular fa-file-image fa-2xl' : '' }}
-                                        {{ $fileUpload === 'JPG' ? 'fa-sharp fa-regular fa-file-image fa-2xl' : '' }}
-                                        {{ $fileUpload === 'jpeg' ? 'fa-sharp fa-regular fa-file-image fa-2xl' : '' }}
-                                        {{ $fileUpload === 'png' ? 'fa-sharp fa-regular fa-file-image fa-2xl' : '' }}
-                                        {{ $fileUpload === 'xlsx' ? 'fa-sharp fa-regular fa-file-excel fa-2xl' : '' }}
-                                        {{ $fileUpload === 'xlsm' ? 'fa-sharp fa-regular fa-file-excel fa-2xl' : '' }}
-                                        {{ $fileUpload === 'pdf' ? 'fa-sharp fa-regular fa-file-pdf fa-2xl' : '' }}
-                                        {{ $fileUpload === 'docx' ? 'fa-sharp fa-regular fa-file-word fa-2xl' : '' }}">
-                                        </i>
+                                    <div class="p-2 mt-4">
+                                       
+                                        @include('livewire.event-report-list.insident.svgCreate')
+
                                     </div>
                                 </div>
                             @endif
@@ -237,6 +229,7 @@
                         </div>
                         <x-input-error :messages="$errors->get('key_learning')" class="mt-0" />
                     </div>
+                    @include('livewire.event-report-list.insident.tablePenilaian')
             </div>
             <div class="modal-action">
                 <button type="submit" id="my-submit" class="text-white btn btn-success btn-xs">Save
@@ -246,9 +239,9 @@
                             d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h5v5.586l-1.293-1.293zM9 4a1 1 0 012 0v2H9V4z" />
                     </svg>
                     <span wire:loading wire:target="store" wire:loading.delay.long wire:loading.class="bg-rose-500"
-                        class="loading loading-spinner loading-sm hidden"></span>
+                        class="hidden loading loading-spinner loading-sm"></span>
                 </button>
-                <label for="my_modal_3" class="btn btn-xs btn-error text-white">Close!</label>
+                <label for="my_modal_3" class="text-white btn btn-xs btn-error">Close!</label>
             </div>
             </form>
         </div>

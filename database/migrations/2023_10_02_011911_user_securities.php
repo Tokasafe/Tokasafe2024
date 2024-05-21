@@ -18,8 +18,10 @@ return new class extends Migration
             $table->string('workflow');
             $table->unsignedBigInteger('workgroup_id');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('event_types_id');
             $table->foreign('workgroup_id')->references('id')->on('workgroups')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('people')->onDelete('cascade');
+            $table->foreign('event_types_id')->references('id')->on('event_types')->onDelete('cascade');
             $table->timestamps();
         });
     }

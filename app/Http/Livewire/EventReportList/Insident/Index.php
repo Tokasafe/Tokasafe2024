@@ -2,19 +2,21 @@
 
 namespace App\Http\Livewire\EventReportList\Insident;
 
+use App\Models\IncidentAction;
 use App\Models\IncidentReport;
 use App\Models\PanelIncident;
 use Livewire\Component;
 
 class Index extends Component
 {
-    public $data_id,$reference,$documentation;
+    public $data_id,$reference,$documentation,$Incident_Action = [];
     protected $listeners = [
 
         'IncidentTable' => 'render',
     ];
     public function render()
     {
+        $this->Incident_Action = IncidentAction::with('IncidentAction')->get();
         return view('livewire.event-report-list.insident.index',[
             'Incident'=>PanelIncident::with(['Incident.eventType','Incident.eventSubType','Incident.workgroup.CompanyLevel.BussinessUnit','Incident.repportBy','Incident.repportTo','WorkflowStep.StatusCode'])->paginate(100, ['*'], 'IncidentPage'),
         ])->extends('navigation.homebase', ['header' => 'Incident report'])->section('content');

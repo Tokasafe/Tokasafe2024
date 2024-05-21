@@ -58,7 +58,7 @@
                         <th>{{ $UserSecurity->firstItem() + $index }}</th>
                         <td>{{ $item->workflow }}</td>
                         <td>
-                           {{$item->eventsubtype->name}}
+                           {{$item->event_type->name}}
                         </td>
                         <td>{{ $item->People->lookup_name }}</td>
                         <td>{{ $item->Workgroup->CompanyLevel->BussinessUnit->name }}-{{ $item->Workgroup->CompanyLevel->deptORcont }}-{{ $item->Workgroup->job_class }}

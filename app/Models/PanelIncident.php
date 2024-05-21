@@ -18,4 +18,12 @@ class PanelIncident extends Model
     {
         return $this->belongsTo(WorkflowAdministration::class, 'workflow_step');
     }
+    public function AssignTo()
+    {
+        return $this->belongsTo(People::class, 'assignTo');
+    }
+    public function Also_assignTo()
+    {
+        return $this->belongsTo(People::class, 'also_assignTo');
+    }
 }
