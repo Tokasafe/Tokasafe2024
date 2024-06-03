@@ -1,13 +1,14 @@
 <div>
     @include('toast.toast')
     <div class="flex items-center justify-between bg-gray-300 rounded-t-lg">
-
         <div class="flex flex-col">
             <div class="flex flex-row pl-2 text-xs w-80">
                 <div class="font-semibold w-36">{{ __('Current_Step') }} {{$responsibleRole}}</div>
                 <div class="w-full font-bold">: {{ $current_step }}</div>
             </div>
             <form  wire:submit.prevent='storeUpdate' class="flex sm:flex-row flex-col  items-center  gap-1 pl-2 py-0.5 text-xs m-[3px]">
+                @csrf
+            @if ($userController)
                 <label class="block w-full sm:max-w-xs ">
                     <x-span-label :value="__('Proceed_To')" />
                     <select wire:model='proceedTo'
@@ -15,7 +16,7 @@
                         <option value="" selected>{{ __('select_option') }}</option>
                         @foreach ($Workflow as $value)
                             <option value="{{ $value->destination_1 }}">{{ $value->destination_1_label }}</option>
-                            @if (!empty($value->destination_2))
+                            @if ($value->destination_2)
                                 <option value="{{ $value->destination_2 }}">{{ $value->destination_2_label }}</option>
                             @elseif($value->checkCancel)
                                 <option value="{{ $value->checkCancel }}">{{ $value->checkCancel }}</option>
@@ -59,9 +60,9 @@
                         wire:loading.class="bg-rose-500 loading loading-spinner loading-sm"></span>
                 </button>
             </form>
+            @endif
         </div>
         <div class="hidden text-xs sm:block">
-            @if ($userController)
             <button
                 class="hidden mr-4 font-bold text-blue-500 btn btn-xs btn-circle btn-ghost tooltip tooltip-left lg:block"
                 data-tip="{{ $moderator }} ">
@@ -70,7 +71,7 @@
                         d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 00-13.074.003z" />
                 </svg>
             </button>
-        @endif
+        
         </div>
     </div>
 </div>

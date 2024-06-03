@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Guest\EventReportList\Hazard;
 
 use Livewire\Component;
 use App\Models\HazardId;
+use App\Models\EventType;
 use App\Models\Workgroup;
 use App\Models\EventAction;
 use App\Models\EventSubType;
@@ -13,14 +14,14 @@ use App\Models\PanelHazardId;
 class Index extends Component
 {
     use WithPagination;
-    public $eventAction=[];
-    public $event_action=[];
+    public $eventAction = [];
+    public $event_action = [];
     public $eventType;
     public $reference;
     public $documentation;
     public $IdData;
+    public $search_wg;
     public $month = '';
-    public $search_wg = '';
     public $tglMulai = '';
     public $endDate = '';
     public $dateRange = '';
@@ -40,7 +41,6 @@ class Index extends Component
     public function TglAkhir($value)
     {
         if (!is_null($value)) {
-
             $this->endDate = date('Y-m-d', strtotime($value));
             // dd($this->endDate);
         }
@@ -51,31 +51,52 @@ class Index extends Component
             if (!empty(HazardId::orderby('tanggal_kejadian', 'asc')->first()->tanggal_kejadian)) {
                 $this->tglMulai = HazardId::orderby('tanggal_kejadian', 'asc')->first()->tanggal_kejadian;
                 $this->endDate = HazardId::orderby('tanggal_kejadian', 'desc')->first()->tanggal_kejadian;
-            }
-            else{
-                $this->tglMulai="";
-                $this->endDate="";
+            } else {
+                $this->tglMulai = "";
+                $this->endDate = "";
             }
         }
         if (!empty($this->dateRange)) {
-            $this->month='';
+            $this->month = '';
+        } elseif (!empty($this->month)) {
+            $this->dateRange = '';
         }
-        elseif (!empty($this->month)) {
-            $this->dateRange='';
-        }
-
         $this->event_action = EventAction::with('HazardId')->get();
         return view('livewire.guest.event-report-list.hazard.index',[
             'PanelHazardId' => PanelHazardId::with([
                 'Hazard.EventSubType',
                 'Hazard.Workgroup.CompanyLevel.BussinessUnit',
                 'WorkflowStep.StatusCode',
-
-            ])->dateRange([trim($this->tglMulai), trim($this->endDate)])->month(trim($this->month))->reference(trim($this->search_eventsubtype))->workgroup(trim($this->search_wg))->latest()->paginate(10),
+            ])->dateRange([trim($this->tglMulai), trim($this->endDate)])->month(trim($this->month))->reference(trim($this->search_eventsubtype))->workgroup(trim($this->search_wg))->latest()->paginate(10, ['*'], 'panelHazardIdPage'),
+            'EventType' => EventType::orderBy('name')->where('eventCategory_id',1)->get(),
             'EventSubType' => EventSubType::where('eventType_id', 1)->get(),
-            'Workgroup'=> Workgroup::with([
+            'Workgroup' => Workgroup::with([
                 'CompanyLevel',
-                'CompanyLevel.BussinessUnit',])->orderBy('companyLevel_id')->get()
+                'CompanyLevel.BussinessUnit',
+            ])->get()
         ])->extends('navigation.guest.guestbase', ['header' => 'Hazard report'])->section('contentUser');
+    }
+    public function delete($id)
+    {
+        $this->IdData = $id;
+        $this->reference = HazardId::whereId($id)->first()->reference;
+        $this->documentation = HazardId::whereId($id)->first()->documentation;
+    }
+    public function deleteFile()
+    {
+        try {
+            EventAction::where('event_hzd_id', $this->IdData)->delete();
+            HazardId::find($this->IdData)->delete();
+            if ($this->documentation) {
+                unlink(storage_path('app/public/documents/' . $this->documentation));
+            }
+            session()->flash('success', "Hazard Report Deleted Successfully!!");
+        } catch (\Exception $e) {
+            session()->flash('error', "Something goes wrong!!");
+        }
+    }
+    public function paginationView()
+    {
+        return 'livewire.pagination';
     }
 }

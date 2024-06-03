@@ -10,6 +10,7 @@ use App\Models\EventType;
 use App\Models\Workgroup;
 use App\Models\CompanyLevel;
 use App\Models\EventSubType;
+use App\Models\UserSecurity;
 use Livewire\WithPagination;
 use App\Models\EventLocation;
 use App\Models\PanelHazardId;
@@ -17,7 +18,6 @@ use Livewire\WithFileUploads;
 use App\Models\RiskAssessment;
 use App\Models\RiskLikelihood;
 use App\Models\RiskConsequence;
-use App\Models\UserSecurity;
 
 class Detail extends Component
 {
@@ -29,16 +29,16 @@ class Detail extends Component
     public $workgroup_id;
     public $radio_select;
     public $waktu;
-    public $show=false;
     public $lokasi;
-    public $search_reportTo='';
+    public $search_reportTo = '';
     public $pengawas_area;
     public $pengawas_area_id;
     public $nama_pelapor;
     public $nama_pelapor_id;
     public $event_subtype;
     public $documentation;
-    public $documentation1;
+    public $fileUpload;
+    public $filename;
     public $tanggal_kejadian;
     public $search_reportBy = '';
     public $search_workgroup = '';
@@ -67,12 +67,17 @@ class Detail extends Component
     public $showWG = true;
     public $showAccess = false;
     public $data_id;
+    public $id_people;
+    public $task;
+    public $current_step;
+    public $userController = false;
     public $hazardClose;
+    public $ERM_Assigned;
     public function mount($id)
     {
         $model = HazardId::find($id);
         if ($model === null) {
-           abort(404);
+            abort(404);
         }
 
         $HazardId = HazardId::whereId($id)->first();
@@ -81,10 +86,10 @@ class Detail extends Component
         $c = $HazardId->Workgroup->job_class;
 
         $this->data_id = $HazardId->id;
-        $close = PanelHazardId::where('hazard_id',$this->data_id)->first()->WorkflowStep->name;
-        if ($close ==='Closed' || $close ==='Cancelled') {
+        $close = PanelHazardId::where('hazard_id', $this->data_id)->first()->WorkflowStep->name;
+        $this->ERM_Assigned = PanelHazardId::where('hazard_id', $this->data_id)->first()->WorkflowStep->name;
+        if ($close === 'Closed' || $close === 'Cancelled') {
             $this->hazardClose = $close;
-            
         }
         $this->event_subtype = $HazardId->event_subtype;
         $this->nama_pelapor = $HazardId->People->lookup_name;
@@ -96,7 +101,7 @@ class Detail extends Component
         $this->pengawas_area_id = $HazardId->pengawas_area;
         $this->lokasi = $HazardId->lokasi;
         $this->workgroup_id = $HazardId->workgroup;
-        $this->documentation = $HazardId->documentation;
+        $this->filename = $HazardId->documentation;
         $this->rincian_bahaya = $HazardId->rincian_bahaya;
         $this->tindakan_perbaikan = $HazardId->tindakan_perbaikan;
         $this->tindakan_perbaikan_disarankan = $HazardId->tindakan_perbaikan_disarankan;
@@ -105,23 +110,12 @@ class Detail extends Component
         $this->potential_likelihood = $HazardId->potential_likelihood;
         $this->tindakan_perbaikan_dilakuan = $HazardId->tindakan_perbaikan_dilakuan;
         $this->komentar = $HazardId->komentar;
+        $this->task = $HazardId->task;
         $this->reference = $HazardId->reference;
-        //    dd($this->pengawas_area_id);
     }
 
     public function render()
     {
-        if (auth()->user()->role_users_id==2) {
-        $user_id = People::where('network_username',auth()->user()->username)->first()->id;
-       $userIn = UserSecurity::whereIn('user_id',[$user_id])->pluck('workflow')->toArray();
-            if (in_array('Event Report Manager', $userIn)) {
-               $this->show =true;
-            }
-            else{
-                $this->show =false;
-            }
-        }
-
         $this->click();
         if (!empty($this->actual_outcome)) {
             $this->actual_outcome_description = RiskConsequence::whereId($this->actual_outcome)->first()->description;
@@ -138,7 +132,11 @@ class Detail extends Component
         } else {
             $this->potential_likelihood_description = '';
         }
-
+        if (!empty($this->documentation)) {
+            $file_name = $this->documentation->getClientOriginalName();
+            $this->fileUpload  = pathinfo($file_name, PATHINFO_EXTENSION);
+            $this->filename = null;
+        }
 
         if (!empty($this->radio_select)) {
             if ($this->radio_select == 'companyLevel') {
@@ -152,18 +150,37 @@ class Detail extends Component
 
             $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
         }
-        return view('livewire.guest.event-report-list.hazard.detail',[
+
+
+
+        if ($this->ERM_Assigned === "ERM Assigned") {
+            $this->userController = true;
+        } else {
+            $this->userController = false;
+        }
+
+        return view('livewire.guest.event-report-list.hazard.detail', [
             'LocationEvent' => EventLocation::get(),
             'EventType' => EventType::get(),
-            'EventSubType' => EventSubType::where('eventType_id', 1)->get(),
-            'People' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(10),
-            'Supervisor' => People::with('Employer')->searchto(trim($this->search_reportTo))->paginate(10),
+            'EventSubType' => EventSubType::with('EventType')->where('eventType_id', 1)->get(),
+            'People' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(10,  ['*'], 'dtPeople'),
+            'Supervisor' => People::with('Employer')->searchto(trim($this->search_reportTo))->paginate(10,  ['*'], 'dtSupervisor'),
             'Company' => Companies::with(['CompanyCategory'])->searchcompany(trim($this->search_company))->get(),
             'Consequence' => RiskConsequence::get(),
             'Likelihood' => RiskLikelihood::get(),
         ])->extends('navigation.guest.guestbase', ['header' => 'Hazard report'])->section('contentUser');
     }
 
+    // FUNCTION BTN MODAL
+    public function previousPage($pageName = 'page')
+    {
+        $this->setPage(max($this->paginators[$pageName] - 1, 1), $pageName);
+    }
+
+    public function nextPage($pageName = 'page')
+    {
+        $this->setPage($this->paginators[$pageName] + 1, $pageName);
+    }
     public function wgClick()
     {
         $this->openModalWG = 'modal-open';
@@ -236,9 +253,9 @@ class Detail extends Component
             $this->reportToClickClose();
         }
     }
-    public function download($id)
+    public function download()
     {
-        $name = HazardId::whereId($id)->first()->documentation;
+        $name = HazardId::whereId($this->data_id)->first()->documentation;
         return response()->download(storage_path('app/public/documents/' . $name));
     }
     public function clearSearchWg()
@@ -251,15 +268,13 @@ class Detail extends Component
     }
     public function store()
     {
-       
-        if (empty($this->documentation1)) {
-            $file_name = $this->documentation;
-          
+
+        if (!$this->documentation) {
+            $file_name = $this->filename;
         } else {
 
-            $file_name = $this->documentation1->getClientOriginalName();
-            $this->documentation1->storeAs('public/documents', $file_name);
-            
+            $file_name = $this->documentation->getClientOriginalName();
+            $this->documentation->storeAs('public/documents', $file_name);
         }
 
         $this->validate([
@@ -276,6 +291,7 @@ class Detail extends Component
             'actual_outcome' => 'required',
             'potential_consequence' => 'required',
             'potential_likelihood' => 'required',
+            'task' => 'required',
             // 'tindakan_perbaikan_dilakuan' => 'required',
 
         ]);
@@ -293,12 +309,15 @@ class Detail extends Component
                 'tindakan_perbaikan_disarankan' => $this->tindakan_perbaikan_disarankan,
                 'documentation' => $file_name,
                 'komentar' => $this->komentar,
+                'task' => $this->task,
                 'actual_outcome' => $this->actual_outcome,
                 'potential_consequence' => $this->potential_consequence,
                 'potential_likelihood' => $this->potential_likelihood,
                 // 'tindakan_perbaikan_dilakuan' => $this->tindakan_perbaikan_dilakuan,
             ]);
-            return redirect()->route('hazardDetailsGuest', ['id' => $this->data_id]);
+
+
+            return redirect()->route('hazardDetails', ['id' => $this->data_id]);
         } catch (\Exception $ex) {
             session()->flash('success', 'Something goes wrong!!');
         }

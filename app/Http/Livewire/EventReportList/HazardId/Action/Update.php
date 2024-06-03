@@ -18,8 +18,6 @@ class Update extends Component
     public $action_condition = '';
     public $due_date = '';
     public $competed = '';
-    public $tanggal_mulai = '';
-    public $tanggal_selesai = '';
     public $search_reportBy = '';
     public $responsibility;
     public $responsibility_id;
@@ -33,10 +31,12 @@ class Update extends Component
 
             $this->data_id = $value;
             $EventAction = EventAction::where('id', $this->data_id)->first();
-            $this->report = $EventAction->report;
+            $this->report = $EventAction->HazardId->task;
             $this->followup_action = $EventAction->followup_action;
             $this->actionee_comments = $EventAction->actionee_comments;
             $this->action_condition = $EventAction->action_condition;
+            $this->due_date =($EventAction->due_date)? date('d-m-Y', strtotime($EventAction->due_date)):'';
+            $this->competed =($EventAction->competed)? date('d-m-Y', strtotime($EventAction->competed)):'';
 
             if (!empty($EventAction->due_date)) {
                 $this->due_date = date('d-m-Y', strtotime($EventAction->due_date));
@@ -88,15 +88,15 @@ class Update extends Component
 
     public function store()
     {
-        if (!empty($this->due_date)) {
-            $this->tanggal_mulai = date('Y-m-d', strtotime($this->due_date));
+        if ($this->competed) {
+            $this->competed =  date('Y-m-d', strtotime($this->competed));
         } else {
-            $this->tanggal_mulai = null;
+            $this->competed=null;
         }
-        if (!empty($this->competed)) {
-            $this->tanggal_selesai = date('Y-m-d', strtotime($this->competed));
+        if ($this->due_date) {
+            $this->due_date =  date('Y-m-d', strtotime($this->due_date));
         } else {
-            $this->tanggal_selesai = null;
+            $this->due_date=null;
         }
 
         try {

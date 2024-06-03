@@ -12,6 +12,10 @@ class Index extends Component
     }
     public function addTodo()
     {
-        $this->emit('OpenModalHzd', 'modal-open');
+        $this->emit('OpenModalHzd', ' modal-open');
+    }
+    public function addTodoIncident()
+    {
+        $this->emit('OpenModalIncident', 'modal modal-open');
     }
 }

@@ -58,12 +58,14 @@ class Create extends Component
     public $nama_pelapor_id;
     public $event_subtype;
     public $nama_pelapor;
+    public $task;
+    public $fileUpload;
     public $statusER;
     public $modal = '';
 
     public $CompanyLevel = [];
     public $EventSubType = [];
-    public $openModalWG = '';
+    public $openModalWG = "modal";
     public $openModalreportBy = '';
     public $openModalreportTo = '';
     public $search_reportTo = '';
@@ -108,11 +110,13 @@ class Create extends Component
         } else {
             $this->potential_likelihood_description = '';
         }
-
-        if (empty($this->nama_pelapor)) {
+        if ($this->documentation) {
+            $file_name = $this->documentation->getClientOriginalName();
+            $this->fileUpload = pathinfo($file_name, PATHINFO_EXTENSION);
+        }
+        if (!$this->nama_pelapor) {
             if (!empty(auth()->user()->username)) {
-                if (!empty(People::where('network_username', auth()->user()->username)->first()->lookup_name)) {
-                    # code...
+                if (People::where('network_username', auth()->user()->username)->first()->lookup_name) {
                     $this->nama_pelapor = People::where('network_username', auth()->user()->username)->first()->lookup_name;
                     $this->nama_pelapor_id = People::where('network_username', auth()->user()->username)->first()->id;
                 }
@@ -120,14 +124,14 @@ class Create extends Component
                 $this->nama_pelapor = '';
             }
         }
-
-        if (!empty($this->radio_select)) {
-            if ($this->radio_select == 'companyLevel') {
+        if ($this->radio_select) {
+            if ($this->radio_select === 'companyLevel') {
+                $this->showWG = false;
                 $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_workgroup))->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
             } else {
-                if ($this->showWG == true) {
-                    $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
-                }
+               
+                $this->showWG = true;
+                $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
             }
         } else {
 
@@ -137,8 +141,9 @@ class Create extends Component
         return view('livewire.event-report-list.hazard-id.create', [
             'LocationEvent' => EventLocation::get(),
             'EventType' => EventType::get(),
-            'People' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(10, ['*'], pageName: 'EnPeople'),
-            'Supervisor' => People::with('Employer')->searchto(trim($this->search_reportTo))->paginate(10, ['*'], 'EnSupervisor'),
+            'People' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(100, ['*'], 'ReportByPage'),
+            'Supervisor' => People::with('Employer')->search(trim($this->search_reportTo))->paginate(100, ['*'], 'ReportToPage'),
+           
             'Company' => Companies::with(['CompanyCategory'])->searchcompany(trim($this->search_company))->get(),
             'Consequence' => RiskConsequence::get(),
             'Likelihood' => RiskLikelihood::get(),
@@ -163,11 +168,11 @@ class Create extends Component
     // FUNCTION BTN MODAL
     public function wgClick()
     {
-        $this->openModalWG = 'modal-open';
+        $this->openModalWG = "modal modal-open";
     }
     public function wgClickClose()
     {
-        $this->openModalWG = '';
+        $this->openModalWG = 'modal';
         $this->clearSearchWg();
     }
     public function reportByClick()
@@ -200,7 +205,8 @@ class Create extends Component
     }
     public function cari($id)
     {
-        $this->showWG = false;
+        $this->radio_select = '';
+        $this->showWG = true;
         if (!empty($id)) {
             $id_Dept = CompanyLevel::with(['BussinessUnit'])->where('id', $id)->first()->id;
             $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->where('companyLevel_id', $id_Dept)->get();
@@ -247,6 +253,7 @@ class Create extends Component
 
         if (!empty($this->documentation)) {
             $file_name = $this->documentation->getClientOriginalName();
+            $this->fileUpload = pathinfo($file_name, PATHINFO_EXTENSION);
             $this->documentation->storeAs('public/documents', $file_name);
         } else {
             $file_name = "";
@@ -267,6 +274,7 @@ class Create extends Component
             'actual_outcome' => 'required',
             'potential_consequence' => 'required',
             'potential_likelihood' => 'required',
+            'task' => 'required',
 
             'documentation' => 'nullable|mimes:jpg,jpeg,png,svg,gif,xlsx,pdf,docx',
         ]);
@@ -287,6 +295,7 @@ class Create extends Component
                 'actual_outcome' => $this->actual_outcome,
                 'potential_consequence' => $this->potential_consequence,
                 'potential_likelihood' => $this->potential_likelihood,
+                'task' => $this->task,
                 'documentation' => $file_name
             ]);
 

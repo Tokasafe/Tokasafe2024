@@ -65,7 +65,7 @@ class Index extends Component
             'Dept'=>Department::get(),
             'CompanyCategory'=>CompanyCategory::get(),
             'ManhoursRegister'=> ManhoursRegister::company(trim($this->searchCompany))->dateRange([trim($this->tglMulai), trim($this->endDate)])->whereIn('company',$this->namecompanies)->orderBy('date','DESC')->orderBy('company','DESC')->paginate(20)
-        ])->extends('navigation.guest.guestbase', ['header' => 'Manhours Register'])->section('contentUser');
+        ])->extends('navigation.guest.guestbase', ['header' => 'Manhours Register','title'])->section('contentUser');
     }
     public function update($id)
     {

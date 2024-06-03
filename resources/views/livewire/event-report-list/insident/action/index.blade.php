@@ -61,7 +61,7 @@
 
                 <tbody>
                     @forelse($IncidentAction as $index =>$value )
-                        
+                      
                     <tr class="border-b-2 border-gray-400">
                         <td>
                             <table class="table table-xs">
@@ -79,7 +79,7 @@
                                        <p class="text-justify text-[11px] font-bold">Observation, Hazard or Non-Conformance</p>
                                     </td>
                                     <td>
-                                        <p class="text-[10px]">{{$value->description_incident}}</p>
+                                        <p class="text-[10px]">{{$value->IncidentAction->task}}</p>
                                     </td>
                                 </tr>
                               
@@ -180,7 +180,7 @@
                    
                     @empty
                         <tr>
-                            <th class="text-lg text-center text-rose-500 animate-pulse">{{__('Tindakan_Perbaikan_empty')}}</th>
+                            <th class="font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-500 animate-pulse">{{__('Tindakan_Perbaikan_empty')}}</th>
                         </tr>
                     @endforelse
 

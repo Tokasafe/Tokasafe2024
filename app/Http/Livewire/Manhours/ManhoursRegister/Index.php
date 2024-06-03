@@ -54,7 +54,7 @@ class Index extends Component
             'Dept' => Department::get(),
             'CompanyCategory' => CompanyCategory::get(),
             'ManhoursRegister' =>  $MR
-        ])->extends('navigation.homebase', ['header' => 'Manhours Register'])->section('content');
+        ])->extends('navigation.homebase', ['header' => 'Manhours Register','title'=>'Manhours Register'])->section('content');
     }
     public function update($id)
     {

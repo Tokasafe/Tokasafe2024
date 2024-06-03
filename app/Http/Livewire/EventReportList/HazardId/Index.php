@@ -70,12 +70,13 @@ class Index extends Component
                 'Hazard.Workgroup.CompanyLevel.BussinessUnit',
                 'WorkflowStep.StatusCode',
             ])->dateRange([trim($this->tglMulai), trim($this->endDate)])->month(trim($this->month))->reference(trim($this->search_eventsubtype))->workgroup(trim($this->search_wg))->latest()->paginate(10, ['*'], 'panelHazardIdPage'),
+            'EventType' => EventType::orderBy('name')->where('eventCategory_id',1)->get(),
             'EventSubType' => EventSubType::where('eventType_id', 1)->get(),
             'Workgroup' => Workgroup::with([
                 'CompanyLevel',
                 'CompanyLevel.BussinessUnit',
             ])->get()
-        ])->extends('navigation.homebase', ['header' => 'Hazard report'])->section('content');
+        ])->extends('navigation.homebase', ['header' => 'Hazard report','title' => 'Hazard report'])->section('content');
     }
     public function delete($id)
     {

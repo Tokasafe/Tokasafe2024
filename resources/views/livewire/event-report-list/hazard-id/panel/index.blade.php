@@ -1,12 +1,12 @@
 <div>
-    <div class="items-center justify-between flex bg-gray-300 rounded-t-lg ">
+    <div class="flex items-center justify-between p-0 bg-gray-300 rounded-t-lg">
         <div class="flex flex-row pl-2 bg-gray-300 rounded-t-lg w-80">
-            <div class="w-36 text-xs font-semibold ">{{ __('Current_Step') }}</div>
+            <div class="text-xs font-semibold w-36 ">{{ __('Current_Step') }} </div>
             <div class="w-full text-xs font-extrabold">: {{ $current_step }}</div>
         </div>
         @if ($userController)
             <button
-                class="btn btn-xs btn-circle btn-ghost  right-2 top-2 tooltip tooltip-left font-bold text-blue-500 hidden lg:block"
+                class="hidden font-bold text-blue-500 btn btn-xs btn-circle btn-ghost right-2 top-2 tooltip tooltip-left lg:block"
                 data-tip="{{ $moderator }} ">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 pl-1">
                     <path
@@ -18,20 +18,20 @@
     <form wire:submit.prevent='store'>
         @csrf
         @if ($userController)
-            <div class="z-20 flex flex-col sm:flex-row gap-1 pb-1 px-2 bg-gray-300 shadow-md ">
+            <div class="z-20 flex flex-col gap-1 px-2 pb-1 bg-gray-300 shadow-md sm:flex-row ">
                 <div class="w-full sm:max-w-max form-control">
                     <x-input-label-req :value="__('Proceed_To')" />
                     <select wire:model='proceedTo'
                         class="@error('proceedTo') border-rose-500 border-2 @enderror w-full sm:max-w-max select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
                         <option value="" selected>Select an option</option>
                         @foreach ($Workflow as $value)
-                            <option value="{{ $value->destination_1 }}">{{ $value->destination_1_label }}</option>
-                            @if (!empty($value->destination_2))
-                                <option value="{{ $value->destination_2 }}">{{ $value->destination_2_label }}</option>
-                            @elseif(!empty($value->checkCancel))
-                                <option value="{{ $value->checkCancel }}">{{ $value->checkCancel }}</option>
-                            @endif
-                        @endforeach
+                        <option value="{{ $value->destination_1 }}">{{ $value->destination_1_label }}</option>
+                        @if ($value->destination_2)
+                            <option value="{{ $value->destination_2 }}">{{ $value->destination_2_label }}</option>
+                        @elseif($value->checkCancel)
+                            <option value="{{ $value->checkCancel }}">{{ $value->checkCancel }}</option>
+                        @endif
+                    @endforeach
                     </select>
                     <x-input-error :messages="$errors->get('proceedTo')" class="mt-0" />
                 </div>

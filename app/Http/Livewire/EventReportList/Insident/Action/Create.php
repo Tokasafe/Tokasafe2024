@@ -98,10 +98,10 @@ class Create extends Component
                 'actionee_comments' => $this->actionee_comments,
                 'action_condition' => $this->action_condition,
                 'responsibility' => $this->responsibility,
-                'orginal_dueDate' =>$this->orginal_dueDate,
-                'dueDate' =>$this->dueDate,
-                'completion_date' =>$this->completion_date,
-                'personal_reminder' => $this->personal_reminder,
+                'orginal_dueDate' =>date('Y-m-d',strtotime($this->orginal_dueDate)),
+                'dueDate' =>date('Y-m-d',strtotime($this->dueDate)),
+                'completion_date' => date('Y-m-d',strtotime($this->completion_date)),
+                'personal_reminder' => date('Y-m-d',strtotime($this->personal_reminder)),
                 'incident_report_id' => $this->data_id,
             ]);
             session()->flash('success', 'Data added Successfully!!');

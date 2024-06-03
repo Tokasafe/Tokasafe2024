@@ -38,7 +38,7 @@ class Create extends Component
             $this->hazardClose = $close;
         }
         $ER = HazardId::whereid($this->real_id)->first();
-       $this->report = $ER->rincian_bahaya;
+       $this->report = $ER->task;
     }
     public function render()
     {
@@ -76,12 +76,12 @@ class Create extends Component
     public function storeAction()
     {
        
-        if (!empty($this->competed)) {
+        if ($this->competed) {
             $this->competed =  date('Y-m-d', strtotime($this->competed));
         } else {
             $this->competed=null;
         }
-        if (!empty($this->due_date)) {
+        if ($this->due_date) {
             $this->due_date =  date('Y-m-d', strtotime($this->due_date));
         } else {
             $this->due_date=null;
@@ -98,21 +98,11 @@ class Create extends Component
                 'followup_action' => $this->followup_action,
                 'actionee_comments' => $this->actionee_comments,
                 'action_condition' => $this->action_condition,
-                'due_date' =>  $this->due_date,
-                'competed' => $this->competed,
+                'due_date' =>  date('Y-m-d',strtotime($this->due_date)),
+                'competed' => date('Y-m-d',strtotime($this->competed)),
                 'responsibility' => $this->responsibility_id,
                 'event_hzd_id' => $this->real_id,
             ]);
-            $decoded_id = $this->real_id;
-            // if (!empty(User::where('username', $this->email_Responsibilty)->first()->email)) {
-            //     $email = User::where('username', $this->email_Responsibilty)->first()->email;
-                
-            //     $url = "http://tokasafe.tokatindung.com:8080/eventReport/hazard_id/detail/$decoded_id";
-            //     if (!empty($email)) {
-            //         Mail::to($email)->send(new responsibilityAction( $this->responsibility, $this->followup_action, $url));
-            //     }
-            // }
-
             session()->flash('success', 'Data Updated Successfully!!');
             $this->emit('Add_action');
             $this->clearFields();

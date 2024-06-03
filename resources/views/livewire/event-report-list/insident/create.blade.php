@@ -1,7 +1,44 @@
 <div>
+    @push('styles')
+        <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+    @endpush
+    @push('scripts')
+    <script>
+        flatpickr("#tanggal", {
+            disableMobile: "true",
+            dateFormat: "d-m-Y", //defaults to "F Y"
+        });
+
+        flatpickr("#tglLapor", {
+            disableMobile: "true",
+            dateFormat: "d-m-Y", //defaults to "F Y"
+        });
+        flatpickr("#jamKejadian", {
+            disableMobile: "true",
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            time_24hr: true
+        });
+       
+        flatpickr("#month", {
+            disableMobile: "true",
+            plugins: [
+                new monthSelectPlugin({
+                    shorthand: true, //defaults to false
+                    dateFormat: "M-Y", //defaults to "F Y"
+                    altFormat: "F Y", //defaults to "F Y"
+                    theme: "dark" // defaults to "light"
+                })
+            ]
+        });
+
+        
+    </script>
+    @endpush
     <!-- You can open the modal using ID.showModal() method -->
     @include('toast.toast')
-    <label class="btn btn-xs btn-accent btn-square btn-outline" for="my_modal_3">
+    <label wire:click='open_modal' class="btn btn-xs btn-accent btn-square btn-outline">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
             <path fill-rule="evenodd"
                 d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25v2.5h2.5a.75.75 0 0 1 0 1.5h-2.5v2.5a.75.75 0 0 1-1.5 0v-2.5h-2.5a.75.75 0 0 1 0-1.5h2.5v-2.5a.75.75 0 0 1 1.5 0Z"
@@ -9,21 +46,23 @@
         </svg>
 
     </label>
-    <input type="checkbox" id="my_modal_3" class="modal-toggle" />
-    <div id="my_modal_3" class="modal ">
-        <div class="modal-box sm:w-11/12 sm:max-w-5xl">
 
+    <div id="my_modal_3" class="{{ $openModal }} ">
+        <div class="max-w-7xl xl:w-11/12  xl:h-[800px] modal-box">
+            <button
+                class="absolute z-10 font-bold text-blue-500 btn btn-sm btn-circle btn-ghost right-2 top-2 tooltip tooltip-left"
+                data-tip="{{ __('info') }}">?</button>
             <div
                 class="font-extrabold text-transparent divider divider-accent text-1xl bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
                 {{ __('reportIncident') }}</div>
-            <div class="overflow-auto h-80">
-                <form wire:submit.prevent='store'>
+            <form wire:submit.prevent='store'>
+                <div class="p-2 overflow-y-auto shadow-inner sm:60 md:h-80 xl:h-[640px]">
                     @csrf
-                    <div class="flex flex-wrap gap-1">
-                        <div class="w-full max-w-md form-control">
+                    <div class="flex flex-wrap gap-1 xl:flex-none xl:grid xl:grid-cols-2">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('et')" />
                             <select wire:model='event_type'
-                                class=" @error('event_type') border-rose-500 border-2 @enderror select select-bordered select-xs w-full max-w-md focus:outline-none  focus:ring-success focus:ring-1">
+                                class=" @error('event_type') border-rose-500 border-2 @enderror select select-bordered select-xs w-full xl:max-w-xl sm:max-w-sm focus:outline-none  focus:ring-success focus:ring-1">
                                 <option selected>{{ __('select_option') }}</option>
                                 @foreach ($EventType as $key)
                                     <option value="{{ $key->id }}">{{ $key->name }}</option>
@@ -31,10 +70,10 @@
                             </select>
                             <x-input-error :messages="$errors->get('event_type')" class="mt-0" />
                         </div>
-                        <div class="w-full max-w-md form-control">
+                        <div class="w-full xl:max-w-xl sm:max-w-sm form-control">
                             <x-input-label-req :value="__('est')" />
                             <select wire:model='sub_type'
-                                class=" @error('sub_type') border-rose-500 border-2 @enderror select select-bordered select-xs w-full max-w-md focus:outline-none  focus:ring-success focus:ring-1">
+                                class=" @error('sub_type') border-rose-500 border-2 @enderror select select-bordered select-xs w-full xl:max-w-xl sm:max-w-sm focus:outline-none  focus:ring-success focus:ring-1">
                                 <option selected>{{ __('select_option') }}</option>
                                 @foreach ($EventSubType as $key)
                                     <option value="{{ $key->id }}">{{ $key->name }}</option>
@@ -42,13 +81,13 @@
                             </select>
                             <x-input-error :messages="$errors->get('sub_type')" class="mt-0" />
                         </div>
-                        <div class="w-full max-w-md form-control">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('rw')" />
                             <label class="join " wire:click='openWokrgroup'>
                                 <input type="text" placeholder="Type here" wire:model='workgroup' readonly
                                     class=" @error('workgroup') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1" />
                                 <label for=""
-                                    class="border btn btn-xs btn-square join-item border-info btn-info">
+                                    class="border btn btn-xs btn-square join-item  btn-info @error('workgroup') btn-error @enderror">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -59,13 +98,13 @@
                             </label>
                             <x-input-error :messages="$errors->get('workgroup')" class="mt-0" />
                         </div>
-                        <div class="w-full max-w-md form-control">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('nama_pelapor')" />
                             <label class="join" wire:click='openReportBy'>
                                 <input type="text" placeholder="Type here" wire:model='reporter_name' readonly
                                     class=" @error('reporter_name') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1" />
                                 <label for=""
-                                    class="border btn btn-xs btn-square join-item border-info btn-info">
+                                    class="border btn btn-xs btn-square join-item  btn-info @error('workgroup') btn-error @enderror">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -77,13 +116,13 @@
                             </label>
                             <x-input-error :messages="$errors->get('reporter_name')" class="mt-0" />
                         </div>
-                        <div class="w-full max-w-md form-control">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('pengawas_area')" />
                             <label wire:click='openReportTo' class="join">
                                 <input type="text" placeholder="Type here" wire:model='report_to'
                                     class=" @error('report_to') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered input-xs focus:outline-none  focus:ring-success focus:ring-1" />
                                 <label for=""
-                                    class="border btn btn-xs btn-square join-item border-info btn-info">
+                                    class="border btn btn-xs btn-square join-item  btn-info @error('workgroup') btn-error @enderror">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -95,10 +134,10 @@
                             </label>
                             <x-input-error :messages="$errors->get('report_to')" class="mt-0" />
                         </div>
-                        <div class="w-full max-w-md form-control">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('el')" />
                             <select wire:model='location'
-                                class=" @error('location') border-rose-500 border-2 @enderror select select-bordered select-xs w-full max-w-md focus:outline-none  focus:ring-success focus:ring-1">
+                                class=" @error('location') border-rose-500 border-2 @enderror select select-bordered select-xs w-full sm:max-w-xl focus:outline-none  focus:ring-success focus:ring-1">
                                 <option selected>{{ __('select_option') }}</option>
                                 @foreach ($Location as $value)
                                     <option value="{{ $value->id }}">{{ $value->name }}</option>
@@ -107,14 +146,14 @@
                             <x-input-error :messages="$errors->get('location')" class="mt-0" />
                         </div>
 
-                        <div class="w-full max-w-md form-control">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('tanggal_kejadian')" />
                             <input type="text" id="tglLapor" placeholder="Type here" wire:model='date_event'
                                 readonly
                                 class=" @error('date_event') border-rose-500 border-2 @enderror  w-full input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1" />
                             <x-input-error :messages="$errors->get('date_event')" class="mt-0" />
                         </div>
-                        <div class="w-full max-w-md form-control">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('time_event')" />
                             <input type="text" id="jamKejadian" placeholder="Type here" wire:model='time_event'
                                 readonly
@@ -123,10 +162,11 @@
                         </div>
 
 
-                        <div class="w-full max-w-md form-control ">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('BerpotensiLTI')" />
 
-                            <fieldset class="">
+                            <fieldset
+                                class="flex items-start p-[3px] border @error('potential_lti') border-rose-500 border-2 @enderror gap-0.5">
                                 <input wire:model.live="potential_lti" name="radio-10" id="yes"
                                     class="radio-xs peer/yes checked:bg-rose-500 radio" type="radio" name="status"
                                     value="Yes" />
@@ -142,10 +182,10 @@
                             </fieldset>
                             <x-input-error :messages="$errors->get('potential_lti')" class="mt-0" />
                         </div>
-                        <div class="w-full max-w-md form-control ">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label :value="__('insidenlingkungan')" />
                             <select wire:model='env_incident'
-                                class=" @error('env_incident') border-rose-500 border-2 @enderror select select-bordered select-xs w-full max-w-md focus:outline-none  focus:ring-success focus:ring-1">
+                                class=" @error('env_incident') border-rose-500 border-2 @enderror select select-bordered select-xs w-full sm:max-w-xl focus:outline-none  focus:ring-success focus:ring-1">
                                 <option selected>{{ __('select_option') }}</option>
                                 <option value="Level 1">Level 1</option>
                                 <option value="Level 2">Level 2</option>
@@ -153,14 +193,14 @@
                             </select>
                             <x-input-error :messages="$errors->get('env_incident')" class="mt-0 " />
                         </div>
-                        <div class="w-full max-w-md form-control">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('tugas')" />
                             <input type="text" placeholder="Type here" wire:model='task'
-                                class=" @error('task') border-rose-500 border-2 @enderror  w-full max-w-md input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1" />
+                                class=" @error('task') border-rose-500 border-2 @enderror  w-full sm:max-w-xl input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1" />
                             <x-input-error :messages="$errors->get('task')" class="mt-0" />
                         </div>
                         <div
-                            class="w-full max-w-md form-control     {{ $documentation ? 'flex flex-row' : '' }}">
+                            class="w-full sm:max-w-sm xl:max-w-xl form-control     {{ $documentation ? 'flex flex-row' : '' }}">
                             <div class="{{ $documentation ? 'flex-initial w-[650px]' : '' }} relative">
                                 <x-input-label :value="__('documentation')" />
                                 <input type="file" wire:model='documentation'
@@ -172,7 +212,7 @@
                             @if ($documentation)
                                 <div class="flex-none w-10 ">
                                     <div class="p-2 mt-4">
-                                       
+
                                         @include('livewire.event-report-list.insident.svgCreate')
 
                                     </div>
@@ -181,301 +221,196 @@
                         </div>
                     </div>
 
-                    <div>
-                        <div wire:ignore class="w-full max-w-md sm:max-w-screen-2xl form-control">
-                            <x-input-label-bahaya :value="__('deskripsi')" />
-                            <textarea id="editor1" placeholder="Bio" wire:model='description_incident'
-                                class="@error('description_incident') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                    <div class="flex flex-wrap gap-1 xl:flex-none xl:grid xl:grid-cols-2">
+                        <div>
+                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-xl">
+                                <x-input-label-bhy :value="__('deskripsi')" />
+                                <textarea id="description_incident" placeholder="Type here" wire:model='description_incident'
+                                    class="@error('description_incident') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                            </div>
+                            <x-input-error :messages="$errors->get('description_incident')" class="mt-0" />
                         </div>
-                        <x-input-error :messages="$errors->get('description_incident')" class="mt-0" />
-                    </div>
-                    <div>
-                        <div wire:ignore class="w-full max-w-md sm:max-w-screen-2xl form-control">
-                            <x-input-label-req :value="__('InvolvedPerson')" />
-                            <textarea id="editor2" placeholder="Bio" wire:model='involved_person'
-                                class="@error('involved_person') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                        <div>
+                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-xl">
+                                <x-input-label-req :value="__('InvolvedPerson')" />
+                                <textarea id="involved_person" placeholder="Type here" wire:model='involved_person'
+                                    class="@error('involved_person') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                            </div>
+                            <x-input-error :messages="$errors->get('involved_person')" class="mt-0" />
                         </div>
-                        <x-input-error :messages="$errors->get('involved_person')" class="mt-0" />
-                    </div>
-                    <div>
-                        <div wire:ignore class="w-full max-w-md sm:max-w-screen-2xl form-control">
-                            <x-input-label-req :value="__('InvolvedEquipment')" />
-                            <textarea id="editor3" placeholder="Bio" wire:model='involved_person'
-                                class="@error('involved_equipment') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                        <div>
+                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-xl">
+                                <x-input-label-req :value="__('InvolvedEquipment')" />
+                                <textarea id="involved_equipment" placeholder="Type here" wire:model='involved_equipment'
+                                    class="@error('involved_equipment') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                            </div>
+                            <x-input-error :messages="$errors->get('involved_equipment')" class="mt-0" />
                         </div>
-                        <x-input-error :messages="$errors->get('involved_equipment')" class="mt-0" />
-                    </div>
-                    <div>
-                        <div wire:ignore class="w-full max-w-md sm:max-w-screen-2xl form-control">
-                            <x-input-label-req :value="__('PreliminaryCauses')" />
-                            <textarea id="editor4" placeholder="Bio" wire:model='preliminary_causes'
-                                class="@error('preliminary_causes') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                        <div>
+                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-xl">
+                                <x-input-label-req :value="__('PreliminaryCauses')" />
+                                <textarea id="preliminary_causes" placeholder="Type here" wire:model='preliminary_causes'
+                                    class="@error('preliminary_causes') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                            </div>
+                            <x-input-error :messages="$errors->get('preliminary_causes')" class="mt-0" />
                         </div>
-                        <x-input-error :messages="$errors->get('preliminary_causes')" class="mt-0" />
-                    </div>
-                    <div>
-                        <div wire:ignore class="w-full max-w-md sm:max-w-screen-2xl form-control">
-                            <x-input-label-req :value="__('ImmediateActionTaken')" />
-                            <textarea id="editor5" placeholder="Bio" wire:model='imediate_action_taken'
-                                class="@error('imediate_action_taken') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                        <div>
+                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-xl">
+                                <x-input-label-req :value="__('ImmediateActionTaken')" />
+                                <textarea id="imediate_action_taken" placeholder="Type here" wire:model='imediate_action_taken'
+                                    class="@error('imediate_action_taken') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                            </div>
+                            <x-input-error :messages="$errors->get('imediate_action_taken')" class="mt-0" />
                         </div>
-                        <x-input-error :messages="$errors->get('imediate_action_taken')" class="mt-0" />
-                    </div>
-                    <div>
-                        <div wire:ignore class="w-full max-w-md sm:max-w-screen-2xl form-control">
-                            <x-input-label-req :value="__('KeyLearning')" />
-                            <textarea id="editor6" placeholder="Bio" wire:model='key_learning'
-                                class="@error('key_learning') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                        <div>
+                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-xl">
+                                <x-input-label-req :value="__('KeyLearning')" />
+                                <textarea id="key_learning" placeholder="Type here" wire:model='key_learning'
+                                    class="@error('key_learning') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                            </div>
+                            <x-input-error :messages="$errors->get('key_learning')" class="mt-0" />
                         </div>
-                        <x-input-error :messages="$errors->get('key_learning')" class="mt-0" />
                     </div>
                     @include('livewire.event-report-list.insident.tablePenilaian')
-            </div>
-            <div class="modal-action">
-                <button type="submit" id="my-submit" class="text-white btn btn-success btn-xs">Save
-                    <svg wire:loading.remove wire:target="store" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
-                        viewBox="0 0 20 20" fill="currentColor">
-                        <path
-                            d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h5v5.586l-1.293-1.293zM9 4a1 1 0 012 0v2H9V4z" />
-                    </svg>
-                    <span wire:loading wire:target="store" wire:loading.delay.long wire:loading.class="bg-rose-500"
-                        class="hidden loading loading-spinner loading-sm"></span>
-                </button>
-                <label for="my_modal_3" class="text-white btn btn-xs btn-error">Close!</label>
-            </div>
+                </div>
+
+                <div class=" modal-action">
+                    <button type="submit" id="my-submit" class="text-white btn btn-success btn-xs">Save
+                        <svg wire:loading.remove wire:target="store" xmlns="http://www.w3.org/2000/svg"
+                            class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path
+                                d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h5v5.586l-1.293-1.293zM9 4a1 1 0 012 0v2H9V4z" />
+                        </svg>
+                        <span wire:loading wire:target="store" wire:loading.delay.long
+                            wire:loading.class="bg-rose-500" class="hidden loading loading-spinner loading-sm"></span>
+                    </button>
+                    <label wire:click='close_modal' class="text-white btn btn-xs btn-error">Close!</label>
+                </div>
             </form>
         </div>
     </div>
     @include('livewire.event-report-list.insident.modal')
-
+    <style>
+        .ck-editor__editable[role="textbox"] {
+            /* Editing area */
+            /* min-height: 200px; */
+            padding: 25px !IMPORTANT;
+        }
+    </style>
     <script>
-        const editor = CKEDITOR.replace('editor1');
-        editor.config.uiColor = '#bae6fd';
-        editor.config.height = 150;
+        // description_incident
+        ClassicEditor
+            .create(document.querySelector('#description_incident'), {
+                toolbar: ['heading', 'undo', 'redo', 'bold', 'italic', 'numberedList', 'bulletedList', 'link']
 
-        editor.config.toolbar = [{
-                name: 'clipboard',
-                items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
-            },
-            {
-                name: 'editing',
-                items: ['Scayt']
-            },
+            })
+            .then(newEditor => {
 
-            {
-                name: 'tools',
-                items: ['Maximize']
-            },
-            {
-                name: 'basicstyles',
-                items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']
-            },
-            {
-                name: 'paragraph',
-                items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote']
-            },
-            {
-                name: 'styles',
-                items: ['Styles', 'Format']
-            },
+                newEditor.model.document.on('change:data', () => {
+                    @this.set('description_incident', newEditor.getData())
+                });
+                window.addEventListener('articleStore', event => {
+                    newEditor.setData('');
+                })
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        // involved_person
+        ClassicEditor
+            .create(document.querySelector('#involved_person'), {
+                toolbar: ['heading', 'undo', 'redo', 'bold', 'italic', 'numberedList', 'bulletedList', 'link']
 
-        ];
 
-        editor.on('change', function(event) {
-            // console.log(event.editor.getData())
-            @this.set('description_incident', event.editor.getData())
-        })
-        const editor2 = CKEDITOR.replace('editor2');
-        editor2.config.uiColor = '#bae6fd';
-        editor2.config.height = 150;
+            })
+            .then(newEditor => {
 
-        editor2.config.toolbar = [{
-                name: 'clipboard',
-                items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
-            },
-            {
-                name: 'editing',
-                items: ['Scayt']
-            },
+                newEditor.model.document.on('change:data', () => {
 
-            {
-                name: 'tools',
-                items: ['Maximize']
-            },
-            {
-                name: 'basicstyles',
-                items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']
-            },
-            {
-                name: 'paragraph',
-                items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote']
-            },
-            {
-                name: 'styles',
-                items: ['Styles', 'Format']
-            },
+                    @this.set('involved_person', newEditor.getData())
+                    window.addEventListener('articleStore', event => {
+                        newEditor.setData('');
+                    })
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        // involved_equipment
+        ClassicEditor
+            .create(document.querySelector('#involved_equipment'), {
+                toolbar: ['heading', 'undo', 'redo', 'bold', 'italic', 'numberedList', 'bulletedList', 'link']
 
-        ];
+            })
+            .then(newEditor => {
 
-        editor2.on('change', function(event) {
-            console.log(event.editor.getData())
-            @this.set('involved_person', event.editor.getData())
-        })
-        const editor3 = CKEDITOR.replace('editor3');
-        editor3.config.uiColor = '#bae6fd';
-        editor3.config.height = 150;
+                newEditor.model.document.on('change:data', () => {
+                    console.log(newEditor.getData());
+                    @this.set('involved_equipment', newEditor.getData())
+                    window.addEventListener('articleStore', event => {
+                        newEditor.setData('');
+                    })
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        // preliminary_causes
+        ClassicEditor
+            .create(document.querySelector('#preliminary_causes'), {
+                toolbar: ['heading', 'undo', 'redo', 'bold', 'italic', 'numberedList', 'bulletedList', 'link']
 
-        editor3.config.toolbar = [{
-                name: 'clipboard',
-                items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
-            },
-            {
-                name: 'editing',
-                items: ['Scayt']
-            },
+            })
+            .then(newEditor => {
 
-            {
-                name: 'tools',
-                items: ['Maximize']
-            },
-            {
-                name: 'basicstyles',
-                items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']
-            },
-            {
-                name: 'paragraph',
-                items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote']
-            },
-            {
-                name: 'styles',
-                items: ['Styles', 'Format']
-            },
+                newEditor.model.document.on('change:data', () => {
 
-        ];
+                    @this.set('preliminary_causes', newEditor.getData())
+                    window.addEventListener('articleStore', event => {
+                        newEditor.setData('');
+                    })
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        // imediate_action_taken
+        ClassicEditor
+            .create(document.querySelector('#imediate_action_taken'), {
+                toolbar: ['heading', 'undo', 'redo', 'bold', 'italic', 'numberedList', 'bulletedList', 'link']
 
-        editor3.on('change', function(event) {
-            // console.log(event.editor3.getData())
-            @this.set('involved_equipment', event.editor.getData())
-        })
-        const editor4 = CKEDITOR.replace('editor4');
-        editor4.config.uiColor = '#bae6fd';
-        editor4.config.height = 150;
+            })
+            .then(newEditor => {
 
-        editor4.config.toolbar = [{
-                name: 'clipboard',
-                items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
-            },
-            {
-                name: 'editing',
-                items: ['Scayt']
-            },
+                newEditor.model.document.on('change:data', () => {
 
-            {
-                name: 'tools',
-                items: ['Maximize']
-            },
-            {
-                name: 'basicstyles',
-                items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']
-            },
-            {
-                name: 'paragraph',
-                items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote']
-            },
-            {
-                name: 'styles',
-                items: ['Styles', 'Format']
-            },
+                    @this.set('imediate_action_taken', newEditor.getData())
+                    window.addEventListener('articleStore', event => {
+                        newEditor.setData('');
+                    })
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        // key_learning
+        ClassicEditor
+            .create(document.querySelector('#key_learning'), {
+                toolbar: ['heading', 'undo', 'redo', 'bold', 'italic', 'numberedList', 'bulletedList', 'link']
 
-        ];
+            })
+            .then(newEditor => {
 
-        editor4.on('change', function(event) {
-            // console.log(event.editor4.getData())
-            @this.set('preliminary_causes', event.editor.getData())
-        })
-        const editor5 = CKEDITOR.replace('editor5');
-        editor5.config.uiColor = '#bae6fd';
-        editor5.config.height = 150;
+                newEditor.model.document.on('change:data', () => {
 
-        editor5.config.toolbar = [{
-                name: 'clipboard',
-                items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
-            },
-            {
-                name: 'editing',
-                items: ['Scayt']
-            },
-
-            {
-                name: 'tools',
-                items: ['Maximize']
-            },
-            {
-                name: 'basicstyles',
-                items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']
-            },
-            {
-                name: 'paragraph',
-                items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote']
-            },
-            {
-                name: 'styles',
-                items: ['Styles', 'Format']
-            },
-
-        ];
-
-        editor5.on('change', function(event) {
-            // console.log(event.editor5.getData())
-            @this.set('imediate_action_taken', event.editor.getData())
-        })
-        const editor6 = CKEDITOR.replace('editor6');
-        editor6.config.uiColor = '#bae6fd';
-        editor6.config.height = 150;
-
-        editor6.config.toolbar = [{
-                name: 'clipboard',
-                items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
-            },
-            {
-                name: 'editing',
-                items: ['Scayt']
-            },
-
-            {
-                name: 'tools',
-                items: ['Maximize']
-            },
-            {
-                name: 'basicstyles',
-                items: ['Bold', 'Italic', 'Strike', '-', 'RemoveFormat']
-            },
-            {
-                name: 'paragraph',
-                items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote']
-            },
-            {
-                name: 'styles',
-                items: ['Styles', 'Format']
-            },
-
-        ];
-
-        editor6.on('change', function(event) {
-            // console.log(event.editor6.getData())
-            @this.set('key_learning', event.editor.getData())
-        })
-
-        window.addEventListener('articleStore', event => {
-
-            CKEDITOR.instances['editor1'].setData('');
-            CKEDITOR.instances['editor2'].setData('');
-            CKEDITOR.instances['editor3'].setData('');
-            CKEDITOR.instances['editor4'].setData('');
-            CKEDITOR.instances['editor5'].setData('');
-            CKEDITOR.instances['editor6'].setData('');
-        })
+                    @this.set('key_learning', newEditor.getData())
+                    window.addEventListener('articleStore', event => {
+                        newEditor.setData('');
+                    })
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
     </script>
-
-
 </div>

@@ -63,6 +63,7 @@ class ToSupervisor extends Notification
             'lookup_name' =>$this->offerDataSpv['name'],
             'reference' =>$this->offerDataSpv['offerText'],
             'info' =>$this->offerDataSpv['body'],
+            'dateTime' =>$this->offerDataSpv['dateTime'],
             'bahaya' =>$this->offerDataSpv['name']
         ];
     }

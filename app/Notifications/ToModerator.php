@@ -65,7 +65,8 @@ class ToModerator extends Notification
             'lookup_name' =>$this->offerData['name'],
             'reference' =>$this->offerData['offerText'],
             'info' =>$this->offerData['body'],
-            'bahaya' =>$this->offerData['name']
+            'bahaya' =>$this->offerData['name'],
+            'dateTime' =>$this->offerData['dateTime'],
         ];
     }
 }

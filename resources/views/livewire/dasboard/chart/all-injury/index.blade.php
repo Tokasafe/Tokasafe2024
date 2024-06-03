@@ -1,6 +1,8 @@
 <div>
     @push('styles')
         @livewireStyles()
+    
+           
         <link rel="stylesheet" href="/css/flatpickr/flatpickr.min.css">
         <link rel="stylesheet" href="/css/flatpickr/monthSelect/style.css" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="/css/flatpickr/dark.css">
@@ -431,36 +433,37 @@
 
             <div class="sm:col-span-3 grow">
                 <div class="self-center p-4">
-                    <h3 class="font-bold text-xl sm:text-3xl text-center">TOKA SAFE Performance Flash Report</h3>
+                    <h3 class="text-xl font-bold text-center sm:text-3xl">TOKA SAFE Performance Flash Report</h3>
                 </div>
 
-                <div class="px-4  ">
+                <div class="px-4 ">
                     <!-- Chart -->
                     @livewire('dasboard.chart.kpi.index')
-                    <div class="relative   bg-zinc-400 rounded-sm mt-2">
+                    <div class="relative mt-2 rounded-sm bg-zinc-400">
                         <div class="" id="chart"></div>
                     </div>
                 </div>
-                <div class="m-4 self-center">
+                <div class="self-center m-4">
                 </div>
                 <div class="mx-8 lg:mx-0">
                     @livewire('dasboard.chart.key-state.index')
                 </div>
-                <div class="grid sm:grid-cols-2  gap-2 m-4">
+                <div class="grid gap-2 m-4 sm:grid-cols-2">
                     <div class="bg-zinc-400" id="chartLine"></div>
                     <div class="bg-zinc-400"id="chartStackedColumns"></div>
                     <div class="bg-zinc-400"id="chartDonute"></div>
                     <div class="bg-zinc-400"id="chartColumne"></div>
                 </div>
             </div>
-            <div class=" flex-none sm:mt-14 ">
-                <div class="w-full join p-2 ">
-                    <div class="card w-full sm:w-36 bg-base-100 shadow-md text-primary-content">
-                        {{-- <div class="divider divider-info text-xs p-0">Short Menu</div> --}}
-                        <div class="card-body p-0  flex justify-center ">
+            <div class="flex-none sm:mt-14">
+                <div class="w-full p-2 join ">
+                    <div class="w-full shadow-md card sm:w-36 bg-base-100 text-primary-content">
+                        {{-- <div class="p-0 text-xs divider divider-info">Short Menu</div> --}}
+                        <div class="flex justify-center p-0 card-body ">
                             <div class="self-center">
                                 @livewire('dasboard.short-link.index')
                                 <div class="invisible h-0 p-0">
+                                    @livewire('event-report-list.insident.create')
                                     @livewire('event-report-list.hazard-id.create')
                                 </div>
                             </div>
