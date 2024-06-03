@@ -45,6 +45,8 @@ module.exports = {
 
             'lg': '1024px',
             // => @media (min-width: 1024px) { ... }
+            'laptop_l': '1440px',
+            // => @media (min-width: 1024px) { ... }
 
             'xl': '1280px',
             // => @media (min-width: 1280px) { ... }
@@ -76,5 +78,9 @@ module.exports = {
 
     },
 
-    plugins: [require("@tailwindcss/typography"), require("daisyui")],
+    plugins: [
+        require('@tailwindcss/typography'),
+        
+        require("daisyui")
+    ],
 };

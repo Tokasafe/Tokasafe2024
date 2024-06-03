@@ -20,20 +20,20 @@ Breadcrumbs::for('hazard', function (BreadcrumbTrail $trail) {
 });
 
 // Home > hazard > [detail]
-Breadcrumbs::for('hazard_details', function (BreadcrumbTrail $trail,$h1) {
+Breadcrumbs::for('hazard_details', function (BreadcrumbTrail $trail, $h1) {
     $trail->parent('hazard');
-    $trail->push('Hazard Detail', route('hazardDetails',$h1));
+    $trail->push('Hazard Detail', route('hazardDetails', $h1));
 });
 
-// Home > hazard
+// Home > incident
 Breadcrumbs::for('incident', function (BreadcrumbTrail $trail) {
     $trail->parent('home');
     $trail->push('Incident ', route('incident'));
 });
 // Home > incident > [detail]
-Breadcrumbs::for('incident_details', function (BreadcrumbTrail $trail,$h1) {
+Breadcrumbs::for('incident_details', function (BreadcrumbTrail $trail, $h1) {
     $trail->parent('incident');
-    $trail->push('Incident Detail', route('incidentDetails',$h1));
+    $trail->push('Incident Detail', route('incidentDetails', $h1));
 });
 
 
@@ -46,7 +46,29 @@ Breadcrumbs::for('hazardGuest', function (BreadcrumbTrail $trail) {
 });
 
 // Home > hazardguest > [detail]
-Breadcrumbs::for('hazardDetailsGuest', function (BreadcrumbTrail $trail,$h1) {
+Breadcrumbs::for('hazardDetailsGuest', function (BreadcrumbTrail $trail, $h1) {
     $trail->parent('hazardGuest');
-    $trail->push('Hazard Detail', route('hazardDetailsGuest',$h1));
+    $trail->push('Hazard Detail', route('hazardDetailsGuest', $h1));
 });
+
+// Home > incidentGuest
+Breadcrumbs::for('incidentGuest', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Incident ', route('incidentGuest'));
+});
+// Home > incidentGuest > [detail]
+Breadcrumbs::for('incidentDetailsGuest', function (BreadcrumbTrail $trail, $h1) {
+    $trail->parent('incidentGuest');
+    $trail->push('Incident Detail', route('incidentDetailsGuest', $h1));
+});
+// Home > Manhours
+Breadcrumbs::for('manhoursRegister', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Manhours ', route('manhoursRegister'));
+});
+// Home > ManhoursGuest
+Breadcrumbs::for('ManhoursGuest', function (BreadcrumbTrail $trail) {
+    $trail->parent('home');
+    $trail->push('Manhours ', route('ManhoursGuest'));
+});
+

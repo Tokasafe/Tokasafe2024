@@ -17,6 +17,6 @@ class EventAction extends Model
     }
     public function HazardId()
     {
-        return $this->belongsTo(HazardId::class,'hazard_id_id');
+        return $this->belongsTo(HazardId::class,'event_hzd_id');
     }
 }

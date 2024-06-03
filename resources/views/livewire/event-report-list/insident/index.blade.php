@@ -1,10 +1,9 @@
-<div>
+<div class="">
     @push('styles')
         @livewireStyles()
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/3de311882c.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
         <link rel="stylesheet" href="../../flatpickr/dist/flatpickr.min.css">
@@ -40,7 +39,7 @@
                 enableTime: true,
                 noCalendar: true,
                 dateFormat: "H:i",
-                // time_24hr: true
+                time_24hr: true
             });
             flatpickr("#tgldilapor", {
                 disableMobile: "true",
@@ -57,7 +56,7 @@
                     })
                 ]
             });
-
+            var bulan = "<?php echo "$month"; ?>";
             $("#rangeDate").flatpickr({
                 mode: 'range',
                 dateFormat: "d-m-Y", //defaults to "F Y"
@@ -90,49 +89,102 @@
 
                         tglMulai = year + '-' + month + '-' + dt;
                         tglAkhir = year2 + '-' + month2 + '-' + dt2;
-                        livewire.emit('TglMulai', tglMulai);
-                        livewire.emit('TglAkhir', tglAkhir);
+
+                        livewire.emit('TglMulaiIncident', tglMulai);
+                        livewire.emit('TglAkhirIncident', tglAkhir);
                     }
                 }
             })
         </script>
     @endpush
     @include('toast.toast')
-    <div class="m-4">
-        <div class="flex flex-col gap-2 sm:flex-row sm:justify-between">
-            <div class="max-w-xs ">@livewire('event-report-list.insident.create')</div>
+    @section('bradcrumbs')
+        {{ Breadcrumbs::render('incident') }}
+    @endsection
 
-            <div class="flex flex-col gap-1 join sm:flex-row sm:gap-0 ">
-                <div class="relative flex items-center max-w-xs join-item ">
-                    <input id="5" type="text"
-                        class="relative w-full max-w-xs peer input input-bordered input-xs focus:ring-1 focus:outline-none focus:drop-shadow-lg"
-                        placeholder="search" />
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                        class="absolute w-4 h-4 opacity-70 right-2">
-                        <path fill-rule="evenodd"
-                            d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                            clip-rule="evenodd" />
-                    </svg>
-                </div>
-                <div class="relative flex items-center w-full max-w-xs join-item">
-                    <input id="rangeDate" type="text"
-                        class="relative w-full peer input input-bordered input-xs focus:ring-1 focus:outline-none focus:drop-shadow-lg" />
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                        class="absolute w-4 h-4 opacity-70 right-2">
-                        <path fill-rule="evenodd"
-                            d="M4 1.75a.75.75 0 0 1 1.5 0V3h5V1.75a.75.75 0 0 1 1.5 0V3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2V1.75ZM4.5 6a1 1 0 0 0-1 1v4.5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-7Z"
-                            clip-rule="evenodd" />
-                    </svg>
+    <div class="items-center justify-between flex-none my-4 sm:flex sm:p-0">
+        <div class="">
+            @livewire('event-report-list.insident.create')
+        </div>
 
-                </div>
+        <div class="flex flex-col join sm:flex-row sm:gap-0 ">
+
+
+            <div class="relative flex items-center w-full max-w-xs join-item ">
+                <input id="rangeDate" type="text" readonly wire:model='dateRange'
+                    class="relative w-full   peer input input-bordered pl-6 input-xs text-[9px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
+                    placeholder="date range" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                    class="absolute w-4 h-4 pl-0.5 pl-0.5 opacity-70 left-2">
+                    <path fill-rule="evenodd"
+                        d="M4 1.75a.75.75 0 0 1 1.5 0V3h5V1.75a.75.75 0 0 1 1.5 0V3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2V1.75ZM4.5 6a1 1 0 0 0-1 1v4.5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-7Z"
+                        clip-rule="evenodd" />
+                </svg>
+
             </div>
+            <div class="relative flex items-center w-full max-w-xs join-item ">
+                <select type="text" wire:model='search_eventType'
+                    class="relative w-full sm:w-full max-w-xs pl-6 peer select select-bordered select-xs text-[10px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
+                    placeholder="Initial Incident Class">
+                    <option value="" selected>{{ __('KelasInsidenAwal') }}</option>
+                    @foreach ($EventType as $key => $value)
+                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                    @endforeach
+
+                </select>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                    class="absolute w-4 h-4 pl-0.5 opacity-70 left-2">
+                    <path fill-rule="evenodd"
+                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                        clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="relative flex items-center w-full max-w-xs join-item ">
+                <select type="text" wire:model='search_SubEventType'
+                    class="relative w-full sm:w-auto max-w-xs pl-6 peer select select-bordered select-xs text-[10px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
+                    placeholder="Initial Incident Class">
+                    <option value="" selected>Sub {{ __('KelasInsidenAwal') }}</option>
+                    @foreach ($EventSubType as $key => $value)
+                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                    @endforeach
+
+                </select>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                    class="absolute w-4 h-4 pl-0.5 opacity-70 left-2">
+                    <path fill-rule="evenodd"
+                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                        clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="relative flex items-center w-full max-w-xs join-item ">
+                <select type="text" wire:model='search_Workgroup'
+                    class="relative w-full sm:w-auto max-w-xs pl-6 peer select select-bordered select-xs text-[10px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
+                    placeholder="Initial Incident Class">
+                    <option class="text-center" value="" selected>Workgroup</option>
+                    @foreach ($Workgroup as $item)
+                        <option value="{{ $item->id }}">
+                            {{ $item->CompanyLevel->BussinessUnit->name }}-{{ $item->CompanyLevel->level }}-{{ $item->CompanyLevel->deptORcont }}
+                            {{ $item->job_class }}</option>
+                    @endforeach
+
+                </select>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                    class="absolute w-4 h-4 pl-0.5 opacity-70 left-2">
+                    <path
+                        d="M1 4a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4ZM10 5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V5ZM4 10a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1H4Z" />
+                </svg>
+
+            </div>
+
         </div>
     </div>
+
     <div class="overflow-x-auto">
         <table class="table table-xs table-zebra">
             <thead class="bg-gray-400">
                 <tr class="text-center">
                     <th>#</th>
+                    <th>{{ __('date') }}</th>
                     <th>{{ __('Reference') }}</th>
                     <th>{{ __('KelasInsidenAwal') }}</th>
                     <th>Sub {{ __('KelasInsidenAwal') }}</th>
@@ -145,20 +197,23 @@
             </thead>
             <tbody>
                 @forelse($Incident as $index => $value)
-                    <tr class="">
+                    <tr class="text-center ">
                         <th>{{ $Incident->firstItem() + $index }}</th>
+                        <th>{{ date('d-M-Y', strtotime($value->Incident->date_event)) }}</th>
                         <th>{{ $value->Incident->reference }}</th>
                         <td>{{ $value->Incident->eventType->name }}</td>
                         <td>{{ $value->Incident->eventSubType->name }}</td>
                         <td>{{ $value->Incident->workgroup->CompanyLevel->BussinessUnit->name }}-{{ $value->Incident->workgroup->CompanyLevel->deptORcont }}-{{ $value->Incident->workgroup->job_class }}
                         </td>
-                        <td>{{ $value->Incident->task }}</td>
+                        <td>
+                            <p class="w-full max-w-xs text-center truncate">{{ $value->Incident->task }}</p>
+                        </td>
                         <td>
                             @if (!empty($Incident_Action->where('incident_report_id', $value->Incident->id)->first()->incident_report_id))
-                                    {{ $Incident_Action->where('incident_report_id', $value->Incident->id)->count('dueDate') }}/{{ $Incident_Action->where('incident_report_id', $value->Incident->id)->whereNull('completion_date')->count() }}
-                                @else
-                                    0/0
-                                @endif
+                                {{ $Incident_Action->where('incident_report_id', $value->Incident->id)->count('dueDate') }}/{{ $Incident_Action->where('incident_report_id', $value->Incident->id)->whereNull('completion_date')->count() }}
+                            @else
+                                0/0
+                            @endif
                         </td>
                         <td
                             class="
@@ -180,7 +235,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="font-semibold text-rose-500">
+                        <td colspan="10" class="font-semibold text-rose-500">
 
                             <p class="flex justify-center"> Data not found <span
                                     class="loading loading-bars loading-xs"> </span></p>
@@ -189,8 +244,9 @@
                 @endforelse
             </tbody>
             <tfoot class="bg-gray-400">
-                <tr class="">
+                <tr class="text-center">
                     <th>#</th>
+                    <th>{{ __('date') }}</th>
                     <th>{{ __('Reference') }}</th>
                     <th>{{ __('KelasInsidenAwal') }}</th>
                     <th>Sub {{ __('KelasInsidenAwal') }}</th>
@@ -223,4 +279,5 @@
             </form>
         </div>
     </div>
+
 </div>

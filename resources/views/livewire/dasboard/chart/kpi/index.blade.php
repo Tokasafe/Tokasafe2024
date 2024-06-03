@@ -1,5 +1,5 @@
 <div class="grid ">
-    <div class="stats shadow">
+    <div class="shadow stats">
 
         <div class="stat">
             <div class="stat-figure text-primary">
@@ -45,7 +45,7 @@
                 </svg>
             </div>
             <div class="stat-title">Hazard ID</div>
-            <div class="stat-value text-error">25.6K</div>
+            <div class="stat-value text-error">{{$hazard_count}}</div>
             <div class="stat-desc">21% more than last month</div>
         </div>
 

@@ -21,7 +21,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.event-report-list.insident.action.index', [
-            'IncidentAction' => IncidentAction::with(['People'])->where('incident_report_id', $this->data_id)->paginate(10)
+            'IncidentAction' => IncidentAction::with(['People','IncidentAction'])->where('incident_report_id', $this->data_id)->paginate(10)
         ]);
     }
     public function update($id)

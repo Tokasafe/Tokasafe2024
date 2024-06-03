@@ -9,6 +9,8 @@ class Index extends Component
 {
     public $notifications=[];
     public $readNotifications;
+    public $markAsRead="All";
+    public $Pemberitahuan=[];
     public $unreadNotifications;
     protected $listeners = [
         'notificationMarkAsRead' => 'render',
@@ -17,12 +19,19 @@ class Index extends Component
     ];
     public function render()
     {
+        if ($this->markAsRead==='Unread') {
+            $this->Pemberitahuan= auth()->user()->unreadNotifications;
+        } else {
+            $this->Pemberitahuan= auth()->user()->notifications;
+        }
         $this->notifications = auth()->user()->unreadNotifications;
         return view('livewire.dasboard.notification.index');
     }
 
     public function markNotification()
     {
+       
+        
         Auth::user()->unreadNotifications->markAsRead();
         return response()->noContent();
     }
@@ -40,6 +49,7 @@ class Index extends Component
         $this->unreadNotifications = auth()->user()->unreadNotifications;
         
     }
+
     public function pemberitahuan()
     {
         $this->readNotifications = auth()->user()->readNotifications;

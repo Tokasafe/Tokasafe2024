@@ -21,49 +21,58 @@ class Detail extends Component
 {
     use WithFileUploads;
     use WithPagination;
-    public $data_id,$IncidentClose,$filename;
-    public $event_type, $sub_type,$reference, $workgroup, $workgroup_id, $reporter_name, $reporter_name_id, $report_to, $report_to_id, $location, $date_event, $time_event, $potential_lti, $env_incident, $task, $description_incident, $involved_person, $involved_equipment, $preliminary_causes, $imediate_action_taken, $key_learning, $documentation;
-    public $openWG = "modal", $open_ReportBy = "modal ", $open_ReportTo = "modal", $CompanyLevel = [], $radio_select = '', $ModalWorkgroup = [], $EventSubType = [], $showWG = false, $search_workgroup = '', $search_reportBy = '';
-    public $actual_outcome,$notes_assessment,$potential_consequence,$name_assessment,$potential_likelihood,$investigation_req_assessment,$reporting_obligation_assessment,$actual_outcome_description,$potential_consequence_description,$potential_likelihood_description  ;
-    
+    public $data_id, $delete_id, $IncidentClose, $filename;
+    public $event_type, $sub_type, $reference, $workgroup, $workgroup_id, $reporter_name, $reporter_name_id, $report_to, $report_to_id, $location, $date_event, $time_event, $potential_lti, $env_incident, $task, $description_incident, $involved_person, $involved_equipment, $preliminary_causes, $imediate_action_taken, $key_learning, $documentation;
+    public $openWG = "modal", $open_ReportBy = "modal ", $open_ReportTo = "modal", $modalDelete = "modal", $CompanyLevel = [], $radio_select = '', $ModalWorkgroup = [], $EventSubType = [], $showWG = false, $search_workgroup = '', $search_reportBy = '',$fileUpload;
+    public $actual_outcome, $notes_assessment, $potential_consequence, $name_assessment, $potential_likelihood, $investigation_req_assessment, $reporting_obligation_assessment, $actual_outcome_description, $potential_consequence_description, $potential_likelihood_description;
+
     public function mount($id)
     {
-        $this->data_id = $id;
-        $close = PanelIncident::where('incident_report_id', $this->data_id)->first()->WorkflowStep->name;
-        if ($close === 'Closed' || $close === 'Cancelled') {
-            $this->IncidentClose = $close;
-        }
-        $incident = IncidentReport::whereId($id)->first();
-        $a = $incident->workgroup->CompanyLevel->BussinessUnit->name;
-        $b = $incident->workgroup->CompanyLevel->deptORcont;
-        $c = $incident->workgroup->job_class;
-        $this->workgroup = "$a-$b-$c";
-        $this->reference = $incident->reference;
-        $this->date_event =$incident->date_event;
-        $this->event_type = $incident->event_type;
-        $this->sub_type = $incident->sub_type;
-        $this->workgroup_id = $incident->workgroup_id;
-        $this->reporter_name = $incident->repportBy->lookup_name;
-        $this->reporter_name_id = $incident->reporter_name_id;
-        $this->report_to_id = $incident->report_to_id;
-        $this->report_to = $incident->repportTo->lookup_name;
-        $this->location = $incident->location;
-        $this->date_event = $incident->date_event;
-        $this->time_event = $incident->time_event;
-        $this->potential_lti = $incident->potential_lti;
-        $this->env_incident = $incident->env_incident;
-        $this->task = $incident->task;
-        $this->description_incident = $incident->description_incident;
-        $this->involved_person = $incident->involved_person;
-        $this->involved_equipment = $incident->involved_equipment;
-        $this->preliminary_causes = $incident->preliminary_causes;
-        $this->imediate_action_taken = $incident->imediate_action_taken;
-        $this->key_learning = $incident->key_learning;
-        $this->actual_outcome = $incident->actual_outcome;
-        $this->potential_consequence = $incident->potential_consequence;
-        $this->potential_likelihood = $incident->potential_likelihood;
-        $this->filename = $incident->documentation;
-       
+     
+        // dd($id);
+        if (IncidentReport::whereId($id)->first()) {
+            $this->data_id = $id;
+            $close = PanelIncident::where('incident_report_id', $this->data_id)->first()->WorkflowStep->name;
+            if ($close === 'Closed' || $close === 'Cancelled') {
+                $this->IncidentClose = $close;
+            }
+
+            $incident = IncidentReport::whereId($id)->first();
+            $a = $incident->workgroup->CompanyLevel->BussinessUnit->name;
+            $b = $incident->workgroup->CompanyLevel->deptORcont;
+            $c = $incident->workgroup->job_class;
+            $this->workgroup = "$a-$b-$c";
+            $this->reference = $incident->reference;
+            $this->date_event = $incident->date_event;
+            $this->event_type = $incident->event_type;
+            $this->sub_type = $incident->sub_type;
+            $this->workgroup_id = $incident->workgroup_id;
+            $this->reporter_name = $incident->repportBy->lookup_name;
+            $this->reporter_name_id = $incident->reporter_name_id;
+            $this->report_to_id = $incident->report_to_id;
+            $this->report_to = $incident->repportTo->lookup_name;
+            $this->location = $incident->location;
+            $this->date_event = $incident->date_event;
+            $this->time_event = $incident->time_event;
+            $this->potential_lti = $incident->potential_lti;
+            $this->env_incident = $incident->env_incident;
+            $this->task = $incident->task;
+            $this->description_incident = $incident->description_incident;
+            $this->involved_person = $incident->involved_person;
+            $this->involved_equipment = $incident->involved_equipment;
+            $this->preliminary_causes = $incident->preliminary_causes;
+            $this->imediate_action_taken = $incident->imediate_action_taken;
+            $this->key_learning = $incident->key_learning;
+            $this->actual_outcome = $incident->actual_outcome;
+            $this->potential_consequence = $incident->potential_consequence;
+            $this->potential_likelihood = $incident->potential_likelihood;
+            $this->filename = $incident->documentation;
+           } else {
+            return abort(404);
+           }
+           
+           
+     
     }
     public function render()
     {
@@ -83,6 +92,11 @@ class Detail extends Component
         } else {
             $this->potential_likelihood_description = '';
         }
+        if (!empty($this->documentation)) {
+            $file_name = $this->documentation->getClientOriginalName();
+            $this->fileUpload  = pathinfo($file_name, PATHINFO_EXTENSION);
+            $this->filename=null;
+        }
 
         if (!empty($this->radio_select)) {
             if ($this->radio_select === 'companyLevel') {
@@ -100,7 +114,7 @@ class Detail extends Component
         if ($this->event_type) {
             $this->EventSubType = EventSubType::where('eventType_id', $this->event_type)->get();
         }
-        return view('livewire.event-report-list.insident.detail',[
+        return view('livewire.event-report-list.insident.detail', [
             'ReportBy' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(100, ['*'], 'ReportByPage'),
             'ReportTo' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(100, ['*'], 'ReportToPage'),
             'Location' => EventLocation::get(),
@@ -112,7 +126,7 @@ class Detail extends Component
     public function updateStore()
     {
 
-        if (empty($this->documentation)) {
+        if (!$this->documentation) {
             $file_names = $this->filename;
         } else {
 
@@ -163,7 +177,7 @@ class Detail extends Component
             'actual_outcome' => $this->actual_outcome,
             'potential_consequence' => $this->potential_consequence,
             'potential_likelihood' => $this->potential_likelihood,
-            'reference'=>$this->reference,
+            'reference' => $this->reference,
             'documentation' => $file_names
         ]);
         return redirect()->route('incidentDetails', ['id' =>  $this->data_id]);
@@ -186,6 +200,7 @@ class Detail extends Component
     public function closeReportBy()
     {
         $this->open_ReportBy  = "modal";
+        $this->search_reportBy = "";
     }
     public function openReportTo()
     {
@@ -194,6 +209,7 @@ class Detail extends Component
     public function closeReportTo()
     {
         $this->open_ReportTo  = "modal";
+        $this->search_reportBy = "";
     }
     public function closeWokrgroup()
     {
@@ -234,341 +250,356 @@ class Detail extends Component
         $this->closeWokrgroup();
     }
 
-// ClickFunction
-        public function click()
-        {
-            if ($this->potential_consequence == 5 && $this->potential_likelihood == 1) {
-                $this->btn_a1();
-            }
-            if ($this->potential_consequence == 4 && $this->potential_likelihood == 1) {
-                $this->btn_a2();
-            }
-            if ($this->potential_consequence == 3 && $this->potential_likelihood == 1) {
-                $this->btn_a3();
-            }
-            if ($this->potential_consequence == 2 && $this->potential_likelihood == 1) {
-                $this->btn_a4();
-            }
-            if ($this->potential_consequence == 1 && $this->potential_likelihood == 1) {
-                $this->btn_a5();
-            }
-            if ($this->potential_consequence == 5 && $this->potential_likelihood == 2) {
-                $this->btn_b1();
-            }
-            if ($this->potential_consequence == 4 && $this->potential_likelihood == 2) {
-                $this->btn_b2();
-            }
-            if ($this->potential_consequence == 3 && $this->potential_likelihood == 2) {
-                $this->btn_b3();
-            }
-            if ($this->potential_consequence == 2 && $this->potential_likelihood == 2) {
-                $this->btn_b4();
-            }
-            if ($this->potential_consequence == 1 && $this->potential_likelihood == 2) {
-                $this->btn_b5();
-            }
-            if ($this->potential_consequence == 5 && $this->potential_likelihood == 3) {
-                $this->btn_c1();
-            }
-            if ($this->potential_consequence == 4 && $this->potential_likelihood == 3) {
-                $this->btn_c2();
-            }
-            if ($this->potential_consequence == 3 && $this->potential_likelihood == 3) {
-                $this->btn_c3();
-            }
-            if ($this->potential_consequence == 2 && $this->potential_likelihood == 3) {
-                $this->btn_c4();
-            }
-            if ($this->potential_consequence == 1 && $this->potential_likelihood == 3) {
-                $this->btn_c5();
-            }
-            if ($this->potential_consequence == 5 && $this->potential_likelihood == 4) {
-                $this->btn_d1();
-            }
-            if ($this->potential_consequence == 4 && $this->potential_likelihood == 4) {
-                $this->btn_d2();
-            }
-            if ($this->potential_consequence == 3 && $this->potential_likelihood == 4) {
-                $this->btn_d3();
-            }
-            if ($this->potential_consequence == 2 && $this->potential_likelihood == 4) {
-                $this->btn_d4();
-            }
-            if ($this->potential_consequence == 1 && $this->potential_likelihood == 4) {
-                $this->btn_d5();
-            }
-            if ($this->potential_consequence == 5 && $this->potential_likelihood == 5) {
-                $this->btn_e1();
-            }
-            if ($this->potential_consequence == 4 && $this->potential_likelihood == 5) {
-                $this->btn_e2();
-            }
-            if ($this->potential_consequence == 3 && $this->potential_likelihood == 5) {
-                $this->btn_e3();
-            }
-            if ($this->potential_consequence == 2 && $this->potential_likelihood == 5) {
-                $this->btn_e4();
-            }
-            if ($this->potential_consequence == 1 && $this->potential_likelihood == 5) {
-                $this->btn_e5();
-            }
+    public function delete()
+    {
+        $this->modalDelete = "modal modal-open";
+    }
+    public function deleteFileAction()
+    {
+        try {
+            $this->modalDelete = "modal";
+            IncidentReport::find($this->data_id)->delete();
+            return redirect()->route('incident');
+        } catch (\Exception $e) {
+            session()->flash('error', "Something goes wrong!!");
         }
-     // FUNCTION BTN INITIAL RISK
-        public function btn_a1()
-        {
-            $this->potential_consequence = 5;
-            $this->potential_likelihood = 1;
-            $assessment = RiskAssessment::whereId(1)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+
+    // ClickFunction
+    public function click()
+    {
+        if ($this->potential_consequence == 5 && $this->potential_likelihood == 1) {
+            $this->btn_a1();
         }
-        public function btn_a2()
-        {
-            $this->potential_consequence = 4;
-            $this->potential_likelihood = 1;
-            $assessment = RiskAssessment::whereId(1)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 4 && $this->potential_likelihood == 1) {
+            $this->btn_a2();
         }
-        public function btn_a3()
-        {
-            $this->potential_consequence = 3;
-            $this->potential_likelihood = 1;
-            $assessment = RiskAssessment::whereId(1)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 3 && $this->potential_likelihood == 1) {
+            $this->btn_a3();
         }
-        public function btn_a4()
-        {
-            $this->potential_consequence = 2;
-            $this->potential_likelihood = 1;
-            $assessment = RiskAssessment::whereId(2)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 2 && $this->potential_likelihood == 1) {
+            $this->btn_a4();
         }
-        public function btn_a5()
-        {
-            $this->potential_consequence = 1;
-            $this->potential_likelihood = 1;
-            $assessment = RiskAssessment::whereId(2)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 1 && $this->potential_likelihood == 1) {
+            $this->btn_a5();
         }
-        // BUTTON B
-        public function btn_b1()
-        {
-            $this->potential_consequence = 5;
-            $this->potential_likelihood = 2;
-            $assessment = RiskAssessment::whereId(1)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 5 && $this->potential_likelihood == 2) {
+            $this->btn_b1();
         }
-        public function btn_b2()
-        {
-            $this->potential_consequence = 4;
-            $this->potential_likelihood = 2;
-            $assessment = RiskAssessment::whereId(1)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 4 && $this->potential_likelihood == 2) {
+            $this->btn_b2();
         }
-        public function btn_b3()
-        {
-            $this->potential_consequence = 3;
-            $this->potential_likelihood = 2;
-            $assessment = RiskAssessment::whereId(2)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 3 && $this->potential_likelihood == 2) {
+            $this->btn_b3();
         }
-        public function btn_b4()
-        {
-            $this->potential_consequence = 2;
-            $this->potential_likelihood = 2;
-            $assessment = RiskAssessment::whereId(2)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 2 && $this->potential_likelihood == 2) {
+            $this->btn_b4();
         }
-        public function btn_b5()
-        {
-            $this->potential_consequence = 1;
-            $this->potential_likelihood = 2;
-            $assessment = RiskAssessment::whereId(3)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 1 && $this->potential_likelihood == 2) {
+            $this->btn_b5();
         }
-        // BUTTON C
-        public function btn_c1()
-        {
-            $this->potential_consequence = 5;
-            $this->potential_likelihood = 3;
-    
-            $assessment = RiskAssessment::whereId(1)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 5 && $this->potential_likelihood == 3) {
+            $this->btn_c1();
         }
-        public function btn_c2()
-        {
-            $this->potential_consequence = 4;
-            $this->potential_likelihood = 3;
-    
-            $assessment = RiskAssessment::whereId(1)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 4 && $this->potential_likelihood == 3) {
+            $this->btn_c2();
         }
-        public function btn_c3()
-        {
-            $this->potential_consequence = 3;
-            $this->potential_likelihood = 3;
-            $assessment = RiskAssessment::whereId(2)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 3 && $this->potential_likelihood == 3) {
+            $this->btn_c3();
         }
-        public function btn_c4()
-        {
-            $this->potential_consequence = 2;
-            $this->potential_likelihood = 3;
-            $assessment = RiskAssessment::whereId(3)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 2 && $this->potential_likelihood == 3) {
+            $this->btn_c4();
         }
-        public function btn_c5()
-        {
-            $this->potential_consequence = 1;
-            $this->potential_likelihood = 3;
-            $assessment = RiskAssessment::whereId(4)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 1 && $this->potential_likelihood == 3) {
+            $this->btn_c5();
         }
-        // BUTTON D
-        public function btn_d1()
-        {
-            $this->potential_consequence = 5;
-            $this->potential_likelihood = 4;
-            $assessment = RiskAssessment::whereId(1)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 5 && $this->potential_likelihood == 4) {
+            $this->btn_d1();
         }
-        public function btn_d2()
-        {
-            $this->potential_consequence = 4;
-            $this->potential_likelihood = 4;
-            $assessment = RiskAssessment::whereId(2)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 4 && $this->potential_likelihood == 4) {
+            $this->btn_d2();
         }
-        public function btn_d3()
-        {
-            $this->potential_consequence = 3;
-            $this->potential_likelihood = 4;
-            $assessment = RiskAssessment::whereId(3)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 3 && $this->potential_likelihood == 4) {
+            $this->btn_d3();
         }
-        public function btn_d4()
-        {
-            $this->potential_consequence = 2;
-            $this->potential_likelihood = 4;
-            $assessment = RiskAssessment::whereId(4)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 2 && $this->potential_likelihood == 4) {
+            $this->btn_d4();
         }
-        public function btn_d5()
-        {
-            $this->potential_consequence = 1;
-            $this->potential_likelihood = 4;
-            $assessment = RiskAssessment::whereId(4)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 1 && $this->potential_likelihood == 4) {
+            $this->btn_d5();
         }
-        // BUTTON E
-        public function btn_e1()
-        {
-            $this->potential_consequence = 5;
-            $this->potential_likelihood = 5;
-            $assessment = RiskAssessment::whereId(2)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 5 && $this->potential_likelihood == 5) {
+            $this->btn_e1();
         }
-        public function btn_e2()
-        {
-            $this->potential_consequence = 4;
-            $this->potential_likelihood = 5;
-            $assessment = RiskAssessment::whereId(2)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 4 && $this->potential_likelihood == 5) {
+            $this->btn_e2();
         }
-        public function btn_e3()
-        {
-            $this->potential_consequence = 3;
-            $this->potential_likelihood = 5;
-            $assessment = RiskAssessment::whereId(3)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 3 && $this->potential_likelihood == 5) {
+            $this->btn_e3();
         }
-        public function btn_e4()
-        {
-            $this->potential_consequence = 2;
-            $this->potential_likelihood = 5;
-            $assessment = RiskAssessment::whereId(4)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 2 && $this->potential_likelihood == 5) {
+            $this->btn_e4();
         }
-        public function btn_e5()
-        {
-            $this->potential_consequence = 1;
-            $this->potential_likelihood = 5;
-            $assessment = RiskAssessment::whereId(4)->first();
-            $this->name_assessment = $assessment->name;
-            $this->notes_assessment = $assessment->notes;
-            $this->investigation_req_assessment = $assessment->investigation_req;
-            $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+        if ($this->potential_consequence == 1 && $this->potential_likelihood == 5) {
+            $this->btn_e5();
         }
-// 
+    }
+    // FUNCTION BTN INITIAL RISK
+    public function btn_a1()
+    {
+        $this->potential_consequence = 5;
+        $this->potential_likelihood = 1;
+        $assessment = RiskAssessment::whereId(1)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_a2()
+    {
+        $this->potential_consequence = 4;
+        $this->potential_likelihood = 1;
+        $assessment = RiskAssessment::whereId(1)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_a3()
+    {
+        $this->potential_consequence = 3;
+        $this->potential_likelihood = 1;
+        $assessment = RiskAssessment::whereId(1)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_a4()
+    {
+        $this->potential_consequence = 2;
+        $this->potential_likelihood = 1;
+        $assessment = RiskAssessment::whereId(2)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_a5()
+    {
+        $this->potential_consequence = 1;
+        $this->potential_likelihood = 1;
+        $assessment = RiskAssessment::whereId(2)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    // BUTTON B
+    public function btn_b1()
+    {
+        $this->potential_consequence = 5;
+        $this->potential_likelihood = 2;
+        $assessment = RiskAssessment::whereId(1)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_b2()
+    {
+        $this->potential_consequence = 4;
+        $this->potential_likelihood = 2;
+        $assessment = RiskAssessment::whereId(1)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_b3()
+    {
+        $this->potential_consequence = 3;
+        $this->potential_likelihood = 2;
+        $assessment = RiskAssessment::whereId(2)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_b4()
+    {
+        $this->potential_consequence = 2;
+        $this->potential_likelihood = 2;
+        $assessment = RiskAssessment::whereId(2)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_b5()
+    {
+        $this->potential_consequence = 1;
+        $this->potential_likelihood = 2;
+        $assessment = RiskAssessment::whereId(3)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    // BUTTON C
+    public function btn_c1()
+    {
+        $this->potential_consequence = 5;
+        $this->potential_likelihood = 3;
+
+        $assessment = RiskAssessment::whereId(1)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_c2()
+    {
+        $this->potential_consequence = 4;
+        $this->potential_likelihood = 3;
+
+        $assessment = RiskAssessment::whereId(1)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_c3()
+    {
+        $this->potential_consequence = 3;
+        $this->potential_likelihood = 3;
+        $assessment = RiskAssessment::whereId(2)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_c4()
+    {
+        $this->potential_consequence = 2;
+        $this->potential_likelihood = 3;
+        $assessment = RiskAssessment::whereId(3)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_c5()
+    {
+        $this->potential_consequence = 1;
+        $this->potential_likelihood = 3;
+        $assessment = RiskAssessment::whereId(4)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    // BUTTON D
+    public function btn_d1()
+    {
+        $this->potential_consequence = 5;
+        $this->potential_likelihood = 4;
+        $assessment = RiskAssessment::whereId(1)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_d2()
+    {
+        $this->potential_consequence = 4;
+        $this->potential_likelihood = 4;
+        $assessment = RiskAssessment::whereId(2)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_d3()
+    {
+        $this->potential_consequence = 3;
+        $this->potential_likelihood = 4;
+        $assessment = RiskAssessment::whereId(3)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_d4()
+    {
+        $this->potential_consequence = 2;
+        $this->potential_likelihood = 4;
+        $assessment = RiskAssessment::whereId(4)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_d5()
+    {
+        $this->potential_consequence = 1;
+        $this->potential_likelihood = 4;
+        $assessment = RiskAssessment::whereId(4)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    // BUTTON E
+    public function btn_e1()
+    {
+        $this->potential_consequence = 5;
+        $this->potential_likelihood = 5;
+        $assessment = RiskAssessment::whereId(2)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_e2()
+    {
+        $this->potential_consequence = 4;
+        $this->potential_likelihood = 5;
+        $assessment = RiskAssessment::whereId(2)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_e3()
+    {
+        $this->potential_consequence = 3;
+        $this->potential_likelihood = 5;
+        $assessment = RiskAssessment::whereId(3)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_e4()
+    {
+        $this->potential_consequence = 2;
+        $this->potential_likelihood = 5;
+        $assessment = RiskAssessment::whereId(4)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    public function btn_e5()
+    {
+        $this->potential_consequence = 1;
+        $this->potential_likelihood = 5;
+        $assessment = RiskAssessment::whereId(4)->first();
+        $this->name_assessment = $assessment->name;
+        $this->notes_assessment = $assessment->notes;
+        $this->investigation_req_assessment = $assessment->investigation_req;
+        $this->reporting_obligation_assessment = $assessment->reporting_obligation;
+    }
+    // 
 }

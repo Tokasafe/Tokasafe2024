@@ -20,6 +20,7 @@ class Index extends Component
     public function mount($id)
     {
         $this->ID_Details = $id;
+       
         $close = PanelHazardId::where('hazard_id',$this->ID_Details)->first()->WorkflowStep->name;
         if ($close ==='Closed' || $close ==='Cancelled') {
             $this->hazardClose = $close;
@@ -30,7 +31,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.event-report-list.hazard-id.action.index',[
-            'EventAction' => EventAction::with(['People'])->where('event_hzd_id',$this->ID_Details)->paginate(5),
+            'EventAction' => EventAction::with(['People','HazardId'])->where('event_hzd_id',$this->ID_Details)->paginate(5),
         ]);
     }
 

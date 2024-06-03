@@ -1,9 +1,11 @@
-<div class="py-6">
-    @include('toast.toast')
+<div class="">
+  
     @push('styles')
         @livewireStyles()
+        
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
         <link rel="stylesheet" href="../../flatpickr/dist/flatpickr.min.css">
         <link rel="stylesheet" href="../../flatpickr/dist/plugins/monthSelect/style.css" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="../../flatpickr/dist/themes/dark.css">
@@ -11,6 +13,7 @@
     @endpush
     @push('scripts')
         @livewireScripts()
+        <script src="../../ckeditor5/js/index.js"></script>
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -40,7 +43,7 @@
                 enableTime: true,
                 noCalendar: true,
                 dateFormat: "H:i",
-                // time_24hr: true
+                time_24hr: true
             });
             flatpickr("#tgldilapor", {
                 disableMobile: "true",
@@ -100,43 +103,88 @@
             })
         </script>
     @endpush
+    @include('toast.toast')
     @section('bradcrumbs')
         {{ Breadcrumbs::render('hazard') }}
     @endsection
 
-    <div class="items-center justify-between flex-none gap-2 p-2 sm:flex sm:p-0">
-        <div class="mt-2">
+    <div class="items-center justify-between flex-none my-4 sm:flex sm:p-0">
+        <div class="">
             @livewire('event-report-list.hazard-id.create')
         </div>
-        <div class=" md:join">
-            <input type="text" id="rangeDate" placeholder="{{ __('date_range') }}" wire:model='dateRange' readonly
-                autocomplete="off"
-                class="w-full max-w-xs join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-            <input type="text" id="month" placeholder="{{ __('month') }}" readonly wire:model='month'
-                class="w-full max-w-xs join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-            <select wire:model='search_eventsubtype'
-                class="  join-item w-full max-w-xs select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
-                <option value="" selected disabled>{{__('Select_sub_type')}}</option>
-                @foreach ($EventSubType as $ets)
-                    <option value="{{ $ets->id }}">{{ $ets->name }}</option>
+        <div class="flex flex-col gap-1 join sm:flex-row sm:gap-0">  
+           
+            <div class="relative flex items-center w-full max-w-xs join-item ">
+                <input id="rangeDate" type="text" readonly wire:model='dateRange'
+                    class="relative w-full   peer input input-bordered pl-6 input-xs text-[9px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
+                    placeholder="date range" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                    class="absolute w-4 h-4 pl-0.5 pl-0.5 opacity-70 left-2">
+                    <path fill-rule="evenodd"
+                        d="M4 1.75a.75.75 0 0 1 1.5 0V3h5V1.75a.75.75 0 0 1 1.5 0V3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2V1.75ZM4.5 6a1 1 0 0 0-1 1v4.5a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-7Z"
+                        clip-rule="evenodd" />
+                </svg>
+
+            </div>
+            <div class="relative flex items-center w-full max-w-xs join-item ">
+                <select type="text" wire:model='search_eventsubtype'
+                    class="relative w-full sm:w-full max-w-xs pl-6 peer select select-bordered select-xs text-[10px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
+                    placeholder="Initial Incident Class">
+                    <option class="text-center" value="" selected>Initial Incident Class</option>
+                    @foreach ($EventType as $key => $value)
+                    <option value="{{ $value->id }}">{{ $value->name }}</option>
                 @endforeach
-            </select>
-            <select wire:model='search_wg'
-                class="  join-item w-full max-w-xs select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
-                <option value="" selected>{{__('wg')}}</option>
-                @foreach ($Workgroup as $item)
-                    <option value="{{ $item->id }}">{{ $item->CompanyLevel->BussinessUnit->name }}-{{ $item->CompanyLevel->level }}-{{ $item->CompanyLevel->deptORcont }}
-                        {{ $item->job_class }}</option>
-                @endforeach
-            </select>
-            
+
+                </select>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                    class="absolute w-4 h-4 pl-0.5 opacity-70 left-2">
+                    <path fill-rule="evenodd"
+                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                        clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="relative flex items-center w-full max-w-xs join-item ">
+                <select type="text" wire:model='search_eventsubtype'
+                    class="relative w-full sm:w-auto max-w-xs pl-6 peer select select-bordered select-xs text-[10px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
+                    placeholder="Initial Incident Class">
+                    <option value="" selected>Sub {{ __('KelasInsidenAwal') }}</option>
+                    @foreach ($EventSubType as $key => $value)
+                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                    @endforeach
+
+                </select>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                    class="absolute w-4 h-4 pl-0.5 opacity-70 left-2">
+                    <path fill-rule="evenodd"
+                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                        clip-rule="evenodd" />
+                </svg>
+            </div>
+            <div class="relative flex items-center w-full max-w-xs join-item ">
+                <select type="text" wire:model='search_wg'
+                    class="relative w-auto sm:w-auto max-w-xs pl-6 peer select select-bordered select-xs text-[10px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
+                    placeholder="Initial Incident Class">
+                    <option class="text-center" value="" selected>Workgroup</option>
+                    @foreach ($Workgroup as $item)
+                        <option value="{{ $item->id }}">
+                            {{ $item->CompanyLevel->BussinessUnit->name }}-{{ $item->CompanyLevel->level }}-{{ $item->CompanyLevel->deptORcont }}
+                            {{ $item->job_class }}</option>
+                    @endforeach
+
+                </select>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                    class="absolute w-4 h-4 pl-0.5 opacity-70 left-2">
+                    <path
+                        d="M1 4a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4ZM10 5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V5ZM4 10a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1H4Z" />
+                </svg>
+
+            </div>
         </div>
     </div>
-    <div class="grid px-2 ">
-
-        <div class="w-auto mx-4 mt-4 overflow-x-auto rounded-md shadow-md md:w-auto">
-            <table class="table table-xs">
-                <thead class="bg-primary text-base-100">
+    <div class="grid ">
+        <div class="overflow-x-auto">
+            <table class="table table-xs table-zebra">
+                <thead class="bg-gray-400">
                     <tr class="text-center ">
                         <th>#</th>
                         <th>{{__('date')}}</th>
@@ -198,7 +246,7 @@
                         </tr>
                     @endforelse
                 </tbody>
-                <tfoot class="bg-primary text-base-100">
+                <tfoot class="bg-gray-400">
                     <tr class="text-center">
                         <th>#</th>
                         <th>{{__('date')}}</th>

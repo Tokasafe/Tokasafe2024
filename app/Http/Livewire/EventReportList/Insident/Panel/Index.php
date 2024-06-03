@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\EventReportList\Insident\Panel;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\People;
 use Livewire\Component;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Notification;
 
 class Index extends Component
 {
-    public $proceedTo, $requestName, $report_id, $real_id;
+    public $proceedTo, $requestName, $report_id, $real_id, $Event_Report_Manager;
     public $moderator, $current_step, $reference, $getStatusId, $responsibleRole, $id_people, $get_Id, $userController = false, $event_subtype, $event_type, $workgroup, $status, $destination_1_label, $destination_1, $destination_2_label, $destination_2, $destination_3, $assignTo, $assignToName, $also_assignTo, $also_assignToName;
     public function mount($id)
     {
@@ -36,13 +37,30 @@ class Index extends Component
         $this->destination_2_label = $panel->WorkflowStep->destination_2_label;
         $this->destination_2 = $panel->WorkflowStep->destination_2;
         $this->destination_3 = $panel->WorkflowStep->checkCancel;
-        if (!empty($panel->assignTo)) {
+        if ($panel->assignTo) {
             $this->assignTo = $panel->assignTo;
             $this->assignToName = $panel->AssignTo->lookup_name;
         }
-        if (!empty($panel->also_assignTo)) {
+        if ($panel->also_assignTo) {
             $this->also_assignTo = $panel->also_assignTo;
             $this->also_assignToName = $panel->Also_assignTo->lookup_name;
+        }
+        if (!empty(People::whereIn('network_username', [auth()->user()->username])->first()->id)) {
+            $this->id_people = People::whereIn('network_username', [auth()->user()->username])->first()->id;
+            $workflow = UserSecurity::with('People')->where('user_id', $this->id_people)->whereIn('workflow', ['Moderator', 'Event Report Manager'])->pluck('workflow')->toArray();
+            $this->Event_Report_Manager = 'Event Report Manager';
+            $nameStep = 'Assign & Investigation';
+            if (in_array('Moderator', $workflow)) {
+                $this->userController = true;
+            } elseif (in_array('Event Report Manager', $workflow) && $this->current_step === $nameStep && $this->assignTo === $this->id_people) {
+                $this->userController = true;
+            } elseif (in_array('Event Report Manager', $workflow) && $this->current_step === $nameStep &&  $this->also_assignTo === $this->id_people) {
+                $this->userController = true;
+            } else {
+                $this->userController = false;
+            }
+        } else {
+            $this->Event_Report_Manager = '';
         }
     }
     protected $listeners = ['updateIncident' => 'render'];
@@ -51,60 +69,64 @@ class Index extends Component
         if ($this->proceedTo) {
             $this->getStatusId = WorkflowAdministration::where('workflow_template', 2)->where('name', $this->proceedTo)->first()->id;
             $this->responsibleRole = WorkflowAdministration::whereId($this->getStatusId)->first()->id;
-
             $this->get_Id = WorkflowAdministration::whereId($this->getStatusId)->first()->status_code;
         } else {
             $this->responsibleRole = 0;
         }
-        if (!empty(People::whereIn('network_username', [auth()->user()->username])->first()->id)) {
-            $this->id_people = People::whereIn('network_username', [auth()->user()->username])->first()->id;
-            $workflow = UserSecurity::with('People')->where('user_id', $this->id_people)->whereIn('workflow', ['Moderator', 'Event Report Manager'])->pluck('workflow')->toArray();
-            $erm = 'Event Report Manager';
-            $nameStep = 'ERM Assigned';
-            if (in_array('Moderator', $workflow)) {
-                $this->userController = true;
-            } elseif (in_array('Event Report Manager', $workflow) && $this->current_step === $nameStep) {
-                $this->userController = true;
-            } else {
-                $this->userController = false;
-            }
-        } else {
-            $erm = '';
-        }
+
         return view('livewire.event-report-list.insident.panel.index', [
-            'People' => UserSecurity::with('People.Employer')->where('event_types_id', $this->event_type)->workgroup(trim($this->workgroup))->flow(trim($erm))->get(),
+            'People' => UserSecurity::with('People.Employer')->where('event_types_id', $this->event_type)->workgroup(trim($this->workgroup))->flow(trim($this->Event_Report_Manager))->get(),
             'Workflow' => WorkflowAdministration::where('workflow_template', 2)->where('name', $this->current_step)->get()
         ]);
     }
-
     public function storeUpdate()
     {
+
         if (!empty($this->assignTo) && empty($this->also_assignTo)) {
-            $this->requestName = 'Hallo' . ' ' . $this->assignToName;
+            $this->assignToName = People::find($this->assignTo)->lookup_name;
+            $this->requestName = 'Hi' . ' ' . $this->assignToName;
         }
         if (!empty($this->assignTo) && !empty($this->also_assignTo)) {
-            $this->requestName = 'Hallo' . ' ' . $this->assignToName . ' & ' . $this->also_assignToName;
+            $this->assignToName = People::find($this->assignTo)->lookup_name;
+            $this->also_assignToName = People::find($this->also_assignTo)->lookup_name;
+            $this->requestName = 'Hi' . ' ' . $this->assignToName . ' & ' . $this->also_assignToName;
         }
         $moderatorReport = People::where('network_username', auth()->user()->username)->first()->lookup_name;
+        $url = $this->real_id;
         if ($this->responsibleRole == 6) {
             $userSecurity = UserSecurity::whereIn('user_id', [$this->assignTo, $this->also_assignTo])->where('workflow', 'Event Report Manager')->pluck('user_id')->toArray();
             $people = People::whereIn('id', $userSecurity)->pluck('network_username')->toArray();
             $User = User::whereIn('username', $people)->get();
-            $url = $this->real_id;
             foreach ($User as $key => $user) {
                 if ($user->role_users_id == 1) {
-                    $user_security1 = User::whereIn('username', $people)->where('role_users_id', 1)->get();
+                    $user_security = User::whereIn('username', $people)->where('role_users_id', 1)->get();
                     $offerData = [
                         'name' => $this->requestName,
                         'subject' => $this->event_subtype,
-                        'body2' => 'The Moderator assigned this incident report to you',
+                        'body2' => "Moderator reopened this report",
                         'body' => 'Please check by click the button below',
                         'thanks' => 'Thank you',
                         'offerText' => $this->reference,
                         'offerUrl' => url("http://tokasafe.tokatindung.com/eventReport/incident/$url"),
-                        'offer_id' => $this->real_id
+                        'offer_id' => $this->real_id,
+                        'dateTime' => Carbon::now(+8)->toDateTimeString()
                     ];
-                    Notification::send($user_security1, new ToERM($offerData));
+                    Notification::send($user_security, new ToERM($offerData));
+                }
+                else{
+                    $user_security = User::whereIn('username', $people)->where('role_users_id', 2)->get();
+                    $offerData = [
+                        'name' => $this->requestName,
+                        'subject' => $this->event_subtype,
+                        'body2' => 'Moderator reopened this report',
+                        'body' => 'Please click the button below',
+                        'thanks' => 'Thank you',
+                        'offerText' => $this->reference,
+                        'offerUrl' => url("http://tokasafe.tokatindung.com/user/eventReport/incident/$url"),
+                        'offer_id' => $this->real_id,
+                        'dateTime' => Carbon::now(+8)->toDateTimeString()
+                    ];
+                    Notification::send($user_security, new ToERM($offerData));
                 }
             }
             $this->validate([
@@ -121,7 +143,7 @@ class Index extends Component
                 ]);
 
                 if (auth()->user()->role_users_id == 2) {
-                    return redirect()->route('hazardDetailsGuest', ['id' =>  $this->real_id]);
+                    return redirect()->route('incidentDetailsGuest', ['id' =>  $this->real_id]);
                 } else {
                     return redirect()->route('incidentDetails', ['id' =>  $this->real_id]);
                 }
@@ -129,31 +151,47 @@ class Index extends Component
                 session()->flash('error', "Something goes wrong!!");
             }
         } elseif ($this->responsibleRole == 7) {
+            $this->validate([
+                'proceedTo' => 'required',
+                'assignTo' => 'required',
+                'also_assignTo' => 'nullable',  
+            ]);
             $userSecurity =  UserSecurity::whereIn('user_id', [$this->assignTo, $this->also_assignTo])->where('workflow', 'Event Report Manager')->pluck('user_id')->toArray();
             $people = People::whereIn('id', $userSecurity)->pluck('network_username')->toArray();
             $User = User::whereIn('username', $people)->get();
-            $url = $this->real_id;
             foreach ($User as $key => $user) {
                 if ($user->role_users_id == 1) {
-                    $user_security1 = User::whereIn('username', $people)->where('role_users_id', 1)->get();
+                    $user_security = User::whereIn('username', $people)->where('role_users_id', 1)->get();
                     $offerData = [
                         'name' => $this->requestName,
                         'subject' => $this->event_subtype,
-                        'body2' => 'Moderator Re-Assigned this hazard report',
+                        'body2' => 'Moderator Assigns this Incident report to you',
                         'body' => 'Please click the button below',
                         'thanks' => 'Thank you',
                         'offerText' => $this->reference,
                         'offerUrl' => url("http://tokasafe.tokatindung.com/eventReport/incident/$url"),
-                        'offer_id' => $this->real_id
+                        'offer_id' => $this->real_id,
+                        'dateTime' => Carbon::now(+8)->toDateTimeString()
                     ];
-                    Notification::send($user_security1, new ToERM($offerData));
+                    Notification::send($user_security, new ToERM($offerData));
+                }
+                else{
+                    $user_security = User::whereIn('username', $people)->where('role_users_id', 2)->get();
+                    $offerData = [
+                        'name' => $this->requestName,
+                        'subject' => $this->event_subtype,
+                        'body2' => 'Moderator Assigns this Incident report to you',
+                        'body' => 'Please click the button below',
+                        'thanks' => 'Thank you',
+                        'offerText' => $this->reference,
+                        'offerUrl' => url("http://tokasafe.tokatindung.com/user/eventReport/incident/$url"),
+                        'offer_id' => $this->real_id,
+                        'dateTime' => Carbon::now(+8)->toDateTimeString()
+                    ];
+                    Notification::send($user_security, new ToERM($offerData));
                 }
             }
-            $this->validate([
-                'proceedTo' => 'required',
-                'assignTo' => 'required',
-                'also_assignTo' => 'nullable',
-            ]);
+            
             PanelIncident::whereId($this->report_id)->update([
                 'workflow_step' => $this->getStatusId,
                 'assignTo' => $this->assignTo,
@@ -161,7 +199,7 @@ class Index extends Component
                 'moderator_report' => $moderatorReport
             ]);
             if (auth()->user()->role_users_id == 2) {
-                return redirect()->route('hazardDetailsGuest', ['id' =>  $this->real_id]);
+                return redirect()->route('incidentDetailsGuest', ['id' =>  $this->real_id]);
             } else {
                 return redirect()->route('incidentDetails', ['id' =>  $this->real_id]);
             }
@@ -170,10 +208,9 @@ class Index extends Component
             $userSecurity = UserSecurity::where('workflow', 'Moderator')->pluck('user_id')->toArray();
             $people = People::whereIn('id', $userSecurity)->pluck('network_username')->toArray();
             $User = User::whereIn('username', $people)->get();
-            $url = $this->real_id;
             foreach ($User as $key => $user) {
                 if ($user->role_users_id == 1) {
-                    $user_security1 = User::whereIn('username', $people)->where('role_users_id', 1)->get();
+                    $user_security = User::whereIn('username', $people)->where('role_users_id', 1)->get();
                     $offerData = [
                         'name' => $this->requestName,
                         'subject' => $this->event_subtype,
@@ -181,9 +218,10 @@ class Index extends Component
                         'thanks' => 'Thank you',
                         'offerText' => $this->reference,
                         'offerUrl' => url("http://tokasafe.tokatindung.com/eventReport/incident/$url"),
-                        'offer_id' => $this->real_id
+                        'offer_id' => $this->real_id,
+                        'dateTime' => Carbon::now(+8)->toDateTimeString()
                     ];
-                    Notification::send($user_security1, new ToModerator($offerData));
+                    Notification::send($user_security, new ToModerator($offerData));
                 }
             }
             $this->validate([
@@ -199,29 +237,46 @@ class Index extends Component
 
             ]);
             if (auth()->user()->role_users_id == 2) {
-                return redirect()->route('hazardDetailsGuest', ['id' =>  $this->real_id]);
+                return redirect()->route('incidentDetailsGuest', ['id' =>  $this->real_id]);
             } else {
                 return redirect()->route('incidentDetails', ['id' =>  $this->real_id]);
             }
         } elseif ($this->responsibleRole == 9) {
-            $this->validate([
-                'proceedTo' => 'required',
-                'assignTo' => 'required',
-                'also_assignTo' => 'nullable',
-            ]);
-            PanelIncident::whereId($this->report_id)->update([
-                'workflow_step' => $this->getStatusId,
-                'assignTo' => $this->assignTo,
-                'also_assignTo' => $this->also_assignTo,
-                'moderator_report' => $this->moderator
-
-            ]);
-            if (auth()->user()->role_users_id == 2) {
-                return redirect()->route('hazardDetailsGuest', ['id' =>  $this->real_id]);
-            } else {
-                return redirect()->route('incidentDetails', ['id' =>  $this->real_id]);
+            $userSecurity =  UserSecurity::whereIn('user_id', [$this->assignTo, $this->also_assignTo])->where('workflow', 'Event Report Manager')->pluck('user_id')->toArray();
+            $people = People::whereIn('id', $userSecurity)->pluck('network_username')->toArray();
+            $User = User::whereIn('username', $people)->get();
+            foreach ($User as $key => $user) {
+                if ($user->role_users_id == 1) {
+                    $user_security = User::whereIn('username', $people)->where('role_users_id', 1)->get();
+                    $offerData = [
+                        'name' => $this->requestName,
+                        'subject' => $this->event_subtype,
+                        'body2' => "Moderator has Closed this report",
+                        'body' => 'Please click the button below',
+                        'thanks' => 'Thank you',
+                        'offerText' => $this->reference,
+                        'offerUrl' => url("http://tokasafe.tokatindung.com/eventReport/incident/$url"),
+                        'offer_id' => $this->real_id,
+                        'dateTime' => Carbon::now(+8)->toDateTimeString()
+                    ];
+                    Notification::send($user_security, new ToERM($offerData));
+                }
+                else{
+                    $user_security = User::whereIn('username', $people)->where('role_users_id', 2)->get();
+                    $offerData = [
+                        'name' => $this->requestName,
+                        'subject' => $this->event_subtype,
+                        'body2' => 'Moderator has Closed this report',
+                        'body' => 'Please click the button below',
+                        'thanks' => 'Thank you',
+                        'offerText' => $this->reference,
+                        'offerUrl' => url("http://tokasafe.tokatindung.com/user/eventReport/incident/$url"),
+                        'offer_id' => $this->real_id,
+                        'dateTime' => Carbon::now(+8)->toDateTimeString()
+                    ];
+                    Notification::send($user_security, new ToERM($offerData));
+                }
             }
-        } elseif ($this->responsibleRole == 10) {
             $this->validate([
                 'proceedTo' => 'required',
                 'assignTo' => 'required',
@@ -234,12 +289,50 @@ class Index extends Component
                 'moderator_report' => $this->moderator
 
             ]);
+
             if (auth()->user()->role_users_id == 2) {
-                return redirect()->route('hazardDetailsGuest', ['id' =>  $this->real_id]);
+                return redirect()->route('incidentDetailsGuest', ['id' =>  $this->real_id]);
             } else {
                 return redirect()->route('incidentDetails', ['id' =>  $this->real_id]);
             }
         } else {
+            $userSecurity =  UserSecurity::whereIn('user_id', [$this->assignTo, $this->also_assignTo])->where('workflow', 'Event Report Manager')->pluck('user_id')->toArray();
+            $people = People::whereIn('id', $userSecurity)->pluck('network_username')->toArray();
+            $User = User::whereIn('username', $people)->get();
+            foreach ($User as $key => $user) {
+                if ($user->role_users_id == 1) {
+                    $user_security = User::whereIn('username', $people)->where('role_users_id', 1)->get();
+                    $offerData = [
+                        'name' => $this->requestName,
+                        'subject' => $this->event_subtype,
+                        'body2' => "Moderator has Cancelled this report",
+                        'body' => 'Please click the button below',
+                        'thanks' => 'Thank you',
+                        'offerText' => $this->reference,
+                        'offerUrl' => url("http://tokasafe.tokatindung.com/eventReport/incident/$url"),
+                        'offer_id' => $this->real_id,
+                        'dateTime' => Carbon::now(+8)->toDateTimeString()
+                    ];
+                    Notification::send($user_security, new ToERM($offerData));
+                }
+            }
+            $this->validate([
+                'proceedTo' => 'required',
+                'assignTo' => 'required',
+                'also_assignTo' => 'nullable',
+            ]);
+            PanelIncident::whereId($this->report_id)->update([
+                'workflow_step' => $this->getStatusId,
+                'assignTo' => $this->assignTo,
+                'also_assignTo' => $this->also_assignTo,
+                'moderator_report' => $this->moderator
+
+            ]);
+            if (auth()->user()->role_users_id == 2) {
+                return redirect()->route('incidentDetailsGuest', ['id' =>  $this->real_id]);
+            } else {
+                return redirect()->route('incidentDetails', ['id' =>  $this->real_id]);
+            }
         }
     }
 }

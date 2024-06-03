@@ -1,60 +1,59 @@
 <div>
-
+    @push('styles')
+        <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+        <style>
+            .ck-editor__editable[role="textbox"] {
+                /* Editing area */
+                /* min-height: 200px; */
+                padding: 25px !IMPORTANT;
+            }
+        </style>
+    @endpush
     @include('toast.toast')
-    <!-- The button to open modal -->
-    <!-- You can open the modal using ID.showModal() method -->
-    <!-- The button to open modal -->
-
-
-
-
-    <label wire:click='openModal' class="btn btn-sm btn-square btn-info tooltip tooltip-info tooltip-right "><svg
-            xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 pl-0.5 pt-0.5 " viewBox="0 0 20 20" fill="currentColor">
+    <label wire:click='openModal' class="btn btn-xs btn-accent btn-square btn-outline">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-4 h-4">
             <path fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25v2.5h2.5a.75.75 0 0 1 0 1.5h-2.5v2.5a.75.75 0 0 1-1.5 0v-2.5h-2.5a.75.75 0 0 1 0-1.5h2.5v-2.5a.75.75 0 0 1 1.5 0Z"
                 clip-rule="evenodd" />
         </svg>
     </label>
-
-
-
-
-    <div class="modal {{ $modal }}">
-        <div class=" sm:w-10/12 sm:max-w-fit modal-box">
+    <div class="modal {{ $modal }} ">
+        <div class="max-w-7xl xl:w-11/12  xl:h-[800px] modal-box">
             <button
                 class="absolute z-10 font-bold text-blue-500 btn btn-sm btn-circle btn-ghost right-2 top-2 tooltip tooltip-left"
                 data-tip="{{ __('info') }}">?</button>
-            <div class="divider divider-accent">
-                <h3 class="text-lg font-bold shadow-2xl ">{{ __('add_hazard') }}</h3>
-            </div>
-
+            <div
+                class="font-extrabold text-transparent divider divider-accent text-1xl bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
+                {{ __('add_hazard') }}</div>
             <form wire:submit.prevent='store'>
                 @csrf
-                <div class="overflow-y-auto sm:h-80 lg2x:h-1/2">
+                <div class="p-2 overflow-y-auto shadow-inner sm:60 md:h-80 xl:h-[640px]">
 
-                    <div class="flex flex-wrap gap-2">
-                        <div class="w-full max-w-xs form-control">
+                    <div class="flex flex-wrap gap-1">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('est')" />
                             <select wire:model='event_subtype'
-                                class=" @error('event_subtype') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
+                                class=" @error('event_subtype') border-rose-500 border-2 @enderror select select-bordered select-xs w-full sm:max-w-xl focus:outline-none  focus:ring-success focus:ring-1">
                                 <option selected>Select an option</option>
                                 @foreach ($EventSubType as $ets)
                                     @if (old('event_subtype') == $ets->id)
-                                        <option value="{{ $ets->id }}">{{$ets->EventType->name}}-{{ $ets->name }}</option>
+                                        <option value="{{ $ets->id }}">
+                                            {{ $ets->EventType->name }}-{{ $ets->name }}</option>
                                     @else
-                                        <option value="{{ $ets->id }}">{{$ets->EventType->name}}-{{ $ets->name }}</option>
+                                        <option value="{{ $ets->id }}">
+                                            {{ $ets->EventType->name }}-{{ $ets->name }}</option>
                                     @endif
                                 @endforeach
                             </select>
                             <x-input-error :messages="$errors->get('event_subtype')" class="mt-0" />
                         </div>
-                        <div class="w-full max-w-xs form-control">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('nama_pelapor')" />
                             <label class="join" wire:click='reportByClick'>
                                 <input type="text" placeholder="Type here" wire:model='nama_pelapor' readonly
-                                    class=" @error('nama_pelapor') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-                                <label  for=""
-                                    class="border btn btn-xs btn-square join-item border-info btn-info">
+                                    class=" @error('nama_pelapor') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1" />
+                                <label for=""
+                                    class="border btn btn-xs btn-square join-item @error('nama_pelapor') btn-error @enderror btn-info">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -66,26 +65,26 @@
                             </label>
                             <x-input-error :messages="$errors->get('nama_pelapor')" class="mt-0" />
                         </div>
-                        <div class="w-full max-w-xs form-control">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('tanggal_kejadian')" />
                             <input type="text" id="tglLapor" placeholder="Type here" wire:model='tanggal_kejadian'
                                 readonly
-                                class=" @error('tanggal_kejadian') border-rose-500 border-2 @enderror  w-full input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                                class=" @error('tanggal_kejadian') border-rose-500 border-2 @enderror  cursor-pointer w-full join-item input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1" />
                             <x-input-error :messages="$errors->get('tanggal_kejadian')" class="mt-0" />
                         </div>
-                        <div class="w-full max-w-xs form-control">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('time_event')" />
                             <input type="text" id="jamKejadian" placeholder="Type here" wire:model='waktu' readonly
-                                class=" @error('waktu') border-rose-500 border-2 @enderror w-full input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                                class=" @error('waktu') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1" />
                             <x-input-error :messages="$errors->get('waktu')" class="mt-0" />
                         </div>
-                        <div class="w-full max-w-xs form-control">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('rw')" />
                             <label class="join " wire:click='wgClick'>
                                 <input type="text" placeholder="Type here" wire:model='workgroup' readonly
-                                    class=" @error('workgroup') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-                                <label  for=""
-                                    class="border btn btn-xs btn-square join-item border-info btn-info">
+                                    class=" @error('workgroup') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1" />
+                                <label for=""
+                                    class="border btn btn-xs btn-square join-item @error('workgroup') btn-error @enderror btn-info">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -97,13 +96,13 @@
                             <x-input-error :messages="$errors->get('workgroup')" class="mt-0" />
                         </div>
 
-                        <div class="w-full max-w-xs form-control">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('pengawas_area')" />
-                            <label  wire:click='reportToClick' class="join">
+                            <label wire:click='reportToClick' class="join">
                                 <input type="text" placeholder="Type here" wire:model='pengawas_area'
-                                    class=" @error('pengawas_area') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                                    class=" @error('pengawas_area') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1" />
                                 <label for=""
-                                    class="border btn btn-xs btn-square join-item border-info btn-info">
+                                    class="border btn btn-xs btn-square join-item @error('pengawas_area') btn-error @enderror btn-info">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -115,10 +114,10 @@
                             </label>
                             <x-input-error :messages="$errors->get('pengawas_area')" class="mt-0" />
                         </div>
-                        <div class="w-full max-w-xs form-control">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('el')" />
                             <select wire:model='lokasi'
-                                class=" @error('lokasi') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
+                                class=" @error('lokasi') border-rose-500 border-2 @enderror select select-bordered select-xs w-full sm:max-w-xl focus:outline-none  focus:ring-success focus:ring-1">
                                 <option selected>Select an option</option>
                                 @foreach ($LocationEvent as $location)
                                     @if (old('lokasi') == $location->name)
@@ -130,36 +129,63 @@
                             </select>
                             <x-input-error :messages="$errors->get('lokasi')" class="mt-0" />
                         </div>
-                        <div class="w-full max-w-xs form-control">
+                        <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
+                            <x-input-label-req :value="__('tugas')" />
+                            <input type="text" placeholder="Type here" wire:model='task'
+                                class=" @error('task') border-rose-500 border-2 @enderror  w-full sm:max-w-xl input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1" />
+                            <x-input-error :messages="$errors->get('task')" class="mt-0" />
+                        </div>
+                        <div
+                            class="w-full sm:max-w-sm xl:max-w-xl form-control     {{ $documentation ? 'flex flex-row' : '' }}">
+                            <div class="{{ $documentation ? 'flex-initial w-[650px]' : '' }} relative">
+                                <x-input-label :value="__('documentation')" />
+                                <input type="file" wire:model='documentation'
+                                    class=" @error('documentation') border-rose-500 border-2 @enderror peer relative file-input file-input-bordered file-input-primary w-full  file-input-xs  focus:outline-none  focus:ring-success focus:ring-1" />
+                                <span class="absolute mt-1 right-2" wire:loading wire:target="documentation"
+                                    wire:loading.class="loading loading-dots loading-xs text-neutral"></span>
+                                <x-input-error :messages="$errors->get('documentation')" class="mt-0" />
+                            </div>
+                            @if ($documentation)
+                                <div class="flex-none w-10 ">
+                                    <div class="p-2 mt-4">
 
-                            <x-input-label-req :value="__('documentation')" />
-                            <input type="file" placeholder="Type here" wire:model='documentation'
-                                class=" @error('documentation') border-rose-500 border-2 @enderror w-full max-w-xs file-input file-input-bordered file-input-success file-input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-                            <x-input-error :messages="$errors->get('documentation')" class="mt-0" />
+                                        @include('livewire.event-report-list.hazard-id.svgCreate')
+
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
 
-                    <div class="w-full max-w-xs sm:max-w-screen-2xl form-control">
-                        <x-input-label-bahaya :value="__('rincian_bahaya')" />
-                        <textarea placeholder="Bio" wire:model='rincian_bahaya'
-                            class="@error('rincian_bahaya') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-success textarea-sm w-full  focus:outline-none focus:border-success focus:ring-success focus:ring-1"></textarea>
+                    <div>
+                        <div wire:ignore class="w-full form-control">
+                            <x-input-label-bahaya :value="__('deskripsi')" />
+                            <textarea id="rincian_bahaya" placeholder="Type here" wire:model='rincian_bahaya'
+                                class="@error('rincian_bahaya') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                        </div>
                         <x-input-error :messages="$errors->get('rincian_bahaya')" class="mt-0" />
                     </div>
-                    <div class="w-full max-w-xs sm:max-w-screen-2xl form-control">
-                        <x-input-label-req :value="__('tindakan_perbaikan')" />
-                        <textarea placeholder="Bio" wire:model='tindakan_perbaikan'
-                            class="@error('tindakan_perbaikan') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-success textarea-sm w-full  focus:outline-none focus:border-success focus:ring-success focus:ring-1"></textarea>
+                    <div>
+                        <div wire:ignore class="w-full form-control">
+                            <x-input-label-req :value="__('tindakan_perbaikan_dilakuan')" />
+                            <textarea id="tindakan_perbaikan" placeholder="Type here" wire:model='tindakan_perbaikan'
+                                class="@error('tindakan_perbaikan') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                        </div>
                         <x-input-error :messages="$errors->get('tindakan_perbaikan')" class="mt-0" />
                     </div>
-                    <div class="w-full max-w-xs sm:max-w-screen-2xl form-control">
-                        <x-input-label-req :value="__('tindakan_perbaikan_disarankan')" />
-                        <textarea placeholder="Bio" wire:model='tindakan_perbaikan_disarankan'
-                            class="@error('tindakan_perbaikan_disarankan') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-success textarea-sm w-full  focus:outline-none focus:border-success focus:ring-success focus:ring-1"></textarea>
+                    <div>
+                        <div wire:ignore class="w-full form-control">
+                            <x-input-label-req :value="__('tindakan_perbaikan_disarankan')" />
+                            <textarea id="tindakan_perbaikan_disarankan" placeholder="Type here" wire:model='tindakan_perbaikan_disarankan'
+                                class="@error('tindakan_perbaikan_disarankan') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
+                        </div>
                         <x-input-error :messages="$errors->get('tindakan_perbaikan_disarankan')" class="mt-0" />
                     </div>
+
+
                     @include('livewire.event-report-list.hazard-id.tablePenilaian')
-                       
-                  
+
+
                 </div>
 
                 <div class="modal-action">
@@ -179,4 +205,109 @@
     </div>
     @include('livewire.event-report-list.hazard-id.modal')
 
+    <script>
+        var hazardClose = "<?php echo "$hazardClose"; ?>";
+        // rincian_bahaya
+        ClassicEditor
+            .create(document.querySelector('#rincian_bahaya'), {
+                toolbar: ['heading', 'undo', 'redo', 'bold', 'italic', 'numberedList', 'bulletedList', 'link']
+
+            })
+            .then(newEditor => {
+                const toolbarElement = newEditor.ui.view.toolbar.element;
+                if (hazardClose === 'Closed' || hazardClose === 'Cancelled') {
+
+                    newEditor.enableReadOnlyMode('#rincian_bahaya');
+
+                    toolbarElement.style.display = 'none';
+                } else {
+                    toolbarElement.style.display = 'flex';
+                    newEditor.disableReadOnlyMode('#rincian_bahaya');
+                }
+                newEditor.model.document.on('change:data', () => {
+
+                    @this.set('rincian_bahaya', newEditor.getData())
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        // tindakan_perbaikan
+        ClassicEditor
+            .create(document.querySelector('#tindakan_perbaikan'), {
+                toolbar: ['heading', 'undo', 'redo', 'bold', 'italic', 'numberedList', 'bulletedList', 'link']
+
+
+            })
+            .then(newEditor => {
+                const toolbarElement = newEditor.ui.view.toolbar.element;
+               
+                if (hazardClose === 'Closed' || hazardClose === 'Cancelled') {
+
+                    newEditor.enableReadOnlyMode('#tindakan_perbaikan');
+
+                    toolbarElement.style.display = 'none';
+                } else {
+                    toolbarElement.style.display = 'flex';
+                    newEditor.disableReadOnlyMode('#tindakan_perbaikan');
+                }
+                newEditor.model.document.on('change:data', () => {
+
+                    @this.set('tindakan_perbaikan', newEditor.getData())
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        // tindakan_perbaikan_disarankan
+        ClassicEditor
+            .create(document.querySelector('#tindakan_perbaikan_disarankan'), {
+                toolbar: ['heading', 'undo', 'redo', 'bold', 'italic', 'numberedList', 'bulletedList', 'link']
+
+            })
+            .then(newEditor => {
+                const toolbarElement = newEditor.ui.view.toolbar.element;
+                if (hazardClose === 'Closed' || hazardClose === 'Cancelled') {
+
+                    newEditor.enableReadOnlyMode('#tindakan_perbaikan_disarankan');
+
+                    toolbarElement.style.display = 'none';
+                } else {
+                    toolbarElement.style.display = 'flex';
+                    newEditor.disableReadOnlyMode('#tindakan_perbaikan_disarankan');
+                }
+                newEditor.model.document.on('change:data', () => {
+
+                    @this.set('tindakan_perbaikan_disarankan', newEditor.getData())
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        // komentar
+        ClassicEditor
+            .create(document.querySelector('#komentar'), {
+                toolbar: ['heading', 'undo', 'redo', 'bold', 'italic', 'numberedList', 'bulletedList', 'link']
+
+            })
+            .then(newEditor => {
+                const toolbarElement = newEditor.ui.view.toolbar.element;
+                if (hazardClose === 'Closed' || hazardClose === 'Cancelled') {
+
+                    newEditor.enableReadOnlyMode('#komentar');
+
+                    toolbarElement.style.display = 'none';
+                } else {
+                    toolbarElement.style.display = 'flex';
+                    newEditor.disableReadOnlyMode('#komentar');
+                }
+                newEditor.model.document.on('change:data', () => {
+
+                    @this.set('komentar', newEditor.getData())
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 </div>

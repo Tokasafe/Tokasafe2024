@@ -40,6 +40,8 @@ use App\Http\Livewire\EventReportList\Insident\Index as InsidentIndex;
 use App\Http\Livewire\Guest\EventReportList\Dashboard\Index as DashboardIndex;
 use App\Http\Livewire\Guest\EventReportList\Hazard\Detail;
 use App\Http\Livewire\Guest\EventReportList\Hazard\Index as HazardIndexGuest;
+use App\Http\Livewire\Guest\EventReportList\Insident\Detail as EventReportListInsidentDetail;
+use App\Http\Livewire\Guest\EventReportList\Insident\Index as EventReportListInsidentIndex;
 use App\Http\Livewire\Guest\Manhours\ManhoursRegister\Index as ManhoursManhoursRegisterIndex;
 use App\Http\Livewire\Manhours\ManhoursRegister\Index as ManhoursRegisterIndex;
 use App\Http\Livewire\Manhours\TableExcel;
@@ -100,6 +102,8 @@ Route::middleware(['auth', 'user-role:1'])->group(function () {
 Route::middleware(['auth', 'user-role:2'])->group(function () {
     Route::get('user/eventReport/hazard_id', HazardIndexGuest::class)->name('hazardGuest');
     Route::get('user/eventReport/hazard_id/{id}', Detail::class)->name('hazardDetailsGuest');
+    Route::get('user/eventReport/incident',EventReportListInsidentIndex::class)->name('incidentGuest');
+    Route::get('user/eventReport/incident/{id}',EventReportListInsidentDetail::class)->name('incidentDetailsGuest');
     Route::get('user/manhours/manhoursRegister', ManhoursManhoursRegisterIndex::class)->name('ManhoursGuest');
 });
 Route::middleware(['auth', 'user-role:1'])->group(function () {

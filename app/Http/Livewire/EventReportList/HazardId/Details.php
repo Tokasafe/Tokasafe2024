@@ -36,7 +36,8 @@ class Details extends Component
     public $nama_pelapor_id;
     public $event_subtype;
     public $documentation;
-    public $documentation1;
+    public $fileUpload ;
+    public $filename;
     public $tanggal_kejadian;
     public $search_reportBy = '';
     public $search_workgroup = '';
@@ -65,6 +66,7 @@ class Details extends Component
     public $showWG = true;
     public $showAccess = false;
     public $data_id;
+    public $task;
     public $hazardClose;
     public function mount($id)
     {
@@ -93,7 +95,7 @@ class Details extends Component
         $this->pengawas_area_id = $HazardId->pengawas_area;
         $this->lokasi = $HazardId->lokasi;
         $this->workgroup_id = $HazardId->workgroup;
-        $this->documentation = $HazardId->documentation;
+        $this->filename = $HazardId->documentation;
         $this->rincian_bahaya = $HazardId->rincian_bahaya;
         $this->tindakan_perbaikan = $HazardId->tindakan_perbaikan;
         $this->tindakan_perbaikan_disarankan = $HazardId->tindakan_perbaikan_disarankan;
@@ -102,8 +104,9 @@ class Details extends Component
         $this->potential_likelihood = $HazardId->potential_likelihood;
         $this->tindakan_perbaikan_dilakuan = $HazardId->tindakan_perbaikan_dilakuan;
         $this->komentar = $HazardId->komentar;
+        $this->task = $HazardId->task;
         $this->reference = $HazardId->reference;
-        //    dd($this->pengawas_area_id);
+       
     }
 
     public function render()
@@ -125,7 +128,11 @@ class Details extends Component
         } else {
             $this->potential_likelihood_description = '';
         }
-
+        if (!empty($this->documentation)) {
+            $file_name = $this->documentation->getClientOriginalName();
+            $this->fileUpload  = pathinfo($file_name, PATHINFO_EXTENSION);
+            $this->filename=null;
+        }
 
         if (!empty($this->radio_select)) {
             if ($this->radio_select == 'companyLevel') {
@@ -233,9 +240,9 @@ class Details extends Component
             $this->reportToClickClose();
         }
     }
-    public function download($id)
+    public function download()
     {
-        $name = HazardId::whereId($id)->first()->documentation;
+        $name = HazardId::whereId($this->data_id)->first()->documentation;
         return response()->download(storage_path('app/public/documents/' . $name));
     }
     public function clearSearchWg()
@@ -249,12 +256,13 @@ class Details extends Component
     public function store()
     {
 
-        if (empty($this->documentation1)) {
-            $file_name = $this->documentation;
+        if (!$this->documentation) {
+            $file_name = $this->filename;
+           
         } else {
-
-            $file_name = $this->documentation1->getClientOriginalName();
-            $this->documentation1->storeAs('public/documents', $file_name);
+           
+            $file_name = $this->documentation->getClientOriginalName();
+            $this->documentation->storeAs('public/documents', $file_name);
         }
 
         $this->validate([
@@ -271,6 +279,7 @@ class Details extends Component
             'actual_outcome' => 'required',
             'potential_consequence' => 'required',
             'potential_likelihood' => 'required',
+            'task' => 'required',
             // 'tindakan_perbaikan_dilakuan' => 'required',
 
         ]);
@@ -288,6 +297,7 @@ class Details extends Component
                 'tindakan_perbaikan_disarankan' => $this->tindakan_perbaikan_disarankan,
                 'documentation' => $file_name,
                 'komentar' => $this->komentar,
+                'task' => $this->task,
                 'actual_outcome' => $this->actual_outcome,
                 'potential_consequence' => $this->potential_consequence,
                 'potential_likelihood' => $this->potential_likelihood,

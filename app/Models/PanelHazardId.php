@@ -50,6 +50,16 @@ class PanelHazardId extends Model
             });
         }
     }
+    public function scopeSearchEventType($query, $term)
+    {
+
+        if ($term) {
+            return  $query->whereHas('Hazard', function ($q) use ($term) {
+                $q->where('event_type', 'like', '%' . $term . '%');
+            });
+        }
+       
+    }
    
     public function WorkflowStep()
     {

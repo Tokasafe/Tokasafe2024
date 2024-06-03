@@ -16,6 +16,6 @@ class IncidentAction extends Model
     }
     public function IncidentAction()
     {
-        return $this->belongsTo(IncidentAction::class,'incident_report_id');
+        return $this->belongsTo(IncidentReport::class,'incident_report_id');
     }
 }

@@ -22,18 +22,17 @@ class Update extends Component
         if (!is_null($value)) {
             $this->data_id = $value;
             $ActionIncident = IncidentAction::find($this->data_id);
-            $this->description_incident = $ActionIncident->description_incident;
+            $this->description_incident = $ActionIncident->IncidentAction->task;
             $this->followup_action = $ActionIncident->followup_action;
             $this->actionee_comments = $ActionIncident->actionee_comments;
             $this->action_condition = $ActionIncident->action_condition;
             $this->incident_report_id = $ActionIncident->incident_report_id;
-            $this->description_incident = $ActionIncident->description_incident;
             if ($ActionIncident->responsibility) {
                 $this->report_to = $ActionIncident->People->lookup_name;
                 $this->responsibility = $ActionIncident->responsibility;
             } else {
-                $this->report_to = "";
-                $this->responsibility = "";
+                $this->report_to = null;
+                $this->responsibility = null;
             }
             $this->orginal_dueDate = ($ActionIncident->orginal_dueDate) ?date('d-m-Y', strtotime($ActionIncident->orginal_dueDate)) : '' ;
             $this->dueDate =($ActionIncident->dueDate)? date('d-m-Y', strtotime($ActionIncident->dueDate)):'';
@@ -64,32 +63,32 @@ class Update extends Component
             $this->report_to = People::whereId($id)->first()->lookup_name;
             $this->closeResponsibility();
         } else {
-            $this->responsibility = '';
-            $this->report_to = '';
+            $this->responsibility = null;
+            $this->report_to = null;
         }
     }
     public function updateStore()
     {
         if ($this->orginal_dueDate) {
-            $orginal_dueDate = date('Y-m-d', strtotime($this->orginal_dueDate));
+           $this->orginal_dueDate = date('Y-m-d', strtotime($this->orginal_dueDate));
         } else{
-            $orginal_dueDate = null;
+           $this->orginal_dueDate = null;
         }
         if ($this->dueDate) {
-          $dueDate = date('Y-m-d', strtotime($this->dueDate));
+         $this->dueDate= date('Y-m-d', strtotime($this->dueDate));
         } else {
-          $dueDate = null;
+         $this->dueDate= null;
         }
         if ($this->completion_date) {
-            $completion_date = date('Y-m-d', strtotime($this->completion_date));
+           $this->completion_date = date('Y-m-d', strtotime($this->completion_date));
         } else {
-            $completion_date = null;
+           $this->completion_date = null;
         }
         if ($this->personal_reminder) {
 
-           $personal_reminder = date('Y-m-d', strtotime($this->personal_reminder));
+           $this->personal_reminder= date('Y-m-d', strtotime($this->personal_reminder));
         } else {
-           $personal_reminder = null;
+           $this->personal_reminder= null;
         }
         try {
             $this->validate([
@@ -112,10 +111,10 @@ class Update extends Component
                 'actionee_comments' => $this->actionee_comments,
                 'action_condition' => $this->action_condition,
                 'responsibility' => $this->responsibility,
-                'orginal_dueDate' =>$orginal_dueDate,
-                'dueDate' =>$dueDate,
-                'completion_date' =>$completion_date,
-                'personal_reminder' => $personal_reminder,
+                'orginal_dueDate' =>$this->orginal_dueDate,
+                'dueDate' =>$this->dueDate,
+                'completion_date' =>$this->completion_date,
+                'personal_reminder' => $this->personal_reminder,
                 'incident_report_id' => $this->incident_report_id
             ]);
             session()->flash('success', 'Data added Successfully!!');

@@ -1,7 +1,6 @@
-<div>
-
-    <div class="dropdown dropdown-bottom dropdown-end ml-4 sm:m-0" wire:poll='pemberitahuan'>
-        <label tabindex="0" role="button" class="btn btn-ghost btn-sm btn-circle m-1 relative">
+<div class="">
+    <div class="ml-[20px] dropdown dropdown-end relative sm:m-0" wire:poll='pemberitahuan'>
+        <label tabindex="0" role="button" class="relative m-1 btn btn-ghost btn-sm btn-circle">
             @if ($notifications->count() < 1)
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6">
@@ -16,93 +15,69 @@
                 </svg>
             @endif
             @if ($notifications->count() >= 1)
-                <span class="absolute h-4 w-4 -right-1 -top-1 bg-rose-400 animate-ping rounded-full opacity-75"></span>
-                <span class="absolute h-4 w-4 -right-1 -top-1 bg-rose-400  rounded-full "><small
-                        class="text-gray-200 font-semibold">{{ $notifications->count() }}</small></span>
+                <span class="absolute w-4 h-4 rounded-full opacity-75 -right-1 -top-1 bg-rose-400 animate-ping"></span>
+                <span class="absolute w-4 h-4 rounded-full -right-1 -top-1 bg-rose-400 "><small
+                        class="font-semibold text-gray-200">{{ $notifications->count() }}</small></span>
             @endif
         </label>
-        <ul tabindex="0" class="dropdown-content z-[1]  menu  shadow bg-base-100 rounded-box   ">
-            <div class="relative w-56 sm:w-96">
-                <div class="h-96 sm:w-96 overflow-y-auto p-0">
+        <ul tabindex="0"
+            class="  gap-0.5 -start-[10rem] m-4 top-4  p-0 dropdown-content mx-auto z-[1] menu m-2  w-80  text-base-content ">
+            <div class="max-h-full overflow-y-auto h-96 sm:h-400px lg:h-[500px] xl:h-[550px] relative">
+                <li class="sticky top-0 left-0 right-0 z-50 shadow-sm bg-slate-200">
+                    <small class="flex menu-title">{{ __('Notification') }}
 
-                    <li
-                        class=" {{ empty($unreadNotifications->first()->id) ? 'hidden' : 'sticky top-0 z-10 bg-gray-200' }}">
-                        <h2 class="menu-title">{{ __('unread') }}</h2>
+                        <fieldset class="flex items-center p-[3px] border absolute inset-y-0 right-0 gap-1">
+                            <input name="radio-10" id="all"wire:model='markAsRead'
+                                class="radio-xs peer/all checked:bg-emerald-500 radio" type="radio" name="status"
+                                 value="All" />
+                            <label for="all"
+                                class="text-xs font-semibold peer-checked/all:text-emerald-500">{{ __('All') }}</label>
+                            <input name="radio-10" id="Unread"wire:model='markAsRead'
+                                class="radio-xs peer/Unread checked:bg-rose-500 radio" type="radio" name="status"
+                                value="Unread" />
+                            <label for="Unread"
+                                class="text-xs font-semibold peer-checked/Unread:text-rose-500">{{ __('Unread') }}</label>
+                            <input name="radio-10" id="Read"wire:model='markAsRead'
+                                class="radio-xs peer/Read checked:bg-sky-500 radio" type="radio" name="status"
+                                value="Read" />
+                            <label for="Read"
+                                class="text-xs font-semibold peer-checked/Read:text-sky-500">{{ __('Read') }}</label>
 
-                    </li>
-                    @foreach ($unreadNotifications as $notification)
-                        @if (auth()->user()->id == $notification->notifiable_id)
-                            <li>
+                        </fieldset>
+                    </small>
+                </li>
+                @forelse ($Pemberitahuan as $notification)
+                    @if (auth()->user()->id == $notification->notifiable_id)
+                        <li class="my-0.5 rounded-lg shadow-xl bg-slate-200 ">
+                            <a class="relative  flex max-w-xs rounded-lg shadow-xl {{ $notification->read_at ? 'bg-base-200' : 'bg-sky-200' }}"
+                                href={{ $notification->data['offerUrl'] }}
+                                wire:click="markasread('{{ $notification->id }}')">
 
-                                <a wire:click="markasread('{{ $notification->id }}')"
-                                    href="{{ auth()->user()->role_users_id == 2 ? route('hazardDetailsGuest', $notification->data['offer_id']) : route('hazardDetails', $notification->data['offer_id']) }}"
-                                    class="flex items-center  py-3 border-b hover:bg-gray-100 ">
-                                    <small class="text-gray-600 text-xs mx-2">
-                                        <span class="font-bold"
-                                            href="#">{{ $notification->data['lookup_name'] }}</span>
-                                        {{ $notification->data['info'] }} 
-                                        <span class="font-bold text-blue-500"
-                                            href="#">{{ $notification->data['reference'] }}</span><br><small
-                                            class="font-bold">{{ date(' d-M-y h:i:sa', strtotime($notification->updated_at)) }}</small>
-                                    </small>
-
-                                </a>
-                            </li>
-                        @endif
-                    @endforeach
-                    <li
-                        class="{{ empty($readNotifications->first()->id) ? 'hidden' : 'sticky top-0 z-10 bg-gray-200' }}">
-                        <h2 class="menu-title flex gap-4">{{ __('read') }}
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                class="w-5 h-5 text-emerald-500">
-                                <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
-                                <path fill-rule="evenodd"
-                                    d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </h2>
-                    </li>
-                    @foreach ($readNotifications as $notification)
-                        @if (auth()->user()->id == $notification->notifiable_id)
-                            <li>
-                                <div class="flex items-center">
-
-                                    <p class="text-gray-600 text-xs px-2">
-                                        <a href="{{ auth()->user()->role_users_id == 2 ? route('hazardDetailsGuest', $notification->data['offer_id']) : route('hazardDetails', $notification->data['offer_id']) }}"
-                                            class="  py-3 border-b  ">
-                                            <span class="font-bold"
-                                                href="#">{{ $notification->data['lookup_name'] }}</span>
-                                            {{ $notification->data['info'] }} 
-                                            <span class="font-bold text-blue-500"
-                                                href="#">{{ $notification->data['reference'] }}</span> <br><small
-                                                class="font-bold">{{ date('d-M-y h:i:sa', strtotime($notification->updated_at)) }}</small>
-                                        </a>
-                                    </p>
-                                    <button class="btn btn-xs btn-ghost btn-square "
-                                        wire:click="deleteNotif('{{ $notification->id }}')">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                            class="w-4 h-4 text-rose-500">
-                                            <path fill-rule="evenodd"
-                                                d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-
-                                    </button>
+                                <span
+                                    class="absolute bottom-0 right-0 py-0 -m-1 mr-3 text-[8px] font-semibold text-gray-500 uppercase">{{ date(' d-M-y h:i:sa', strtotime($notification->data['dateTime'])) }}</span>
+                                <div class="">
+                                    <h4 class="text-sm font-semibold leading-tight text-gray-900">
+                                        {{ $notification->data['lookup_name'] }}</h4>
+                                    <p class="text-[11px] text-gray-600">{{ $notification->data['info'] }}</p>
                                 </div>
-
-                            </li>
-                        @endif
-                    @endforeach
-                </div>
-
-
-                <button wire:click='markNotification' for=""
-                    class="{{ empty($unreadNotifications->first()->id) ? 'hidden' : 'btn absolute bottom-0 z-10 w-full btn-info btn-xs' }}   ">Mark
-                    as Read</button>
-
-
+                            </a>
+                            <label wire:click="deleteNotif('{{ $notification->id }}')"
+                                class="absolute top-0 right-0 order-1 px-2 mt-2 mr-2 text-xs font-bold text-green-900 uppercase btn-ghost btn btn-xs">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                    class="w-4 h-4 -mt-1 text-rose-500">
+                                    <path fill-rule="evenodd"
+                                        d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </label>
+                        </li>
+                    @endif
+                    @empty
+                    <li class="inset-x-0 top-0 z-50 text-center shadow-sm bg-slate-200 ">
+                        <p class="font-semibold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">{{ __('no notifications') }}</p>
+                    </li>
+                @endforelse
             </div>
         </ul>
     </div>
-
 </div>

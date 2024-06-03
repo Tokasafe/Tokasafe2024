@@ -1,10 +1,10 @@
-<div class="flex flex-col sticky top-0 z-30  drop-shadow-lg">
-    <div class="navbar bg-gradient-to-r  from-slate-600 via-slate-400 to-slate-300  w-full">
+<div class="sticky top-0 z-30 flex flex-col drop-shadow-lg">
+    <div class="w-full navbar bg-gradient-to-r from-slate-600 via-slate-400 to-slate-300">
         <div class="navbar-start">
             <div class="drawer">
                 <div class="flex items-center">
                     <label for="my-drawer" class="btn btn-ghost btn-xs btn-primary drawer-button lg:hidden">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none"
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none"
                             viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h8m-8 6h16" />
@@ -24,15 +24,15 @@
                 <div class="drawer-content">
                     <!-- Page content here -->
                 </div>
-                <div class="drawer-side z-30">
+                <div class="z-30 drawer-side">
                     <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-                    <ul class="menu m-0 w-80 min-h-full bg-gray-300 text-base-content ">
+                    <ul class="min-h-full m-0 bg-gray-300 menu w-80 text-base-content ">
                         <!-- Sidebar content here -->
                         @auth
-                            <div class="menu-title sticky top-0 mt-0 bg-gray-300 z-30 shadow-md">
+                            <div class="sticky top-0 z-30 mt-0 bg-gray-300 shadow-md menu-title">
                                 <div class="flex flex-row">
-                                    <h3 class=" text-sm font-extrabold text-amber-500 ">Toka.</h3>
-                                    <p class=" text-sm font-semibold text-emerald-500 ">Safe</p>
+                                    <h3 class="text-sm font-extrabold text-amber-500">Toka.</h3>
+                                    <p class="text-sm font-semibold text-emerald-500">Safe</p>
                                 </div>
                             </div>
                             @if (auth()->user()->role_users_id == 1)
@@ -47,7 +47,7 @@
                                             class="{{ Request::is('eventReport*') ? 'text-emerald-500 font-semibold' : '' }}">
                                             Event Report
                                         </summary>
-                                        <ul class=" text-xs text-center menu menu-xs max-w-xs">
+                                        <ul class="max-w-xs text-xs text-center menu menu-xs">
                                             <li>
                                                 <a
                                                     href="{{ route('hazard') }}"class="{{ Request::is('eventReport/hazard_id*') ? ' active font-semibold ' : '' }}">{{ __('Hazard_Report') }}</a>
@@ -66,7 +66,7 @@
                                             class="{{ Request::is('manhours*') ? 'text-emerald-500 font-semibold' : '' }}">
                                             Manhours
                                         </summary>
-                                        <ul class=" text-xs text-center menu menu-xs max-w-xs">
+                                        <ul class="max-w-xs text-xs text-center menu menu-xs">
                                             <li>
                                                 <a
                                                     href="{{ route('manhoursRegister') }}"class="{{ Request::is('manhours/manhoursRegister*') ? ' active font-semibold ' : '' }}">{{ __('Register') }}</a>
@@ -81,7 +81,7 @@
                                             class="{{ Request::is('InControl*') ? 'text-emerald-500 font-semibold' : '' }}">
                                             Administrator
                                         </summary>
-                                        <ul class=" text-xs text-center opacity-100 bg-gray-300 menu  menu-xs p-2">
+                                        <ul class="p-2 text-xs text-center bg-gray-300 opacity-100 menu menu-xs">
                                             <li><a
                                                     href="{{ route('people') }}"class="{{ Request::is('InControl/people') ? 'active font-semibold' : '' }}">{{ __('People') }}</a>
                                             </li>
@@ -220,14 +220,14 @@
                                             class="{{ Request::is('eventReport*') ? 'text-emerald-500 font-semibold' : '' }}">
                                             Event Report
                                         </summary>
-                                        <ul class=" text-xs text-center menu menu-xs max-w-xs">
+                                        <ul class="max-w-xs text-xs text-center menu menu-xs">
                                             <li>
                                                 <a
                                                     href="{{ route('hazardGuest') }}"class="{{ Request::is('user/eventReport/hazard_id*') ? ' active font-semibold ' : '' }}">{{ __('Hazard_Report') }}</a>
                                             </li>
                                             <li>
                                                 <a
-                                                    href="{{ route('incident') }}"class="{{ Request::is('eventReport/incident*') ? ' active font-semibold ' : '' }}">{{ __('incident_Report') }}</a>
+                                                    href="{{ route('incidentGuest') }}"class="{{ Request::is('user/eventReport/insident*') ? ' active font-semibold ' : '' }}">{{ __('incident_Report') }}</a>
                                             </li>
                                         </ul>
                                     </details>
@@ -239,7 +239,7 @@
                                             class="{{ Request::is('user/manhours*') ? 'text-emerald-500 font-semibold' : '' }}">
                                             Manhours
                                         </summary>
-                                        <ul class=" text-xs text-center menu menu-xs max-w-xs">
+                                        <ul class="max-w-xs text-xs text-center menu menu-xs">
                                             <li>
                                                 <a
                                                     href="{{ route('ManhoursGuest') }}"class="{{ Request::is('user/manhours/manhoursRegister*') ? ' active font-semibold ' : '' }}">{{ __(' Manhours') }}</a>
@@ -256,7 +256,7 @@
 
             </div>
         </div>
-        <div class="navbar-center hidden lg:flex">
+        <div class="hidden navbar-center lg:flex">
             <ul class="menu menu-horizontal menu-xs">
                 <!-- Navbar menu content here -->
                 @auth
@@ -270,7 +270,7 @@
                                 <summary class="{{ Request::is('eventReport*') ? 'text-amber-200 font-semibold' : '' }}">
                                     Event Report
                                 </summary>
-                                <ul class=" text-xs text-center w-32 menu-xs max-w-xs">
+                                <ul class="w-32 max-w-xs text-xs text-center menu-xs">
                                     <li>
                                         <a
                                             href="{{ route('hazard') }}"class="{{ Request::is('eventReport/hazard_id*') ? ' active font-semibold ' : '' }}">{{ __('Hazard_Report') }}</a>
@@ -287,7 +287,7 @@
                                 <summary class="{{ Request::is('manhours*') ? 'text-amber-200 font-semibold' : '' }}">
                                     Manhours
                                 </summary>
-                                <ul class=" text-xs text-center w-28 menu menu-xs max-w-xs">
+                                <ul class="max-w-xs text-xs text-center w-28 menu menu-xs">
                                     <li>
                                         <a
                                             href="{{ route('manhoursRegister') }}"class="{{ Request::is('manhours/manhoursRegister*') ? ' active font-semibold ' : '' }}">{{ __('Register') }}</a>
@@ -300,7 +300,7 @@
                                 <summary class="{{ Request::is('InControl*') ? 'text-amber-200 font-semibold' : '' }}">
                                     Administrator
                                 </summary>
-                                <ul class="grid grid-cols-2 gap-1 text-xs text-center opacity-100 w-96 menu  menu-xs p-2">
+                                <ul class="grid grid-cols-2 gap-1 p-2 text-xs text-center opacity-100 w-96 menu menu-xs">
                                     <li><a
                                             href="{{ route('people') }}"class="{{ Request::is('InControl/people') ? 'active font-semibold' : '' }}">{{ __('People') }}</a>
                                     </li>
@@ -445,10 +445,12 @@
                                     class="{{ Request::is('user/eventReport*') ? 'text-amber-200 font-semibold' : '' }}">
                                     Event Report
                                 </summary>
-                                <ul class=" text-xs text-center w-28 menu-xs max-w-xs">
+                                <ul class="w-32 max-w-xs text-xs text-center menu-xs">
                                     <li>
                                         <a
                                             href="{{ route('hazardGuest') }}"class="{{ Request::is('user/eventReport/hazard_id*') ? ' active font-semibold ' : '' }}">{{ __('Hazard_Report') }}</a>
+                                        <a
+                                            href="{{ route('incidentGuest') }}"class="{{ Request::is('user/eventReport/insident*') ? ' active font-semibold ' : '' }}">{{ __('Incident_Report') }}</a>
                                     </li>
                                 </ul>
                             </details>
@@ -459,7 +461,7 @@
                                     class="{{ Request::is('user/manhours*') ? 'text-amber-200 font-semibold' : '' }}">
                                     Manhours
                                 </summary>
-                                <ul class=" text-xs text-center w-28 menu-xs max-w-xs">
+                                <ul class="max-w-xs text-xs text-center w-28 menu-xs">
                                     <li>
                                         <a
                                             href="{{ route('ManhoursGuest') }}"class="{{ Request::is('user/manhours/manhoursRegister*') ? ' active font-semibold ' : '' }}">{{ __('Register') }}</a>
@@ -475,8 +477,8 @@
                 @auth
                     @livewire('dasboard.notification.index')
                     <div class="dropdown dropdown-end">
-                        <div class=" ">
-                            <label tabindex="0" class="font-semibold btn btn-ghost btn-xs flex flex-col">
+                        <div class="">
+                            <label tabindex="0" class="flex flex-col font-semibold btn btn-ghost btn-xs">
                                 <div class="self-center p-0 ">
                                     <h1 class="text-emerald-600 ">{{ Auth::user()->name }}</h1>
                                     <small>@livewire('time.index')</small>
@@ -486,11 +488,11 @@
 
                         <form method="POST" action="{{ route('logout') }}">
                             <ul tabindex="0"
-                                class="menu menu-sm dropdown-content mt-3 z-20 p-2 shadow bg-base-100 rounded-box w-52">
+                                class="z-20 p-2 mt-3 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
                                 <li>
                                     <!-- Authentication -->
                                     @csrf
-                                    <a href="route('logout')" class=" font-semibold"
+                                    <a href="route('logout')" class="font-semibold "
                                         onclick="event.preventDefault();this.closest('form').submit();">Log Out</a>
                                 </li>
                             </ul>
@@ -535,13 +537,13 @@
         </div>
     </div>
     @if (isset($header))
-        <header class=" text-white shadow bg-gradient-to-r from-amber-500 via-amber-300 to-amber-200 ">
-            <div class=" flex justify-between px-4 items-center">
+        <header class="text-white shadow bg-gradient-to-r from-amber-500 via-amber-300 to-amber-200">
+            <div class="flex items-center justify-between px-4 ">
                 <div class="font-bold ">
                     {{ $header }}
 
                 </div>
-                <div class="text-xs breadcrumbs text-black ">
+                <div class="text-xs text-black breadcrumbs ">
                     @yield('bradcrumbs')
                 </div>
             </div>
