@@ -21,7 +21,10 @@ class Index extends Component
     {
         if ($this->markAsRead==='Unread') {
             $this->Pemberitahuan= auth()->user()->unreadNotifications;
-        } else {
+        }elseif($this->markAsRead==='Read'){
+            $this->Pemberitahuan=auth()->user()->readNotifications;
+        } 
+        else {
             $this->Pemberitahuan= auth()->user()->notifications;
         }
         $this->notifications = auth()->user()->unreadNotifications;

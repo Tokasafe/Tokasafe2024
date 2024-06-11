@@ -34,7 +34,7 @@
         </script>
     @endpush
     <div class="flex justify-between mx-4 mt-4">
-        <div>
+        <div class="{{$guest_respons?'block':'hidden'}}">
             @livewire('event-report-list.hazard-id.action.create', ['id' => $ID_Details])
         </div>
         <div class="hidden">
@@ -151,7 +151,7 @@
                         <td>
                             <table class="table table-xs">
                                 <tr valign="top">
-                                    <td>
+                                    <td class="{{$guest_respons?'block':'hidden'}}">
                                         <div class="flex flex-row justify-center gap-1">
         
                                             <label  wire:click="update({{ $value->id }})"

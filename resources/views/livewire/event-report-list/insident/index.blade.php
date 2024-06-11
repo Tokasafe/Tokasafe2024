@@ -1,6 +1,7 @@
-<div class="">
+<div class=" mx-4 md:mx-0">
     @push('styles')
         @livewireStyles()
+        <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/3de311882c.js" crossorigin="anonymous"></script>
@@ -107,12 +108,12 @@
             @livewire('event-report-list.insident.create')
         </div>
 
-        <div class="flex flex-col join sm:flex-row sm:gap-0 ">
+        <div class="flex flex-col join lg:flex-row sm:gap-0 ">
 
 
             <div class="relative flex items-center w-full max-w-xs join-item ">
-                <input id="rangeDate" type="text" readonly wire:model='dateRange'
-                    class="relative w-full   peer input input-bordered pl-6 input-xs text-[9px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
+                <input id="rangeDate" type="text" readonly wire:model='dateRange' 
+                class="relative w-full   peer input input-bordered pl-6 input-xs text-[10px] lg:text-[9px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
                     placeholder="date range" />
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                     class="absolute w-4 h-4 pl-0.5 pl-0.5 opacity-70 left-2">
@@ -141,7 +142,7 @@
             </div>
             <div class="relative flex items-center w-full max-w-xs join-item ">
                 <select type="text" wire:model='search_SubEventType'
-                    class="relative w-full sm:w-auto max-w-xs pl-6 peer select select-bordered select-xs text-[10px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
+                    class="relative w-full sm:w-full max-w-xs pl-6 peer select select-bordered select-xs text-[10px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
                     placeholder="Initial Incident Class">
                     <option value="" selected>Sub {{ __('KelasInsidenAwal') }}</option>
                     @foreach ($EventSubType as $key => $value)
@@ -228,7 +229,7 @@
                             <div class="flex flex-row justify-center gap-1">
                                 <a href="{{ route('incidentDetails', $value->Incident->id) }}"
                                     class="btn btn-xs btn-warning">Details</a>
-                                <label for="delete_data" wire:click="delete({{ $value->Incident->id }})"
+                                <label for="delete_data" wire:click="delete({{  $value->Incident->id }})"
                                     class="btn btn-xs btn-error ">Delete</label>
                             </div>
                         </td>

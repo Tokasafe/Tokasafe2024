@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Notification;
 class Index extends Component
 {
     public $proceedTo, $requestName, $report_id, $real_id, $Event_Report_Manager;
-    public $moderator, $current_step, $reference, $getStatusId, $responsibleRole, $id_people, $get_Id, $userController = false, $event_subtype, $event_type, $workgroup, $status, $destination_1_label, $destination_1, $destination_2_label, $destination_2, $destination_3, $assignTo, $assignToName, $also_assignTo, $also_assignToName;
+    public $moderator, $current_step, $reference, $getStatusId, $responsibleRole, $id_people, $get_Id, $userController = false, $event_subtype, $event_type, $workgroup, $status, $destination_1_label, $destination_1, $destination_2_label, $destination_2, $destination_3, $assignTo, $assignToName, $also_assignTo = null, $also_assignToName;
     public function mount($id)
     {
         $this->real_id = $id;
@@ -37,11 +37,11 @@ class Index extends Component
         $this->destination_2_label = $panel->WorkflowStep->destination_2_label;
         $this->destination_2 = $panel->WorkflowStep->destination_2;
         $this->destination_3 = $panel->WorkflowStep->checkCancel;
-        if ($panel->assignTo) {
+        if (!empty($panel->assignTo)) {
             $this->assignTo = $panel->assignTo;
             $this->assignToName = $panel->AssignTo->lookup_name;
         }
-        if ($panel->also_assignTo) {
+        if (!empty($panel->also_assignTo)) {
             $this->also_assignTo = $panel->also_assignTo;
             $this->also_assignToName = $panel->Also_assignTo->lookup_name;
         }
@@ -82,18 +82,23 @@ class Index extends Component
     public function storeUpdate()
     {
 
-        if (!empty($this->assignTo) && empty($this->also_assignTo)) {
-            $this->assignToName = People::find($this->assignTo)->lookup_name;
-            $this->requestName = 'Hi' . ' ' . $this->assignToName;
-        }
-        if (!empty($this->assignTo) && !empty($this->also_assignTo)) {
-            $this->assignToName = People::find($this->assignTo)->lookup_name;
-            $this->also_assignToName = People::find($this->also_assignTo)->lookup_name;
-            $this->requestName = 'Hi' . ' ' . $this->assignToName . ' & ' . $this->also_assignToName;
-        }
+
         $moderatorReport = People::where('network_username', auth()->user()->username)->first()->lookup_name;
         $url = $this->real_id;
         if ($this->responsibleRole == 6) {
+            if (!empty($this->assignTo) && empty($this->also_assignTo)) {
+                $this->assignToName = People::find($this->assignTo)->lookup_name;
+                $this->requestName = 'Hi' . ' ' . $this->assignToName;
+            }
+            if ($this->assignTo && $this->also_assignTo) {
+                $this->assignToName = People::find($this->assignTo)->lookup_name;
+                if (is_int($this->also_assignTo) == false) {
+                    $this->also_assignTo = null;
+                } else {
+                    $this->also_assignToName = People::find($this->also_assignTo)->lookup_name;
+                    $this->requestName = 'Hi' . ' ' . $this->assignToName . ' & ' . $this->also_assignToName;
+                }
+            }
             $userSecurity = UserSecurity::whereIn('user_id', [$this->assignTo, $this->also_assignTo])->where('workflow', 'Event Report Manager')->pluck('user_id')->toArray();
             $people = People::whereIn('id', $userSecurity)->pluck('network_username')->toArray();
             $User = User::whereIn('username', $people)->get();
@@ -112,8 +117,7 @@ class Index extends Component
                         'dateTime' => Carbon::now(+8)->toDateTimeString()
                     ];
                     Notification::send($user_security, new ToERM($offerData));
-                }
-                else{
+                } else {
                     $user_security = User::whereIn('username', $people)->where('role_users_id', 2)->get();
                     $offerData = [
                         'name' => $this->requestName,
@@ -151,11 +155,24 @@ class Index extends Component
                 session()->flash('error', "Something goes wrong!!");
             }
         } elseif ($this->responsibleRole == 7) {
+
             $this->validate([
                 'proceedTo' => 'required',
                 'assignTo' => 'required',
-                'also_assignTo' => 'nullable',  
+                'also_assignTo' => 'nullable',
             ]);
+           
+           
+                $this->assignToName = People::find($this->assignTo)->lookup_name;
+                if (empty($this->also_assignTo)) {
+                    
+                    $this->also_assignTo = null;
+                } else {
+                   
+                    $this->also_assignToName = People::find($this->also_assignTo)->lookup_name;
+                    $this->requestName = 'Hi' . ' ' . $this->assignToName . ' & ' . $this->also_assignToName;
+                }
+           
             $userSecurity =  UserSecurity::whereIn('user_id', [$this->assignTo, $this->also_assignTo])->where('workflow', 'Event Report Manager')->pluck('user_id')->toArray();
             $people = People::whereIn('id', $userSecurity)->pluck('network_username')->toArray();
             $User = User::whereIn('username', $people)->get();
@@ -174,8 +191,7 @@ class Index extends Component
                         'dateTime' => Carbon::now(+8)->toDateTimeString()
                     ];
                     Notification::send($user_security, new ToERM($offerData));
-                }
-                else{
+                } else {
                     $user_security = User::whereIn('username', $people)->where('role_users_id', 2)->get();
                     $offerData = [
                         'name' => $this->requestName,
@@ -191,7 +207,7 @@ class Index extends Component
                     Notification::send($user_security, new ToERM($offerData));
                 }
             }
-            
+
             PanelIncident::whereId($this->report_id)->update([
                 'workflow_step' => $this->getStatusId,
                 'assignTo' => $this->assignTo,
@@ -204,6 +220,7 @@ class Index extends Component
                 return redirect()->route('incidentDetails', ['id' =>  $this->real_id]);
             }
         } elseif ($this->responsibleRole == 8) {
+
             $lookupName = People::where('network_username', 'like', auth()->user()->username)->first()->lookup_name;
             $userSecurity = UserSecurity::where('workflow', 'Moderator')->pluck('user_id')->toArray();
             $people = People::whereIn('id', $userSecurity)->pluck('network_username')->toArray();
@@ -212,7 +229,7 @@ class Index extends Component
                 if ($user->role_users_id == 1) {
                     $user_security = User::whereIn('username', $people)->where('role_users_id', 1)->get();
                     $offerData = [
-                        'name' => $this->requestName,
+                        'name' => "Hi, Moderator",
                         'subject' => $this->event_subtype,
                         'body' => "$lookupName has carried out the assigned tasks",
                         'thanks' => 'Thank you',
@@ -242,6 +259,19 @@ class Index extends Component
                 return redirect()->route('incidentDetails', ['id' =>  $this->real_id]);
             }
         } elseif ($this->responsibleRole == 9) {
+            if (!empty($this->assignTo) && empty($this->also_assignTo)) {
+                $this->assignToName = People::find($this->assignTo)->lookup_name;
+                $this->requestName = 'Hi' . ' ' . $this->assignToName;
+            }
+            if ($this->assignTo && $this->also_assignTo) {
+                $this->assignToName = People::find($this->assignTo)->lookup_name;
+                if (is_int($this->also_assignTo) == false) {
+                    $this->also_assignTo = null;
+                } else {
+                    $this->also_assignToName = People::find($this->also_assignTo)->lookup_name;
+                    $this->requestName = 'Hi' . ' ' . $this->assignToName . ' & ' . $this->also_assignToName;
+                }
+            }
             $userSecurity =  UserSecurity::whereIn('user_id', [$this->assignTo, $this->also_assignTo])->where('workflow', 'Event Report Manager')->pluck('user_id')->toArray();
             $people = People::whereIn('id', $userSecurity)->pluck('network_username')->toArray();
             $User = User::whereIn('username', $people)->get();
@@ -260,8 +290,7 @@ class Index extends Component
                         'dateTime' => Carbon::now(+8)->toDateTimeString()
                     ];
                     Notification::send($user_security, new ToERM($offerData));
-                }
-                else{
+                } else {
                     $user_security = User::whereIn('username', $people)->where('role_users_id', 2)->get();
                     $offerData = [
                         'name' => $this->requestName,
@@ -296,6 +325,19 @@ class Index extends Component
                 return redirect()->route('incidentDetails', ['id' =>  $this->real_id]);
             }
         } else {
+            if (!empty($this->assignTo) && empty($this->also_assignTo)) {
+                $this->assignToName = People::find($this->assignTo)->lookup_name;
+                $this->requestName = 'Hi' . ' ' . $this->assignToName;
+            }
+            if ($this->assignTo && $this->also_assignTo) {
+                $this->assignToName = People::find($this->assignTo)->lookup_name;
+                if (is_int($this->also_assignTo) == false) {
+                    $this->also_assignTo = null;
+                } else {
+                    $this->also_assignToName = People::find($this->also_assignTo)->lookup_name;
+                    $this->requestName = 'Hi' . ' ' . $this->assignToName . ' & ' . $this->also_assignToName;
+                }
+            }
             $userSecurity =  UserSecurity::whereIn('user_id', [$this->assignTo, $this->also_assignTo])->where('workflow', 'Event Report Manager')->pluck('user_id')->toArray();
             $people = People::whereIn('id', $userSecurity)->pluck('network_username')->toArray();
             $User = User::whereIn('username', $people)->get();

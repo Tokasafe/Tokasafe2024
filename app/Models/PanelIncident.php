@@ -2,14 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\People;
+use App\Models\IncidentReport;
+use Vinkla\Hashids\Facades\Hashids;
+use App\Models\WorkflowAdministration;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PanelIncident extends Model
 {
     use HasFactory;
     protected $table='panel_incidents';
     protected $guarded = ['id'];
+
     public function scopeDateRange($query, $term)
     {
 
@@ -54,6 +60,7 @@ class PanelIncident extends Model
             });
         }
     }
+   
     public function Incident()
     {
         return $this->belongsTo(IncidentReport::class, 'incident_report_id');

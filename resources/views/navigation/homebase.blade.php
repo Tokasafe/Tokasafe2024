@@ -10,11 +10,20 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
     @if (isset($title))
-    <title>{{$title}}  @if (isset($h1)){{$h1}} @endif </title>
+        <title>{{ $title }}</title>
     @endif
     @laravelPWA
 </head>
+
 <body class="static antialiased">
+
+    <div id="loader" >
+
+        <div class="absolute inset-0   content-center flex  justify-center  z-50 w-full ">
+            <img
+                class=" w-40 p-8 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500" src="{{ asset('loaders/bounce.svg') }}" alt="">
+            </div>
+    </div>
     <div class="min-h-screen">
         <div class="drawer">
             <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
@@ -32,6 +41,22 @@
             @include('navigation.sidebar')
         </div>
     </div>
+    <script>
+        document.onreadystatechange = function() {
+            if (document.readyState !== "complete") {
+                document.querySelector(
+                    "body").style.visibility = "hidden";
+                document.querySelector(
+                    "#loader").style.visibility = "visible";
+            } else {
+                document.querySelector(
+                    "#loader").style.display = "none";
+                document.querySelector(
+                    "body").style.visibility = "visible";
+            }
+        };
+    </script>
     @stack('scripts')
 </body>
+
 </html>

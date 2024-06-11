@@ -2,26 +2,23 @@
     @include('toast.toast')
     <!-- Open the modal using ID.showModal() method -->
     <label for="manhoursRegister"
-        class="btn btn-sm btn-square btn-info tooltip-info tooltip-top tooltip"data-tip="Create">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7  " viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                clip-rule="evenodd" />
-        </svg>
+        class="btn btn-xs btn-square btn-info tooltip-info tooltip-top tooltip"data-tip="Create">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4  mt-0.5 ml-0.5">
+            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25v2.5h2.5a.75.75 0 0 1 0 1.5h-2.5v2.5a.75.75 0 0 1-1.5 0v-2.5h-2.5a.75.75 0 0 1 0-1.5h2.5v-2.5a.75.75 0 0 1 1.5 0Z" clip-rule="evenodd" />
+          </svg>
+          
     </label>
-    <label for="uploadManhoursRegister" class="btn btn-sm btn-square btn-warning tooltip-warning tooltip-top tooltip"
+    <label for="uploadManhoursRegister" class="btn btn-xs btn-square btn-warning tooltip-warning tooltip-top tooltip"
         data-tip="Import">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-7 h-7 pt-0.5">
-            <path
-                d="M9.97.97a.75.75 0 011.06 0l3 3a.75.75 0 01-1.06 1.06l-1.72-1.72v3.44h-1.5V3.31L8.03 5.03a.75.75 0 01-1.06-1.06l3-3zM9.75 6.75v6a.75.75 0 001.5 0v-6h3a3 3 0 013 3v7.5a3 3 0 01-3 3h-7.5a3 3 0 01-3-3v-7.5a3 3 0 013-3h3z" />
-            <path
-                d="M7.151 21.75a2.999 2.999 0 002.599 1.5h7.5a3 3 0 003-3v-7.5c0-1.11-.603-2.08-1.5-2.599v7.099a4.5 4.5 0 01-4.5 4.5H7.151z" />
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4   mt-0.5 ml-0.5">
+            <path d="M8.75 6h-1.5V3.56L6.03 4.78a.75.75 0 0 1-1.06-1.06l2.5-2.5a.75.75 0 0 1 1.06 0l2.5 2.5a.75.75 0 1 1-1.06 1.06L8.75 3.56V6H11a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2.25v5.25a.75.75 0 0 0 1.5 0V6Z" />
+          </svg>
+          
     </label>
     <input type="checkbox" id="manhoursRegister" class="modal-toggle" />
     <div id="manhoursRegister" role="dialog" class="modal ">
         <div class="modal-box sm:w-[55%] max-w-5xl">
-            <div class="divider divider-primary font-bold">{{ __('add') }} Manhours</div>
+            <div class="font-bold divider divider-primary">{{ __('add') }} Manhours</div>
             <form wire:submit.prevent='store'>
                 @csrf
                 <div class="flex flex-wrap gap-1 ">
@@ -120,7 +117,7 @@
                                 d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3V15" />
                         </svg>
                         <span wire:loading wire:target="files"
-                            class="loading loading-spinner loading-sm hidden"wire:loading.class="block"></span>
+                            class="hidden loading loading-spinner loading-sm"wire:loading.class="block"></span>
                     </button>
                     <label for="uploadManhoursRegister" wire:target="uploadManhours"
                         wire:loading.class="btn-disabled" class="btn btn-xs btn-error">Close!</label>

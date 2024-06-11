@@ -2,15 +2,17 @@
 
 namespace App\Http\Livewire\EventReportList\HazardId\Action;
 
+use App\Models\People;
 use Livewire\Component;
 use App\Models\EventAction;
+use App\Models\UserSecurity;
 use Livewire\WithPagination;
 use App\Models\PanelHazardId;
 
 class Index extends Component
 {
     use WithPagination;
-    public $ID_Details;
+    public $ID_Details,$WorkflowStep_name,$assignTo,$also_assignTo,$guest_respons = false;
     public $delete_id;
     public $hazardClose;
     protected $listeners = [
@@ -23,10 +25,31 @@ class Index extends Component
        
         $close = PanelHazardId::where('hazard_id',$this->ID_Details)->first()->WorkflowStep->name;
         if ($close ==='Closed' || $close ==='Cancelled') {
-            $this->hazardClose = $close;
-            
+            $this->hazardClose = $close; 
         }
-
+        $this->WorkflowStep_name = PanelHazardId::where('hazard_id', $this->ID_Details)->first()->WorkflowStep->name;
+            $panel = PanelHazardId::where('hazard_id',$this->ID_Details)->first();
+          
+            if ($panel->assignTo) {
+                $this->assignTo = $panel->assignTo;
+            }
+            if ($panel->also_assignTo) {
+                $this->also_assignTo = $panel->also_assignTo;
+            }
+        if (!empty(People::whereIn('network_username', [auth()->user()->username])->first()->id)) {
+            $id_people = People::whereIn('network_username', [auth()->user()->username])->first()->id;
+            $workflow = UserSecurity::with('People')->where('user_id', $id_people)->whereIn('workflow', ['Moderator', 'Event Report Manager'])->pluck('workflow')->toArray();
+            $nameStep = 'ERM Assigned';
+            if (in_array('Moderator', $workflow)) {
+                $this->guest_respons = true;
+            } elseif (in_array('Event Report Manager', $workflow) && $this->WorkflowStep_name === $nameStep && $this->assignTo === $id_people) {
+                $this->guest_respons = true;
+            } elseif (in_array('Event Report Manager', $workflow) && $this->WorkflowStep_name === $nameStep &&  $this->also_assignTo === $id_people) {
+                $this->guest_respons = true;
+            } else {
+                $this->guest_respons = false;
+            }
+        } 
     }
     public function render()
     {

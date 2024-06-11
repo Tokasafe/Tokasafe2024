@@ -46,43 +46,43 @@ class Create extends Component
     {
         if ($id) {
             $this->responsibility = $id;
-            $this->report_to = People::whereId($id)->first()->lookup_name;
+            $this->report_to = People::find($id)->lookup_name;
             $this->closeResponsibility();
         } else {
-            $this->responsibility = '';
-            $this->report_to = '';
+            $this->responsibility = null;
+            $this->report_to = null;
         }
     }
     public function storeAction()
     {
         if ($this->orginal_dueDate) {
             $this->orginal_dueDate = date('Y-m-d', strtotime($this->orginal_dueDate));
-        } else{
+         } else{
             $this->orginal_dueDate = null;
-        }
-        if ($this->dueDate) {
-          $this->dueDate = date('Y-m-d', strtotime($this->dueDate));
-        } else {
-          $this->dueDate = null;
-        }
-        if ($this->completion_date) {
+         }
+         if ($this->dueDate) {
+          $this->dueDate= date('Y-m-d', strtotime($this->dueDate));
+         } else {
+          $this->dueDate= null;
+         }
+         if ($this->completion_date) {
             $this->completion_date = date('Y-m-d', strtotime($this->completion_date));
-        } else {
+         } else {
             $this->completion_date = null;
-        }
-        if ($this->personal_reminder) {
-
-           $this->completion_date = date('Y-m-d', strtotime($this->personal_reminder));
-        } else {
-           $this->completion_date = null;
-        }
-        try {
+         }
+         if ($this->personal_reminder) {
+ 
+            $this->personal_reminder= date('Y-m-d', strtotime($this->personal_reminder));
+         } else {
+            $this->personal_reminder= null;
+         }
+       
              $this->validate([
                 'description_incident' => 'nullable',
                 'followup_action' => 'required',
                 'actionee_comments' => 'nullable',
                 'action_condition' => 'nullable',
-                'responsibility' => 'nullable',
+                'report_to' => 'required',
                 'orginal_dueDate' => 'nullable',
                 'dueDate' => 'nullable',
                 'completion_date' => 'nullable',
@@ -91,7 +91,7 @@ class Create extends Component
             ]);
             
             
-           
+            try {
             IncidentAction::create([
                 'description_incident' => $this->description_incident,
                 'followup_action' => $this->followup_action,

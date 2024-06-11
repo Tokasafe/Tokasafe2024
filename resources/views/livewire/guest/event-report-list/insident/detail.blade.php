@@ -120,6 +120,8 @@
         <form wire:submit.prevent='updateStore' wire:loading.class="skeleton" wire:target="updateStore">
             @csrf
             @method('PATCH')
+            @if($guest_respons)
+                
             <div class="top-0 z-10 p-1 bg-white shadow-md sm:sticky">
                 <button type="submit" id="my-submit"
                     class="text-white btn btn-success btn-xs btn-outline">{{ __('Save') }}
@@ -140,6 +142,7 @@
 
                 </label>
             </div>
+            @endif
             <div class=" {{ $IncidentClose ? 'stack ' : '' }}">
                 <div
                     class=" {{ $IncidentClose ? 'overflow-y-auto h-[520px] sm:h-[18rem] xxl:h-[22rem] 2xl:h-[40rem] p-2  ' : 'overflow-y-auto h-[520px] sm:h-[18rem] xl:h-[20rem] 2xl:h-[40rem] p-2 ' }}">
@@ -377,14 +380,14 @@
                         </div>
                     </div>
                     @include('livewire.event-report-list.insident.tablePenilaian')
-                    {{-- <div class="flex flex-wrap justify-center gap-2 my-4 sm:justify-normal">
+                    <div class="flex flex-wrap justify-center gap-2 my-4 sm:justify-normal">
                         <div class="w-full p-4 ">
                             <div
                                 class="font-extrabold text-transparent divider divider-info text-1xl bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
                                 {{ __('Tindakan_Perbaikan') }}</div>
                             @livewire('event-report-list.insident.action.index', ['id' => $data_id])
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
                 <div
                     class=" {{ $IncidentClose ? 'overflow-y-auto h-full sm:h-[14rem] xxl:h-[16rem] 2xl:h-[34rem] flex justify-center ' : '' }} ">

@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class IncidentReport extends Model
 {
     use HasFactory;
     protected $table='incident_reports';
     protected $guarded =['id'];
-
+   
     public function eventType()
     {
         return $this->belongsTo(EventType::class, 'event_type');

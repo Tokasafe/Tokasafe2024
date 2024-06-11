@@ -26,7 +26,7 @@ class Details extends Component
     public $tanggal;
     public $workgroup;
     public $workgroup_id;
-    public $radio_select;
+    public $radio_select = '';
     public $waktu;
     public $lokasi;
     public $search_reportTo = '';
@@ -36,18 +36,18 @@ class Details extends Component
     public $nama_pelapor_id;
     public $event_subtype;
     public $documentation;
-    public $fileUpload ;
+    public $fileUpload;
     public $filename;
     public $tanggal_kejadian;
     public $search_reportBy = '';
+    public $search = '';
     public $search_workgroup = '';
     public $search_company = '';
-    public $openModalWG = '';
+    public $search_companyLevel = '';
+    public $openModalWG = 'modal';
     public $openModalreportBy = '';
     public $openModalreportTo = '';
     public $openModalResponsibleCompany = '';
-    public $CompanyLevel = [];
-    public $ModalWorkgroup = [];
     public $name_assessment;
     public $potential_consequence;
     public $potential_likelihood;
@@ -68,18 +68,18 @@ class Details extends Component
     public $data_id;
     public $task;
     public $hazardClose;
+    public $wg_id;
+    public $ModalWorkgroup = [];
     public function mount($id)
     {
         $model = HazardId::find($id);
         if ($model === null) {
             abort(404);
         }
-
-        $HazardId = HazardId::whereId($id)->first();
+        $HazardId = HazardId::with(['Workgroup.CompanyLevel', 'Workgroup.CompanyLevel.BussinessUnit'])->whereId($id)->first();
         $a = $HazardId->Workgroup->CompanyLevel->BussinessUnit->name;
         $b = $HazardId->Workgroup->CompanyLevel->deptORcont;
         $c = $HazardId->Workgroup->job_class;
-
         $this->data_id = $HazardId->id;
         $close = PanelHazardId::where('hazard_id', $this->data_id)->first()->WorkflowStep->name;
         if ($close === 'Closed' || $close === 'Cancelled') {
@@ -106,46 +106,28 @@ class Details extends Component
         $this->komentar = $HazardId->komentar;
         $this->task = $HazardId->task;
         $this->reference = $HazardId->reference;
-       
     }
-
     public function render()
     {
-
         $this->click();
-        if (!empty($this->actual_outcome)) {
-            $this->actual_outcome_description = RiskConsequence::whereId($this->actual_outcome)->first()->description;
-        } else {
-            $this->actual_outcome_description = '';
-        }
-        if (!empty($this->potential_consequence)) {
-            $this->potential_consequence_description = RiskConsequence::whereId($this->potential_consequence)->first()->description;
-        } else {
-            $this->potential_consequence_description = '';
-        }
-        if (!empty($this->potential_likelihood)) {
-            $this->potential_likelihood_description = RiskLikelihood::whereId($this->potential_likelihood)->first()->notes;
-        } else {
-            $this->potential_likelihood_description = '';
-        }
+        $this->actual_outcome_description  = (!empty($this->actual_outcome)) ? RiskConsequence::whereId($this->actual_outcome)->first()->description : $this->actual_outcome_description = '' ;
+        $this->potential_consequence_description  = (!empty($this->potential_consequence)) ? RiskConsequence::whereId($this->potential_consequence)->first()->description : $this->potential_consequence_description = '' ;
+        $this->potential_likelihood_description  = (!empty($this->potential_likelihood)) ? RiskLikelihood::whereId($this->potential_likelihood)->first()->notes : $this->potential_likelihood_description = '' ;
         if (!empty($this->documentation)) {
             $file_name = $this->documentation->getClientOriginalName();
             $this->fileUpload  = pathinfo($file_name, PATHINFO_EXTENSION);
-            $this->filename=null;
+            $this->filename = null;
         }
-
-        if (!empty($this->radio_select)) {
-            if ($this->radio_select == 'companyLevel') {
-                $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_workgroup))->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
-            } else {
-                if ($this->showWG == true) {
-                    $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
-                }
-            }
-        } else {
-
-            $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
+        if ($this->radio_select === 'workgroup') {
+            $this->search_workgroup = $this->search;
+            $this->wg_id=null;
+            $this->search_companyLevel = "";
+        } elseif ($this->radio_select === 'companyLevel') {
+            $this->search_workgroup = "";
+            $this->search_companyLevel = $this->search;
         }
+      
+        $this->ModalWorkgroup = (!empty($this->wg_id)) ? Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->searchWgId(trim($this->wg_id))->orderBy('companyLevel_id', 'asc')->get() : Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
         return view('livewire.event-report-list.hazard-id.detail', [
             'LocationEvent' => EventLocation::get(),
             'EventType' => EventType::get(),
@@ -155,9 +137,9 @@ class Details extends Component
             'Company' => Companies::with(['CompanyCategory'])->searchcompany(trim($this->search_company))->get(),
             'Consequence' => RiskConsequence::get(),
             'Likelihood' => RiskLikelihood::get(),
+            'CompanyLevels' => CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_companyLevel))->orderBy('bussiness_unit', 'asc')->get()
         ])->extends('navigation.homebase', ['header' => 'Hazard report', 'title' => 'hazard', 'h1' => $this->data_id])->section('content');
     }
-   
     // FUNCTION BTN MODAL
     public function previousPage($pageName = 'page')
     {
@@ -170,11 +152,11 @@ class Details extends Component
     }
     public function wgClick()
     {
-        $this->openModalWG = 'modal-open';
+        $this->openModalWG = 'modal modal-open';
     }
     public function wgClickClose()
     {
-        $this->openModalWG = '';
+        $this->openModalWG = 'modal';
         $this->clearSearchWg();
     }
     public function reportByClick()
@@ -205,12 +187,8 @@ class Details extends Component
     }
     public function cari($id)
     {
-        $this->showWG = false;
-        if (!empty($id)) {
-            $id_Dept = CompanyLevel::with(['BussinessUnit'])->where('id', $id)->first()->id;
-            $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->where('companyLevel_id', $id_Dept)->get();
-        } else {
-            $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->get();
+        if ($id) {
+            $this->wg_id = $id;
         }
     }
     public function workGroup($id, $bu, $deptOrCont, $job_class)
@@ -258,9 +236,8 @@ class Details extends Component
 
         if (!$this->documentation) {
             $file_name = $this->filename;
-           
         } else {
-           
+
             $file_name = $this->documentation->getClientOriginalName();
             $this->documentation->storeAs('public/documents', $file_name);
         }
@@ -402,7 +379,7 @@ class Details extends Component
             $this->btn_e5();
         }
     }
- // FUNCTION BTN INITIAL RISK
+    // FUNCTION BTN INITIAL RISK
     public function btn_a1()
     {
         $this->potential_consequence = 5;
@@ -659,5 +636,5 @@ class Details extends Component
         $this->investigation_req_assessment = $assessment->investigation_req;
         $this->reporting_obligation_assessment = $assessment->reporting_obligation;
     }
-// 
+    // 
 }

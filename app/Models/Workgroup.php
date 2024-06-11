@@ -18,6 +18,10 @@ class Workgroup extends Model
             $query->where('deptORcont', 'like', '%' . $term . '%');
         });
     }
+    public function scopeSearchWgId($query, $term)
+    {
+        $query->where('companyLevel_id',$term);
+    }
     public function CompanyLevel()
     {
         return $this->belongsTo(CompanyLevel::class, 'companyLevel_id');

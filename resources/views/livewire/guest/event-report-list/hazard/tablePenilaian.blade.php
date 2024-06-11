@@ -52,9 +52,9 @@
                 </div>
             </div>
         </div>
-        <div class="basis-full md:basis-1/4">
-            <div class="w-[17rem]">
-                <div class="overflow-x-auto bg-gray-200 shadow-md ">
+        <div class=" flex justify-center md:basis-1/4 ">
+            <div class="w-[17rem] bg-slate-200 ">
+                <div class="overflow-x-auto shadow-md ">
                     <table>
                        
                         <tr class="text-center">
@@ -107,7 +107,7 @@
                             </tr>
                         </thead>
                         <tbody>
-
+        
                             <tr>
                                 <td class="p-0 text-center border border-gray-300 "><small>A-Almost Certain</small>
                                 </td>

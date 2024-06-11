@@ -74,7 +74,7 @@ class Index extends Component
                 'CompanyLevel',
                 'CompanyLevel.BussinessUnit',
             ])->get()
-        ])->extends('navigation.guest.guestbase', ['header' => 'Hazard report'])->section('contentUser');
+        ])->extends('navigation.guest.guestbase', ['header' => 'Hazard report','title' => 'Hazard report'])->section('contentUser');
     }
     public function delete($id)
     {

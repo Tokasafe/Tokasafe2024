@@ -63,19 +63,21 @@ class Create extends Component
     public $statusER;
     public $modal = '';
 
-    public $CompanyLevel = [];
     public $EventSubType = [];
     public $openModalWG = "modal";
     public $openModalreportBy = '';
     public $openModalreportTo = '';
     public $search_reportTo = '';
+    public $search= '';
     public $search_workgroup = '';
+    public $search_companyLevel = '';
     public $radio_select = '';
     public $openModalResponsibleCompany = '';
     public $ModalWorkgroup = [];
     public $showWG = true;
     public $showDataInput = false;
     public $showAccess = false;
+    public $wg_id;
     public function clearSearchWg()
     {
         $this->search_workgroup = '';
@@ -95,21 +97,9 @@ class Create extends Component
     {
         $this->modal;
         $this->click();
-        if (!empty($this->actual_outcome)) {
-            $this->actual_outcome_description = RiskConsequence::whereId($this->actual_outcome)->first()->description;
-        } else {
-            $this->actual_outcome_description = '';
-        }
-        if (!empty($this->potential_consequence)) {
-            $this->potential_consequence_description = RiskConsequence::whereId($this->potential_consequence)->first()->description;
-        } else {
-            $this->potential_consequence_description = '';
-        }
-        if (!empty($this->potential_likelihood)) {
-            $this->potential_likelihood_description = RiskLikelihood::whereId($this->potential_likelihood)->first()->notes;
-        } else {
-            $this->potential_likelihood_description = '';
-        }
+        $this->actual_outcome_description  = (!empty($this->actual_outcome)) ? RiskConsequence::whereId($this->actual_outcome)->first()->description : $this->actual_outcome_description = '' ;
+        $this->potential_consequence_description  = (!empty($this->potential_consequence)) ? RiskConsequence::whereId($this->potential_consequence)->first()->description : $this->potential_consequence_description = '' ;
+        $this->potential_likelihood_description  = (!empty($this->potential_likelihood)) ? RiskLikelihood::whereId($this->potential_likelihood)->first()->notes : $this->potential_likelihood_description = '' ;
         if ($this->documentation) {
             $file_name = $this->documentation->getClientOriginalName();
             $this->fileUpload = pathinfo($file_name, PATHINFO_EXTENSION);
@@ -124,26 +114,28 @@ class Create extends Component
                 $this->nama_pelapor = '';
             }
         }
-        if ($this->radio_select) {
-            if ($this->radio_select === 'companyLevel') {
-                $this->showWG = false;
-                $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_workgroup))->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
-            } else {
-               
-                $this->showWG = true;
-                $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
-            }
-        } else {
-
-            $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
+        if ($this->radio_select === 'workgroup') {
+            $this->search_workgroup = $this->search;
+            $this->wg_id=null;
+            $this->search_companyLevel = "";
+        } elseif ($this->radio_select === 'companyLevel') {
+            $this->search_workgroup = "";
+            $this->search_companyLevel = $this->search;
         }
+        else{
+            $this->search_workgroup = $this->search;
+            $this->search_companyLevel = $this->search;
+        }
+      
+        $this->ModalWorkgroup = (!empty($this->wg_id)) ? Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->searchWgId(trim($this->wg_id))->orderBy('companyLevel_id', 'asc')->get() : Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
+        
         $this->EventSubType = EventSubType::with('EventType')->where('eventType_id', 1)->get();
         return view('livewire.event-report-list.hazard-id.create', [
             'LocationEvent' => EventLocation::get(),
             'EventType' => EventType::get(),
             'People' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(100, ['*'], 'ReportByPage'),
             'Supervisor' => People::with('Employer')->search(trim($this->search_reportTo))->paginate(100, ['*'], 'ReportToPage'),
-           
+            'CompanyLevel' => CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_companyLevel))->orderBy('bussiness_unit', 'asc')->get(),
             'Company' => Companies::with(['CompanyCategory'])->searchcompany(trim($this->search_company))->get(),
             'Consequence' => RiskConsequence::get(),
             'Likelihood' => RiskLikelihood::get(),
@@ -205,13 +197,8 @@ class Create extends Component
     }
     public function cari($id)
     {
-        $this->radio_select = '';
-        $this->showWG = true;
-        if (!empty($id)) {
-            $id_Dept = CompanyLevel::with(['BussinessUnit'])->where('id', $id)->first()->id;
-            $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->where('companyLevel_id', $id_Dept)->get();
-        } else {
-            $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->get();
+        if ($id) {
+            $this->wg_id = $id;
         }
     }
     public function workGroup($id, $bu, $deptOrCont, $job_class)

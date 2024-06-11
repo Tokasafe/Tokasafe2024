@@ -34,7 +34,7 @@
         </script>
     @endpush
     <div class="flex justify-between mx-4 mt-4">
-        <div>
+        <div class="{{$guest_respons?'block':'hidden'}}">
           @livewire('event-report-list.insident.action.create',['id' => $data_id])
         </div>
         <div class="hidden">
@@ -161,13 +161,13 @@
                                 
                             </table>
                         </td>
-                        <td>
-                            <table class="table table-xs">
+                        <td class="{{$guest_respons?'block':'hidden'}}">
+                            <table class="table table-xs ">
                                 <tr valign="top">
                                     <td>
                                         <div class="flex flex-row justify-center gap-1">
         
-                                            <label wire:click="update({{ $value->id }})"
+                                            <label  wire:click="update({{ $value->id }})"
                                                 class="btn btn-xs btn-warning ">Edit</label>
                                             <label wire:click="delete({{ $value->id }})"
                                                 class="btn btn-xs btn-error ">{{ __('Delete') }}</label>

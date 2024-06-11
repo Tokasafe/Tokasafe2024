@@ -3,6 +3,7 @@
 
 <head>
     @stack('styles')
+    
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -10,8 +11,30 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.tailwindcss.com"></script>
     @laravelPWA
+    @if (isset($title))
+        <title>{{ $title }}</title>
+    @endif
+
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $("#preloader").fadeOut();
+        })
+    </script>
 </head>
+</head>
+
 <body class="static antialiased">
+        
+    <div id="loader" >
+
+        <div class="absolute inset-0  content-center flex  justify-center  z-50 w-full ">
+            <img
+                class=" w-40 p-8 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500" src="{{ asset('loaders/bounce.svg') }}" alt="">
+            </div>
+    </div>
+
     <div class="min-h-screen">
         <div class="drawer">
             <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
@@ -27,8 +50,27 @@
                 </main>
             </div>
             @include('navigation.guest.sidebarguest')
+
         </div>
+
     </div>
+    
     @stack('scripts')
+    <script> 
+        document.onreadystatechange = function() { 
+            if (document.readyState !== "complete") { 
+                document.querySelector( 
+                "body").style.visibility = "hidden"; 
+                document.querySelector( 
+                "#loader").style.visibility = "visible"; 
+            } else { 
+                document.querySelector( 
+                "#loader").style.display = "none"; 
+                document.querySelector( 
+                "body").style.visibility = "visible"; 
+            } 
+        }; 
+    </script>
 </body>
+
 </html>

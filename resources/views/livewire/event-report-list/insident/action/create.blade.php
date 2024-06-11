@@ -116,7 +116,7 @@
                                         <tr valign="top">
                                             <td>
                                                 <div class="w-full max-w-md form-control">
-                                                    <x-input-label :value="__('Responsibility')" />
+                                                    <x-input-label-req :value="__('Responsibility')" />
                                                     <label wire:click='openResponsibility' class="join">
                                                         <input type="text" placeholder="Type here"
                                                             wire:model='report_to'

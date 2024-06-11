@@ -31,6 +31,7 @@ class Detail extends Component
     public $waktu;
     public $lokasi;
     public $search_reportTo = '';
+    public $search = '';
     public $pengawas_area;
     public $pengawas_area_id;
     public $nama_pelapor;
@@ -43,11 +44,10 @@ class Detail extends Component
     public $search_reportBy = '';
     public $search_workgroup = '';
     public $search_company = '';
-    public $openModalWG = '';
+    public $openModalWG = 'modal';
     public $openModalreportBy = '';
     public $openModalreportTo = '';
     public $openModalResponsibleCompany = '';
-    public $CompanyLevel = [];
     public $ModalWorkgroup = [];
     public $name_assessment;
     public $potential_consequence;
@@ -68,10 +68,12 @@ class Detail extends Component
     public $showAccess = false;
     public $data_id;
     public $id_people;
+    public $search_companyLevel;
     public $task;
     public $current_step;
     public $userController = false;
     public $hazardClose;
+    public $wg_id;
     public $ERM_Assigned;
     public function mount($id)
     {
@@ -138,21 +140,15 @@ class Detail extends Component
             $this->filename = null;
         }
 
-        if (!empty($this->radio_select)) {
-            if ($this->radio_select == 'companyLevel') {
-                $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_workgroup))->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
-            } else {
-                if ($this->showWG == true) {
-                    $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
-                }
-            }
-        } else {
-
-            $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
+        if ($this->radio_select === 'workgroup') {
+            $this->search_workgroup = $this->search;
+            $this->wg_id=null;
+            $this->search_companyLevel = "";
+        } elseif ($this->radio_select === 'companyLevel') {
+            $this->search_workgroup = "";
+            $this->search_companyLevel = $this->search;
         }
-
-
-
+        $this->ModalWorkgroup = (!empty($this->wg_id)) ? Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->searchWgId(trim($this->wg_id))->orderBy('companyLevel_id', 'asc')->get() : Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
         if ($this->ERM_Assigned === "ERM Assigned") {
             $this->userController = true;
         } else {
@@ -168,7 +164,8 @@ class Detail extends Component
             'Company' => Companies::with(['CompanyCategory'])->searchcompany(trim($this->search_company))->get(),
             'Consequence' => RiskConsequence::get(),
             'Likelihood' => RiskLikelihood::get(),
-        ])->extends('navigation.guest.guestbase', ['header' => 'Hazard report'])->section('contentUser');
+            'CompanyLevels' => CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_companyLevel))->orderBy('bussiness_unit', 'asc')->get()
+        ])->extends('navigation.guest.guestbase', ['header' => 'Hazard report','title' => 'Hazard report'])->section('contentUser');
     }
 
     // FUNCTION BTN MODAL
@@ -183,11 +180,11 @@ class Detail extends Component
     }
     public function wgClick()
     {
-        $this->openModalWG = 'modal-open';
+        $this->openModalWG = 'modal modal-open';
     }
     public function wgClickClose()
     {
-        $this->openModalWG = '';
+        $this->openModalWG = 'modal';
         $this->clearSearchWg();
     }
     public function reportByClick()
@@ -218,12 +215,8 @@ class Detail extends Component
     }
     public function cari($id)
     {
-        $this->showWG = false;
-        if (!empty($id)) {
-            $id_Dept = CompanyLevel::with(['BussinessUnit'])->where('id', $id)->first()->id;
-            $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->where('companyLevel_id', $id_Dept)->get();
-        } else {
-            $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->get();
+        if ($id) {
+            $this->wg_id = $id;
         }
     }
     public function workGroup($id, $bu, $deptOrCont, $job_class)

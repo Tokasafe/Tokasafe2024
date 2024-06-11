@@ -21,18 +21,19 @@ class Detail extends Component
 {
     use WithFileUploads;
     use WithPagination;
-    public $data_id, $delete_id, $IncidentClose, $filename;
+   
+    public $data_id, $delete_id, $IncidentClose, $filename,$wg_id,$search_companyLevel='',$search='';
     public $event_type, $sub_type, $reference, $workgroup, $workgroup_id, $reporter_name, $reporter_name_id, $report_to, $report_to_id, $location, $date_event, $time_event, $potential_lti, $env_incident, $task, $description_incident, $involved_person, $involved_equipment, $preliminary_causes, $imediate_action_taken, $key_learning, $documentation;
-    public $openWG = "modal", $open_ReportBy = "modal ", $open_ReportTo = "modal", $modalDelete = "modal", $CompanyLevel = [], $radio_select = '', $ModalWorkgroup = [], $EventSubType = [], $showWG = false, $search_workgroup = '', $search_reportBy = '',$fileUpload;
+    public $openWG = "modal", $open_ReportBy = "modal ", $open_ReportTo = "modal", $modalDelete = "modal", $radio_select = '', $ModalWorkgroup = [], $EventSubType = [], $showWG = false, $search_workgroup = '', $search_reportBy = '', $fileUpload;
     public $actual_outcome, $notes_assessment, $potential_consequence, $name_assessment, $potential_likelihood, $investigation_req_assessment, $reporting_obligation_assessment, $actual_outcome_description, $potential_consequence_description, $potential_likelihood_description;
 
-    public function mount($id)
+    public function mount( $id)
     {
-     
-        // dd($id);
+       
         if (IncidentReport::whereId($id)->first()) {
             $this->data_id = $id;
             $close = PanelIncident::where('incident_report_id', $this->data_id)->first()->WorkflowStep->name;
+            
             if ($close === 'Closed' || $close === 'Cancelled') {
                 $this->IncidentClose = $close;
             }
@@ -67,50 +68,32 @@ class Detail extends Component
             $this->potential_consequence = $incident->potential_consequence;
             $this->potential_likelihood = $incident->potential_likelihood;
             $this->filename = $incident->documentation;
-           } else {
+        } else {
             return abort(404);
-           }
-           
-           
-     
+        }
     }
     public function render()
     {
         $this->click();
-        if (!empty($this->actual_outcome)) {
-            $this->actual_outcome_description = RiskConsequence::whereId($this->actual_outcome)->first()->description;
-        } else {
-            $this->actual_outcome_description = '';
-        }
-        if (!empty($this->potential_consequence)) {
-            $this->potential_consequence_description = RiskConsequence::whereId($this->potential_consequence)->first()->description;
-        } else {
-            $this->potential_consequence_description = '';
-        }
-        if (!empty($this->potential_likelihood)) {
-            $this->potential_likelihood_description = RiskLikelihood::whereId($this->potential_likelihood)->first()->notes;
-        } else {
-            $this->potential_likelihood_description = '';
-        }
+        $this->actual_outcome_description  = (!empty($this->actual_outcome)) ? RiskConsequence::whereId($this->actual_outcome)->first()->description : $this->actual_outcome_description = '' ;
+        $this->potential_consequence_description  = (!empty($this->potential_consequence)) ? RiskConsequence::whereId($this->potential_consequence)->first()->description : $this->potential_consequence_description = '' ;
+        $this->potential_likelihood_description  = (!empty($this->potential_likelihood)) ? RiskLikelihood::whereId($this->potential_likelihood)->first()->notes : $this->potential_likelihood_description = '' ;
         if (!empty($this->documentation)) {
             $file_name = $this->documentation->getClientOriginalName();
             $this->fileUpload  = pathinfo($file_name, PATHINFO_EXTENSION);
-            $this->filename=null;
+            $this->filename = null;
         }
 
-        if (!empty($this->radio_select)) {
-            if ($this->radio_select === 'companyLevel') {
-                $this->showWG = false;
-                $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_workgroup))->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
-            } else {
-
-                $this->showWG = true;
-                $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
-            }
-        } else {
-
-            $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
+        if ($this->radio_select === 'workgroup') {
+            $this->search_workgroup = $this->search;
+            $this->wg_id=null;
+            $this->search_companyLevel = "";
+        } elseif ($this->radio_select === 'companyLevel') {
+            $this->search_workgroup = "";
+            $this->search_companyLevel = $this->search;
         }
+      
+        $this->ModalWorkgroup = (!empty($this->wg_id)) ? Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->searchWgId(trim($this->wg_id))->orderBy('companyLevel_id', 'asc')->get() : Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
         if ($this->event_type) {
             $this->EventSubType = EventSubType::where('eventType_id', $this->event_type)->get();
         }
@@ -121,6 +104,7 @@ class Detail extends Component
             'EventType' => EventType::where('eventCategory_id', 2)->get(),
             'Consequence' => RiskConsequence::get(),
             'Likelihood' => RiskLikelihood::get(),
+            'CompanyLevel' => CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_companyLevel))->orderBy('bussiness_unit', 'asc')->get()
         ])->extends('navigation.homebase', ['header' => 'Incident Report', 'title' => 'incident', 'h1' => $this->data_id])->section('content');
     }
     public function updateStore()
@@ -233,14 +217,8 @@ class Detail extends Component
     }
     public function cariCL($id)
     {
-        // dd($id);
-        $this->radio_select = '';
-        $this->showWG = true;
-        if (!empty($id)) {
-            $id_Dept = CompanyLevel::with(['BussinessUnit'])->where('id', $id)->first()->id;
-            $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->where('companyLevel_id', $id_Dept)->get();
-        } else {
-            $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->get();
+        if ($id) {
+            $this->wg_id = $id;
         }
     }
     public function clickWorkgroup($id, $bu, $deptOrCont, $job_class)
@@ -253,6 +231,9 @@ class Detail extends Component
     public function delete()
     {
         $this->modalDelete = "modal modal-open";
+    }
+    public function deleteClose(){
+        $this->modalDelete = "modal";
     }
     public function deleteFileAction()
     {

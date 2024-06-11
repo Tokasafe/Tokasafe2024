@@ -170,14 +170,14 @@
                             <x-input-label-req :value="__('tanggal_kejadian')" />
                             <input type="text" id="tglLapor1" placeholder="Type here" wire:model='tanggal_kejadian'
                                 {{ $hazardClose ? 'disabled' : '' }} readonly
-                                class=" @error('tanggal_kejadian') border-rose-500 border-2 @enderror w-full input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                                class=" @error('tanggal_kejadian') border-rose-500 border-2 @enderror cursor-pointer w-full input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
                             <x-input-error :messages="$errors->get('tanggal_kejadian')" class="mt-0" />
                         </div>
                         <div class="w-full max-w-xl form-control">
                             <x-input-label-req :value="__('time_event')" />
                             <input type="text" id="jamKejadian" placeholder="Type here" wire:model='waktu' readonly
                                 {{ $hazardClose ? 'disabled' : '' }}
-                                class=" @error('waktu') border-rose-500 border-2 @enderror w-full input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                                class=" @error('waktu') border-rose-500 border-2 @enderror w-full cursor-pointer input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
                             <x-input-error :messages="$errors->get('waktu')" class="mt-0" />
                         </div>
                         <div class="w-full max-w-xl form-control">
@@ -185,7 +185,7 @@
                             <label class="join" wire:click='wgClick'>
                                 <input type="text" placeholder="Type here" wire:model='workgroup' readonly
                                     {{ $hazardClose ? 'disabled' : '' }}
-                                    class=" @error('workgroup') border-rose-500 border-2 @enderror w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                                    class=" @error('workgroup') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
                                 <label for="" {{ $hazardClose ? 'disabled' : '' }}
                                     class="border btn btn-xs btn-square join-item border-info btn-info">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -202,7 +202,7 @@
                             <label class="join"wire:click='reportToClick'>
                                 <input type="text" placeholder="Type here" wire:model='pengawas_area' readonly
                                     {{ $hazardClose ? 'disabled' : '' }}
-                                    class=" @error('pengawas_area') border-rose-500 border-2 @enderror w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                                    class=" @error('pengawas_area') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
                                 <label for="" {{ $hazardClose ? 'disabled' : '' }}
                                     class="border btn btn-xs btn-square join-item border-info btn-info">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -289,7 +289,9 @@
                             <x-input-error :messages="$errors->get('tindakan_perbaikan_disarankan')" class="mt-0" />
                         </div>
                     </div>
-                    @include('livewire.event-report-list.hazard-id.tablePenilaian')
+                   
+                        @include('livewire.guest.event-report-list.hazard.tablePenilaian')
+                   
                     <div class="flex flex-wrap justify-center gap-2 mx-2 my-4 sm:justify-normal">
                         <div class="w-full p-4 ">
                             <div
@@ -326,7 +328,7 @@
             </div>
         </form>
     </div>
-    @include('livewire.event-report-list.hazard-id.modalDetail')
+    @include('livewire.guest.event-report-list.hazard.modalDetail')
     <input type="checkbox" id="delete" class="modal-toggle" />
     <div class="modal">
         <div class="modal-box">

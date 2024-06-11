@@ -8,6 +8,7 @@ use App\Models\EventType;
 use App\Models\Workgroup;
 use App\Models\CompanyLevel;
 use App\Models\EventSubType;
+use App\Models\UserSecurity;
 use Livewire\WithPagination;
 use App\Models\EventLocation;
 use App\Models\PanelIncident;
@@ -21,22 +22,23 @@ class Detail extends Component
 {
     use WithFileUploads;
     use WithPagination;
-    public $data_id, $delete_id, $IncidentClose, $filename;
+    public $data_id, $delete_id, $IncidentClose, $filename, $WorkflowStep_name, $guest_respons = false, $id_people, $Event_Report_Manager,$assignTo,$also_assignTo;
     public $event_type, $sub_type, $reference, $workgroup, $workgroup_id, $reporter_name, $reporter_name_id, $report_to, $report_to_id, $location, $date_event, $time_event, $potential_lti, $env_incident, $task, $description_incident, $involved_person, $involved_equipment, $preliminary_causes, $imediate_action_taken, $key_learning, $documentation;
-    public $openWG = "modal", $open_ReportBy = "modal ", $open_ReportTo = "modal", $modalDelete = "modal", $CompanyLevel = [], $radio_select = '', $ModalWorkgroup = [], $EventSubType = [], $showWG = false, $search_workgroup = '', $search_reportBy = '',$fileUpload;
+    public $openWG = "modal", $open_ReportBy = "modal ", $open_ReportTo = "modal", $modalDelete = "modal", $CompanyLevel = [], $radio_select = '', $ModalWorkgroup = [], $EventSubType = [], $showWG = false, $search_workgroup = '', $search_reportBy = '', $fileUpload;
     public $actual_outcome, $notes_assessment, $potential_consequence, $name_assessment, $potential_likelihood, $investigation_req_assessment, $reporting_obligation_assessment, $actual_outcome_description, $potential_consequence_description, $potential_likelihood_description;
 
     public function mount($id)
     {
-     
+
         // dd($id);
         if (IncidentReport::whereId($id)->first()) {
             $this->data_id = $id;
-            $close = PanelIncident::where('incident_report_id', $this->data_id)->first()->WorkflowStep->name;
+            $close = PanelIncident::where('incident_report_id', $this->data_id)->first()->WorkflowStep->name; 
             if ($close === 'Closed' || $close === 'Cancelled') {
                 $this->IncidentClose = $close;
             }
-
+            $this->WorkflowStep_name = PanelIncident::where('incident_report_id', $this->data_id)->first()->WorkflowStep->name;
+            
             $incident = IncidentReport::whereId($id)->first();
             $a = $incident->workgroup->CompanyLevel->BussinessUnit->name;
             $b = $incident->workgroup->CompanyLevel->deptORcont;
@@ -67,12 +69,32 @@ class Detail extends Component
             $this->potential_consequence = $incident->potential_consequence;
             $this->potential_likelihood = $incident->potential_likelihood;
             $this->filename = $incident->documentation;
-           } else {
+            $panel = PanelIncident::where('incident_report_id',$this->data_id)->first();
+          
+            if ($panel->assignTo) {
+                $this->assignTo = $panel->assignTo;
+            }
+            if ($panel->also_assignTo) {
+                $this->also_assignTo = $panel->also_assignTo;
+            }
+            if (!empty(People::whereIn('network_username', [auth()->user()->username])->first()->id)) {
+                $this->id_people = People::whereIn('network_username', [auth()->user()->username])->first()->id;
+                $workflow = UserSecurity::with('People')->where('user_id', $this->id_people)->whereIn('workflow', ['Moderator', 'Event Report Manager'])->pluck('workflow')->toArray();
+                $nameStep = 'Assign & Investigation';
+                if (in_array('Moderator', $workflow)) {
+                    $this->guest_respons = true;
+                } elseif (in_array('Event Report Manager', $workflow) && $this->WorkflowStep_name === $nameStep && $this->assignTo === $this->id_people) {
+                    $this->guest_respons = true;
+                } elseif (in_array('Event Report Manager', $workflow) && $this->WorkflowStep_name === $nameStep &&  $this->also_assignTo === $this->id_people) {
+                    $this->guest_respons = true;
+                } else {
+                    $this->guest_respons = false;
+                }
+               
+            } 
+        } else {
             return abort(404);
-           }
-           
-           
-     
+        }
     }
     public function render()
     {
@@ -95,7 +117,7 @@ class Detail extends Component
         if (!empty($this->documentation)) {
             $file_name = $this->documentation->getClientOriginalName();
             $this->fileUpload  = pathinfo($file_name, PATHINFO_EXTENSION);
-            $this->filename=null;
+            $this->filename = null;
         }
 
         if (!empty($this->radio_select)) {
@@ -114,7 +136,7 @@ class Detail extends Component
         if ($this->event_type) {
             $this->EventSubType = EventSubType::where('eventType_id', $this->event_type)->get();
         }
-        return view('livewire.guest.event-report-list.insident.detail',[
+        return view('livewire.guest.event-report-list.insident.detail', [
             'ReportBy' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(100, ['*'], 'ReportByPage'),
             'ReportTo' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(100, ['*'], 'ReportToPage'),
             'Location' => EventLocation::get(),

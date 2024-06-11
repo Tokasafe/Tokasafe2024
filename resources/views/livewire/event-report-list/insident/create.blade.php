@@ -1,40 +1,36 @@
 <div>
-    @push('styles')
-        <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-    @endpush
+
     @push('scripts')
-    <script>
-        flatpickr("#tanggal", {
-            disableMobile: "true",
-            dateFormat: "d-m-Y", //defaults to "F Y"
-        });
+        <script>
+            flatpickr("#tanggal", {
+                disableMobile: "true",
+                dateFormat: "d-m-Y", //defaults to "F Y"
+            });
 
-        flatpickr("#tglLapor", {
-            disableMobile: "true",
-            dateFormat: "d-m-Y", //defaults to "F Y"
-        });
-        flatpickr("#jamKejadian", {
-            disableMobile: "true",
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i",
-            time_24hr: true
-        });
-       
-        flatpickr("#month", {
-            disableMobile: "true",
-            plugins: [
-                new monthSelectPlugin({
-                    shorthand: true, //defaults to false
-                    dateFormat: "M-Y", //defaults to "F Y"
-                    altFormat: "F Y", //defaults to "F Y"
-                    theme: "dark" // defaults to "light"
-                })
-            ]
-        });
+            flatpickr("#tglLapor", {
+                disableMobile: "true",
+                dateFormat: "d-m-Y", //defaults to "F Y"
+            });
+            flatpickr("#jamKejadian", {
+                disableMobile: "true",
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",
+                time_24hr: true
+            });
 
-        
-    </script>
+            flatpickr("#month", {
+                disableMobile: "true",
+                plugins: [
+                    new monthSelectPlugin({
+                        shorthand: true, //defaults to false
+                        dateFormat: "M-Y", //defaults to "F Y"
+                        altFormat: "F Y", //defaults to "F Y"
+                        theme: "dark" // defaults to "light"
+                    })
+                ]
+            });
+        </script>
     @endpush
     <!-- You can open the modal using ID.showModal() method -->
     @include('toast.toast')
@@ -48,17 +44,21 @@
     </label>
 
     <div id="my_modal_3" class="{{ $openModal }} ">
-        <div class="max-w-7xl xl:w-11/12  xl:h-[800px] modal-box">
-            <button
-                class="absolute z-10 font-bold text-blue-500 btn btn-sm btn-circle btn-ghost right-2 top-2 tooltip tooltip-left"
-                data-tip="{{ __('info') }}">?</button>
-            <div
-                class="font-extrabold text-transparent divider divider-accent text-1xl bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
-                {{ __('reportIncident') }}</div>
-            <form wire:submit.prevent='store'>
+        <div class="max-w-7xl xl:w-11/12  xl:h-[800px] modal-box p-0 ">
+
+            <div class="bg-white sticky z-10 top-0 h-16 grid justify-items-stretch gap-0 shadow-md">
+                <label
+                    class=" z-20 font-bold text-blue-500 btn btn-xs btn-circle btn-ghost justify-self-end top-3 pt-1 tooltip tooltip-info tooltip-left"
+                    data-tip="{{ __('info') }}">?</label>
+                <div
+                    class=" font-extrabold text-transparent divider divider-accent text-1xl bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
+                    {{ __('reportIncident') }}</div>
+            </div>
+
+            <form class="relative" wire:submit.prevent='store'>
                 <div class="p-2 overflow-y-auto shadow-inner sm:60 md:h-80 xl:h-[640px]">
                     @csrf
-                    <div class="flex flex-wrap gap-1 xl:flex-none xl:grid xl:grid-cols-2">
+                    <div class="grid-cols-1 gap-1 xl:flex-none grid xl:grid-cols-2">
                         <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('et')" />
                             <select wire:model='event_type'
@@ -195,7 +195,7 @@
                         </div>
                         <div class="w-full sm:max-w-sm xl:max-w-xl form-control">
                             <x-input-label-req :value="__('tugas')" />
-                            <input type="text" placeholder="Type here" wire:model='task'
+                            <input type="text" placeholder="Type here" wire:model='task' 
                                 class=" @error('task') border-rose-500 border-2 @enderror  w-full sm:max-w-xl input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1" />
                             <x-input-error :messages="$errors->get('task')" class="mt-0" />
                         </div>
@@ -221,9 +221,9 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap gap-1 xl:flex-none xl:grid xl:grid-cols-2">
+                    <div class="grid-cols-1 gap-1 xl:flex-none grid xl:grid-cols-2">
                         <div>
-                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-xl">
+                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-lg">
                                 <x-input-label-bhy :value="__('deskripsi')" />
                                 <textarea id="description_incident" placeholder="Type here" wire:model='description_incident'
                                     class="@error('description_incident') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
@@ -231,7 +231,7 @@
                             <x-input-error :messages="$errors->get('description_incident')" class="mt-0" />
                         </div>
                         <div>
-                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-xl">
+                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-lg">
                                 <x-input-label-req :value="__('InvolvedPerson')" />
                                 <textarea id="involved_person" placeholder="Type here" wire:model='involved_person'
                                     class="@error('involved_person') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
@@ -239,7 +239,7 @@
                             <x-input-error :messages="$errors->get('involved_person')" class="mt-0" />
                         </div>
                         <div>
-                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-xl">
+                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-lg">
                                 <x-input-label-req :value="__('InvolvedEquipment')" />
                                 <textarea id="involved_equipment" placeholder="Type here" wire:model='involved_equipment'
                                     class="@error('involved_equipment') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
@@ -247,7 +247,7 @@
                             <x-input-error :messages="$errors->get('involved_equipment')" class="mt-0" />
                         </div>
                         <div>
-                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-xl">
+                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-lg">
                                 <x-input-label-req :value="__('PreliminaryCauses')" />
                                 <textarea id="preliminary_causes" placeholder="Type here" wire:model='preliminary_causes'
                                     class="@error('preliminary_causes') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
@@ -255,7 +255,7 @@
                             <x-input-error :messages="$errors->get('preliminary_causes')" class="mt-0" />
                         </div>
                         <div>
-                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-xl">
+                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-lg">
                                 <x-input-label-req :value="__('ImmediateActionTaken')" />
                                 <textarea id="imediate_action_taken" placeholder="Type here" wire:model='imediate_action_taken'
                                     class="@error('imediate_action_taken') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
@@ -263,7 +263,7 @@
                             <x-input-error :messages="$errors->get('imediate_action_taken')" class="mt-0" />
                         </div>
                         <div>
-                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-xl">
+                            <div wire:ignore class="w-full sm:max-w-sm xl:max-w-lg">
                                 <x-input-label-req :value="__('KeyLearning')" />
                                 <textarea id="key_learning" placeholder="Type here" wire:model='key_learning'
                                     class="@error('key_learning') border-rose-500 border-2 @enderror textarea  textarea-bordered textarea-sm w-full  focus:outline-none  focus:ring-success focus:ring-1"></textarea>
@@ -274,7 +274,7 @@
                     @include('livewire.event-report-list.insident.tablePenilaian')
                 </div>
 
-                <div class=" modal-action">
+                <div class=" modal-action sticky bottom-0 h-8 px-2 bg-white">
                     <button type="submit" id="my-submit" class="text-white btn btn-success btn-xs">Save
                         <svg wire:loading.remove wire:target="store" xmlns="http://www.w3.org/2000/svg"
                             class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
@@ -286,6 +286,7 @@
                     </button>
                     <label wire:click='close_modal' class="text-white btn btn-xs btn-error">Close!</label>
                 </div>
+
             </form>
         </div>
     </div>

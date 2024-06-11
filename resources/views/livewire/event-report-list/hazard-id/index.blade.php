@@ -1,8 +1,15 @@
-<div class="">
+<div class=" mx-4 md:mx-0">
   
     @push('styles')
         @livewireStyles()
-        
+        <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+        <style>
+            .ck-editor__editable[role="textbox"] {
+                /* Editing area */
+                /* min-height: 200px; */
+                padding: 25px !IMPORTANT;
+            }
+        </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
@@ -112,11 +119,11 @@
         <div class="">
             @livewire('event-report-list.hazard-id.create')
         </div>
-        <div class="flex flex-col gap-1 join sm:flex-row sm:gap-0">  
+        <div class="flex flex-col join lg:flex-row sm:gap-0 ">
            
             <div class="relative flex items-center w-full max-w-xs join-item ">
                 <input id="rangeDate" type="text" readonly wire:model='dateRange'
-                    class="relative w-full   peer input input-bordered pl-6 input-xs text-[9px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
+                    class="relative w-full   peer input input-bordered pl-6 input-xs text-[10px] lg:text-[9px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
                     placeholder="date range" />
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                     class="absolute w-4 h-4 pl-0.5 pl-0.5 opacity-70 left-2">
@@ -130,7 +137,7 @@
                 <select type="text" wire:model='search_eventsubtype'
                     class="relative w-full sm:w-full max-w-xs pl-6 peer select select-bordered select-xs text-[10px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
                     placeholder="Initial Incident Class">
-                    <option class="text-center" value="" selected>Initial Incident Class</option>
+                    <option  value="" selected>Initial Incident Class</option>
                     @foreach ($EventType as $key => $value)
                     <option value="{{ $value->id }}">{{ $value->name }}</option>
                 @endforeach

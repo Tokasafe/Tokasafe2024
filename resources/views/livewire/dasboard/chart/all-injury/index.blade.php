@@ -1,8 +1,7 @@
 <div>
     @push('styles')
         @livewireStyles()
-    
-           
+        <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
         <link rel="stylesheet" href="/css/flatpickr/flatpickr.min.css">
         <link rel="stylesheet" href="/css/flatpickr/monthSelect/style.css" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="/css/flatpickr/dark.css">

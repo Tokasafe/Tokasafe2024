@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between bg-gray-300 rounded-t-lg">
         <div class="flex flex-col">
             <div class="flex flex-row pl-2 text-xs w-80">
-                <div class="font-semibold w-36">{{ __('Current_Step') }} {{$responsibleRole}}</div>
+                <div class="font-semibold w-36">{{ __('Current_Step') }}{{$responsibleRole}} </div>
                 <div class="w-full font-bold">: {{ $current_step }}</div>
             </div>
             <form  wire:submit.prevent='storeUpdate' class="flex sm:flex-row flex-col  items-center  gap-1 pl-2 py-0.5 text-xs m-[3px]">
@@ -29,7 +29,7 @@
                     <x-span-label :value="__('Assign_To')" />
                     <select wire:model='assignTo'
                         class=" @error('assignTo') border-rose-500 border-2 @enderror peer select select-bordered select-xs w-full max-w-xl focus:outline-none  focus:ring-success focus:ring-1">
-                        <option selected>{{ __('select_option') }}</option>
+                        <option value="" selected>{{ __('select_option') }}</option>
                         @foreach ($People as $index => $person)              
                                 <option value="{{ $person->user_id }}">{{ $person->People->lookup_name }}</option>
                         @endforeach
@@ -40,7 +40,7 @@
                     <x-span-label :value="__('also_assignTo')" />
                     <select wire:model='also_assignTo'
                         class=" @error('also_assignTo') border-rose-500 border-2 @enderror peer select select-bordered select-xs w-full max-w-xl focus:outline-none  focus:ring-success focus:ring-1">
-                        <option selected>{{ __('select_option') }}</option>
+                        <option value="" selected>{{ __('select_option') }}</option>
                         @foreach ($People as $index => $person)              
                                 <option value="{{ $person->user_id }}">{{ $person->People->lookup_name }}</option>
                         @endforeach

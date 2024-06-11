@@ -1,13 +1,5 @@
 <div>
     @push('styles')
-        <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-        <style>
-            .ck-editor__editable[role="textbox"] {
-                /* Editing area */
-                /* min-height: 200px; */
-                padding: 25px !IMPORTANT;
-            }
-        </style>
     @endpush
     @include('toast.toast')
     <label wire:click='openModal' class="btn btn-xs btn-accent btn-square btn-outline">
@@ -18,14 +10,17 @@
         </svg>
     </label>
     <div class="modal {{ $modal }} ">
-        <div class="max-w-7xl xl:w-11/12  xl:h-[800px] modal-box">
-            <button
-                class="absolute z-10 font-bold text-blue-500 btn btn-sm btn-circle btn-ghost right-2 top-2 tooltip tooltip-left"
-                data-tip="{{ __('info') }}">?</button>
-            <div
-                class="font-extrabold text-transparent divider divider-accent text-1xl bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
-                {{ __('add_hazard') }}</div>
+        <div class="max-w-7xl xl:w-11/12  xl:h-[800px] modal-box p-0">
+            <div class="bg-white sticky z-10 top-0 h-16 grid justify-items-stretch gap-0 shadow-md">
+                <label
+                    class=" z-20 font-bold text-blue-500 btn btn-xs btn-circle btn-ghost justify-self-end top-3 pt-1 tooltip tooltip-info tooltip-left"
+                    data-tip="{{ __('info') }}">?</label>
+                <div
+                    class=" font-extrabold text-transparent divider divider-accent text-1xl bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
+                    {{ __('add_hazard') }}</div>
+            </div>
             <form wire:submit.prevent='store'>
+
                 @csrf
                 <div class="p-2 overflow-y-auto shadow-inner sm:60 md:h-80 xl:h-[640px]">
 
@@ -188,7 +183,7 @@
 
                 </div>
 
-                <div class="modal-action">
+                <div class=" modal-action sticky bottom-0 h-8 px-2 bg-white">
                     <button type="submit" class="text-white btn btn-success btn-xs">Save
                         <svg wire:loading.remove xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
                             viewBox="0 0 20 20" fill="currentColor">
@@ -241,7 +236,7 @@
             })
             .then(newEditor => {
                 const toolbarElement = newEditor.ui.view.toolbar.element;
-               
+
                 if (hazardClose === 'Closed' || hazardClose === 'Cancelled') {
 
                     newEditor.enableReadOnlyMode('#tindakan_perbaikan');
@@ -285,29 +280,5 @@
                 console.error(error);
             });
         // komentar
-        ClassicEditor
-            .create(document.querySelector('#komentar'), {
-                toolbar: ['heading', 'undo', 'redo', 'bold', 'italic', 'numberedList', 'bulletedList', 'link']
-
-            })
-            .then(newEditor => {
-                const toolbarElement = newEditor.ui.view.toolbar.element;
-                if (hazardClose === 'Closed' || hazardClose === 'Cancelled') {
-
-                    newEditor.enableReadOnlyMode('#komentar');
-
-                    toolbarElement.style.display = 'none';
-                } else {
-                    toolbarElement.style.display = 'flex';
-                    newEditor.disableReadOnlyMode('#komentar');
-                }
-                newEditor.model.document.on('change:data', () => {
-
-                    @this.set('komentar', newEditor.getData())
-                });
-            })
-            .catch(error => {
-                console.error(error);
-            });
     </script>
 </div>

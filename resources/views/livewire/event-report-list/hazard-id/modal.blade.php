@@ -7,7 +7,7 @@
             Workgroup</div>
         <div class="flex flex-col justify-end gap-1 -mt-3 join sm:flex-row sm:gap-0">
             <div class="relative flex items-center max-w-xs shadow-sm join-item">
-                <input id="5" type="text" wire:model='search_workgroup'
+                <input id="5" type="text" wire:model='search'
                     class="relative w-full max-w-xs peer input input-bordered input-xs focus:ring-1 focus:outline-none focus:drop-shadow-lg"
                     placeholder="search" />
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
@@ -19,20 +19,18 @@
             </div>
             <div class="relative flex items-center max-w-xs shadow-sm join-item ">
 
-                <div class="flex items-center">
-                    <label class="gap-2 cursor-pointer label">
-                        <input type="radio" wire:model='radio_select' value="companyLevel"
-                            class="radio radio-xs checked:bg-teal-600" />
-                        <span class="label-text">Company Level</span>
-                    </label>
-                </div>
-                <div class="flex items-center">
-                    <label class="gap-2 cursor-pointer label">
-                        <input type="radio" wire:model='radio_select' value="workgroup"
-                            class="radio radio-xs checked:bg-sky-600" checked />
-                        <span class="label-text">Workgroup</span>
-                    </label>
-                </div>
+                <fieldset class="flex items-start p-[3px] border  gap-0.5">
+                    <input wire:model.live="radio_select" id="yes"
+                        class="radio-xs peer/yes checked:bg-rose-500 radio" type="radio" value="companyLevel" />
+                    <label for="yes"
+                        class="text-xs font-semibold peer-checked/yes:text-rose-500">{{ __('Company Level') }}</label>
+
+                    <input wire:model.live="radio_select" id="no"
+                        class="radio-xs peer/no checked:bg-sky-500 radio" type="radio" value="workgroup" />
+                    <label for="no"
+                        class="text-xs font-semibold peer-checked/no:text-sky-500">{{ __('Workgroup') }}</label>
+
+                </fieldset>
             </div>
         </div>
         <div class="flex flex-col md:flex-row">
@@ -42,9 +40,9 @@
                     <li
                         class="text-xs font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500 ">
                         Company Level</li>
-                    @foreach ($CompanyLevel as $index => $dept)
-                        <li wire:click="cari('{{ $dept->id }}')" class="px-2 cursor-pointer hover:bg-sky-400">
-                            {{ $dept->BussinessUnit->name }}-{{ $dept->deptORcont }}</li>
+                    @foreach ($CompanyLevel as $index => $item)
+                        <li wire:click="cari('{{ $item->id }}')" class="px-2 cursor-pointer hover:bg-sky-400">
+                            {{ $item->BussinessUnit->name }}-{{ $item->deptORcont }}</li>
                     @endforeach
                 </ul>
             </div>
@@ -53,17 +51,17 @@
                     <li
                         class="text-xs font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
                         Workgroup</li>
-                    @if ($showWG)
+                   
                         @forelse ($ModalWorkgroup as $index => $item)
                             <li class="hover:bg-sky-400 cursor-pointer text-[10px] px-2"
-                                wire:click="workGroup('{{ $item->id }}','{{ $item->companyLevel->BussinessUnit->name }}','{{ $item->CompanyLevel->deptORcont }}','{{ $item->job_class }}')">
+                                wire:click="workGroup('{{ $item->id }}','{{ $item->CompanyLevel->BussinessUnit->name }}','{{ $item->CompanyLevel->deptORcont }}','{{ $item->job_class }}')">
                                 {{ $item->CompanyLevel->BussinessUnit->name }}-{{ $item->CompanyLevel->level }}-{{ $item->CompanyLevel->deptORcont }}
                                 {{ $item->job_class }}</li>
                         @empty
 
                             <li class="font-semibold text-rose-500">data not found!!</li>
                         @endforelse
-                    @endif
+                  
                 </ul>
             </div>
         </div>

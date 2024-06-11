@@ -16,12 +16,12 @@
     @push('scripts')
         @livewireScripts()
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-        <script>
-            const modal = document.getElementById("closeModal");
+        {{-- <script>
+            const modal = document.getElementById("closeModalAction");
             $(document).on('click', '#close', function() {
                 modal.click()
             });
-        </script>
+        </script> --}}
         {{-- <script src="../../flatpickr/dist/plugins/rangePlugin.js"></script> --}}
 
         <script src="../../flatpickr/dist/plugins/monthSelect/index.js"></script>
@@ -341,7 +341,7 @@
                         </svg>
 
                     </button>
-                    <label id="closeModalAction" for="delete_data_act" class="btn btn-xs btn-error">No!</label>
+                    <label wire:click='deleteClose' class="btn btn-xs btn-error">No!</label>
                 </div>
             </form>
         </div>

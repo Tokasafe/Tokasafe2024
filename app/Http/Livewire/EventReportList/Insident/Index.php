@@ -63,6 +63,9 @@ class Index extends Component
 
         ])->extends('navigation.homebase', ['header' => 'Incident report','title' => 'Incident report'])->section('content');
     }
+    public function detail($id){
+        
+    }
     public function delete($id)
     {
         $this->data_id = $id;
