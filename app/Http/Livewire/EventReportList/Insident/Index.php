@@ -12,7 +12,7 @@ use Livewire\Component;
 
 class Index extends Component
 {
-    public $data_id, $reference, $documentation, $Incident_Action = [], $EventSubType = [], $tglMulai = '',$hasilTangal, $endDate = '', $dateRange = '', $search_SubEventType = '', $search_eventType = '', $month = '', $search_Workgroup = '';
+    public $data_id, $reference, $modal='modal',$documentation, $Incident_Action = [], $EventSubType = [], $tglMulai = '',$hasilTangal, $endDate = '', $dateRange = '', $search_SubEventType = '', $search_eventType = '', $month = '', $search_Workgroup = '';
     protected $listeners = [
 
         'TglMulaiIncident',
@@ -37,8 +37,7 @@ class Index extends Component
         if (empty($this->dateRange)) {
           
                 $this->tglMulai = IncidentReport::orderby('date_event', 'asc')->first()->date_event;
-                $this->endDate = IncidentReport::orderby('date_event', 'desc')->first()->date_event;
-               
+                $this->endDate = IncidentReport::orderby('date_event', 'desc')->first()->date_event; 
             
         }
         if ($this->search_eventType) {
@@ -54,7 +53,7 @@ class Index extends Component
                 ->searchSubEventType(trim($this->search_SubEventType))
                 ->searchMonth(trim($this->month))
                 ->searchWorkgroup(trim($this->search_Workgroup))
-                ->with(['Incident.eventType', 'Incident.eventSubType', 'Incident.workgroup.CompanyLevel.BussinessUnit', 'Incident.repportBy', 'Incident.repportTo', 'WorkflowStep.StatusCode'])->paginate(100, ['*'], 'IncidentPage'),
+                ->with(['Incident.eventType', 'Incident.eventSubType', 'Incident.workgroup.CompanyLevel.BussinessUnit', 'WorkflowStep.StatusCode'])->paginate(100, ['*'], 'IncidentPage'),
                 'EventType' => EventType::orderBy('name')->where('eventCategory_id',2)->get(),
             'Workgroup' => Workgroup::with([
                 'CompanyLevel',
@@ -63,25 +62,30 @@ class Index extends Component
 
         ])->extends('navigation.homebase', ['header' => 'Incident report','title' => 'Incident report'])->section('content');
     }
-    public function detail($id){
-        
-    }
+
     public function delete($id)
     {
+        $this->modal='modal modal-open';
         $this->data_id = $id;
-        $this->reference = IncidentReport::whereId($id)->first()->reference;
-        $this->documentation = IncidentReport::whereId($id)->first()->documentation;
+        $this->reference = IncidentReport::find($id)->reference;
+        $this->documentation = IncidentReport::find($id)->documentation;
     }
+  
     public function deleteFile()
     {
-        try {
+        // try {
+            IncidentAction::where('incident_report_id', $this->data_id)->delete();
             IncidentReport::find($this->data_id)->delete();
             if ($this->documentation) {
                 unlink(storage_path('app/public/documents/' . $this->documentation));
             }
             session()->flash('success', "Hazard Report Deleted Successfully!!");
-        } catch (\Exception $e) {
-            session()->flash('error', "Something goes wrong!!");
-        }
+            $this->modal='modal';
+        // } catch (\Exception $e) {
+        //     session()->flash('error', "Something goes wrong!!");
+        // }
+    }
+    public function closeModal(){
+        $this->modal='modal';
     }
 }

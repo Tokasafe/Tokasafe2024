@@ -41,7 +41,7 @@
                         Company Level</li>
                     @foreach ($CompanyLevels as $index => $item)
                         <li wire:click="cari('{{ $item->id }}')" class="px-2 cursor-pointer hover:bg-sky-400">
-                            {{ $item->BussinessUnit->name }}-{{ $item->deptORcont }}</li>
+                            {{ $item->BussinessUnit->name }}-{{ $item->departemen_contractor }}</li>
                     @endforeach
                 </ul>
             </div>
@@ -53,8 +53,8 @@
                    
                         @forelse ($ModalWorkgroup as $index => $item)
                             <li class="hover:bg-sky-400 cursor-pointer text-[10px] px-2"
-                                wire:click="workGroup('{{ $item->id }}','{{ $item->CompanyLevel->BussinessUnit->name }}','{{ $item->CompanyLevel->deptORcont }}','{{ $item->job_class }}')">
-                                {{ $item->CompanyLevel->BussinessUnit->name }}-{{ $item->CompanyLevel->level }}-{{ $item->CompanyLevel->deptORcont }}
+                                wire:click="workGroup('{{ $item->id }}','{{ $item->CompanyLevel->BussinessUnit->name }}','{{ $item->CompanyLevel->departemen_contractor }}','{{ $item->job_class }}')">
+                                {{ $item->CompanyLevel->BussinessUnit->name }}-{{ $item->CompanyLevel->level }}-{{ $item->CompanyLevel->departemen_contractor }}
                                 {{ $item->job_class }}</li>
                         @empty
 

@@ -4,94 +4,106 @@
     <label for="manhoursRegister"
         class="btn btn-xs btn-square btn-info tooltip-info tooltip-top tooltip"data-tip="Create">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4  mt-0.5 ml-0.5">
-            <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25v2.5h2.5a.75.75 0 0 1 0 1.5h-2.5v2.5a.75.75 0 0 1-1.5 0v-2.5h-2.5a.75.75 0 0 1 0-1.5h2.5v-2.5a.75.75 0 0 1 1.5 0Z" clip-rule="evenodd" />
-          </svg>
-          
+            <path fill-rule="evenodd"
+                d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25v2.5h2.5a.75.75 0 0 1 0 1.5h-2.5v2.5a.75.75 0 0 1-1.5 0v-2.5h-2.5a.75.75 0 0 1 0-1.5h2.5v-2.5a.75.75 0 0 1 1.5 0Z"
+                clip-rule="evenodd" />
+        </svg>
+
     </label>
     <label for="uploadManhoursRegister" class="btn btn-xs btn-square btn-warning tooltip-warning tooltip-top tooltip"
         data-tip="Import">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4   mt-0.5 ml-0.5">
-            <path d="M8.75 6h-1.5V3.56L6.03 4.78a.75.75 0 0 1-1.06-1.06l2.5-2.5a.75.75 0 0 1 1.06 0l2.5 2.5a.75.75 0 1 1-1.06 1.06L8.75 3.56V6H11a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2.25v5.25a.75.75 0 0 0 1.5 0V6Z" />
-          </svg>
-          
+            <path
+                d="M8.75 6h-1.5V3.56L6.03 4.78a.75.75 0 0 1-1.06-1.06l2.5-2.5a.75.75 0 0 1 1.06 0l2.5 2.5a.75.75 0 1 1-1.06 1.06L8.75 3.56V6H11a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2.25v5.25a.75.75 0 0 0 1.5 0V6Z" />
+        </svg>
+
     </label>
     <input type="checkbox" id="manhoursRegister" class="modal-toggle" />
-    <div id="manhoursRegister" role="dialog" class="modal ">
+    <div id="manhoursRegister" role="dialog" class="modal modal-open">
         <div class="modal-box sm:w-[55%] max-w-5xl">
             <div class="font-bold divider divider-primary">{{ __('add') }} Manhours</div>
             <form wire:submit.prevent='store'>
                 @csrf
-                <div class="flex flex-wrap gap-1 ">
-                    <div class="w-full max-w-xs form-control">
+                <div class="grid grid-cols-1 content-center xl:grid-cols-2 gap-1">
+                    <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
                         <x-input-label-req :value="__('date')" />
-                        <input type="text" placeholder="Type here" wire:model='date' id="month"
-                            class=" @error('date') border-rose-500 border-2 @enderror z-10 capitalize w-full input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                        <x-input-new id="month" wire:model='date' type="text" :error="$errors->get('date')" readonly />
                         <x-input-error :messages="$errors->get('date')" class="mt-0" />
                     </div>
-                    <div class="w-full max-w-xs form-control">
+                    <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
                         <x-input-label-req :value="__('Category_Company')" />
-                        <select wire:model='company_category'
-                            class=" @error('company_category') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
+
+                        <x-input-select wire:model='company_category' :error="$errors->get('company_category')">
                             <option value="" selected>select category company</option>
                             @foreach ($KategoryCompany as $key => $value)
                                 <option value="{{ $value->id }}">{{ $value->name }}</option>
                             @endforeach
-                        </select>
+                        </x-input-select>
                         <x-input-error :messages="$errors->get('company_category')" class="mt-0" />
                     </div>
                     @if (!empty($company_category))
-                        <div class="w-full max-w-xs form-control">
+                        <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control relative">
 
                             <x-input-label-req :value="__('Company')" />
-                            <select wire:model='company'
-                                class=" @error('company') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
-                                <option value="" selected>select company</option>
-                                @foreach ($SelectCompany as $key => $value)
-                                    <option value="{{ $value->name }}">{{ $value->name }}</option>
-                                @endforeach
-                            </select>
+                           
+                            <x-input-new wire:model='company' type="text"
+                                            onClick="document.getElementById('inputNamaPerusahaan').style.display='block'"
+                                            :error="$errors->get('company')" />
                             <x-input-error :messages="$errors->get('company')" class="mt-0" />
+                                <div id="inputNamaPerusahaan" class="fixed mt-10 py-1 z-10 w-64 {{ $showCompany }}">
+                                    <div class="w-full max-w-xs text-xs shadow-inner bg-base-200 mt-2">
+                                        <ul class="overflow-y-auto list-disc list-inside h-">
+                                            @forelse ($SelectCompany as $key => $value)
+                                                <li class="w-full cursor-pointer"
+                                                    wire:click="cari_perusahaan({{ $value->id }})">
+                                                    {{ $value->name }}
+                                                </li>
+
+                                            @empty
+                                                <li class="text-rose-500 text-center font-semibold">name not found!!
+                                                </li>
+                                            @endforelse
+                                        </ul>
+                                    </div>
+                                   
+                                </div>
                         </div>
-                        <div class="w-full max-w-xs form-control">
+                        <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
                             <x-input-label-req :value="__($label_dept)" />
-                            <select wire:model='dept'
-                                class=" @error('dept') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
+                            <x-input-select wire:model='dept' :error="$errors->get('dept')">
                                 <option value="" selected>select {{ __('department') }}</option>
                                 @foreach ($GroupCompany as $key => $value)
                                     <option value="{{ $value->id }}">{{ $value->Department->name }}</option>
                                 @endforeach
-                            </select>
+                            </x-input-select>
                             <x-input-error :messages="$errors->get('dept')" class="mt-0" />
                         </div>
                     @endif
-                    <div class="w-full max-w-xs form-control">
+                    <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
                         <x-input-label-req :value="__('Role Class')" />
-                        <select wire:model='role_class'
-                            class=" @error('role_class') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
+                        <x-input-select wire:model='role_class' :error="$errors->get('role_class')">
                             <option value="" selected>select Role</option>
                             <option value="Supervisor" selected>Supervisor</option>
                             <option value="Operational" selected>Operational</option>
                             <option value="Administrator" selected>Administrator</option>
-                        </select>
+                        </x-input-select>
                         <x-input-error :messages="$errors->get('role_class')" class="mt-0" />
                     </div>
-                    <div class="w-full max-w-xs form-control">
+                    <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
                         <x-input-label-req :value="__('manhour')" />
-                        <input type="number" placeholder="Type here" wire:model='manhour' step="0.01"
-                            class=" @error('manhour') border-rose-500 border-2 @enderror capitalize w-full input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                        <x-input-new  wire:model='manhour' type="text" :error="$errors->get('manhour')" />
                         <x-input-error :messages="$errors->get('manhour')" class="mt-0" />
                     </div>
-                    <div class="w-full max-w-xs form-control">
+                    <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
                         <x-input-label-req :value="__('manpower')" />
-                        <input type="number" step="0.01" placeholder="Type here" wire:model='manpower'
-                            class=" @error('manpower') border-rose-500 border-2 @enderror capitalize w-full input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                        <x-input-new  wire:model='manpower' type="text" :error="$errors->get('manpower')" />
                         <x-input-error :messages="$errors->get('manpower')" class="mt-0" />
                     </div>
                 </div>
                 <div class="modal-action">
                     <!-- if there is a button in form, it will close the modal -->
-                    <button type="submit" class="btn btn-success btn-sm">Save</button>
-                    <label for="manhoursRegister" class="btn btn-error btn-sm">Close</label>
+                    <button type="submit" class="btn btn-success btn-xs">Save</button>
+                    <label for="manhoursRegister" class="btn btn-error btn-xs">Close</label>
                 </div>
             </form>
         </div>
@@ -102,10 +114,9 @@
             <div class="divider divider-primary">Import new Register Manhours</div>
             <form wire:submit.prevent='uploadManhours'>
                 @csrf
-                <div class="w-full max-w-xs form-control">
+                <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
                     <x-input-label-req :value="__('File Name')" />
-                    <input type="file" placeholder="Type here" wire:model='files'
-                        class=" @error('files') border-rose-500 border-2 @enderror w-full max-w-xs file-input file-input-bordered file-input-success file-input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                    <x-input-file :error="$errors->get('files')" class="relative" wire:model='files' />
                     <x-input-error :messages="$errors->get('files')" class="mt-0" />
                 </div>
                 <div class="modal-action">
@@ -125,4 +136,13 @@
             </form>
         </div>
     </div>
+
+    <script>
+        window.addEventListener('mouseup', function(event) {
+            var inputNamaPerusahaan = document.getElementById('inputNamaPerusahaan');
+            if (event.target != inputNamaPerusahaan && event.target.parentNode != inputNamaPerusahaan) {
+                inputNamaPerusahaan.style.display = 'none';
+            }
+        });
+    </script>
 </div>

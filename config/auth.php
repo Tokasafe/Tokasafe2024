@@ -64,7 +64,7 @@ return [
         'users' => [
             'driver' => 'ldap',
             'model' => LdapRecord\Models\ActiveDirectory\User::class,
-            'rules' => [],
+            'rules' => [ ],
             'database' => [
                 'model' => App\Models\User::class,
                 'sync_passwords' => true,

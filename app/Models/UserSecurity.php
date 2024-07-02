@@ -30,14 +30,7 @@ class UserSecurity extends Model
 
     }
 
-    public function scopeSearchwokrgroup($query, $term)
-    {
-        $query->whereHas('Workgroup', function ($query) use ($term) {
-            $query->whereHas('CompanyLevel', function ($query) use ($term) {
-                $query->where('deptORcont', 'like', '%' . $term . '%');
-            });
-        });
-    }
+   
     public function Workgroup()
     {
         return $this->belongsTo(Workgroup::class, 'workgroup_id');

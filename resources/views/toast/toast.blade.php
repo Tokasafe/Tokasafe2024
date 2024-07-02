@@ -1,15 +1,29 @@
 <div class="mr-4">
     @if (Session::has('success'))
         <script>
-            toastr.options.extendedTimeOut = "2000";
-            toastr.options.hideDuration = "2000";
-            toastr.options.timeOut = "2000";
-            toastr.options.showDuration = "300";
-            toastr.success("{!! Session::get('success') !!}")
+            Toastify({
+                text: "{!! Session::get('success') !!}",
+                duration: 3000,
+                destination: '/contact',
+                newWindow: true,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                positionLeft: false, // `true` or `false`
+                backgroundColor: "#10b981"
+            }).showToast();
         </script>
     @elseif(Session::has('error'))
         <script>
-            toastr.error("{!! Session::get('error') !!}")
+            Toastify({
+                text: "{!! Session::get('error') !!}",
+                duration: 3000,
+                destination: '/contact',
+                newWindow: true,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                positionLeft: false, // `true` or `false`
+                backgroundColor: "#f43f5e"
+            }).showToast();
         </script>
     @endif
 </div>

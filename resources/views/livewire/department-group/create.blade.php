@@ -17,41 +17,28 @@
             <h3 class="text-lg font-bold text-center">Add Department Group!</h3>
             <form wire:submit.prevent='storeDeptGroup'>
                 @csrf
-
-                <div class="w-full max-w-xs mb-2 form-control">
-                    <label class="p-0 label">
-                        <span class="font-bold label-text-alt">Group</span>
-                    </label>
-                    <select wire:model='group_id'
-                        class=" @error('group_id') border-rose-500 border-2 @enderror select select-success w-full select-sm max-w-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1">
-                        <option selected>Select Group</option>
+                <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
+                    <x-input-label-req :value="__('Group')" />
+                    <x-input-select wire:model='group_id' :error="$errors->get('group_id')">
+                        <option value="" selected>Select an option</option>
                         @foreach ($Group as $item)
                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                         @endforeach
-                    </select>
-                    @error('group_id')
-                        <label class="p-0 label">
-                            <span class="label-text-alt text-rose-500">{{ $message }}</span>
-                        </label>
-                    @enderror
+                    </x-input-select>
+                    <x-input-error :messages="$errors->get('group_id')" class="mt-0" />
                 </div>
-                <div class="w-full max-w-xs form-control">
-                    <label class="p-0 label">
-                        <span class="font-bold label-text-alt">Department</span>
-                    </label>
-                    <select wire:model='department_id'
-                        class=" @error('department_id') border-rose-500 border-2 @enderror select select-success w-full select-sm max-w-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1">
-                        <option selected>Select Department</option>
+
+                <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
+                    <x-input-label-req :value="__('Department')" />
+                    <x-input-select wire:model='department_id' :error="$errors->get('department_id')">
+                        <option value="" selected>Select an option</option>
                         @foreach ($Department as $item)
-                            <option value="{{ $item->id }}">{{ $item->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('department_id')
-                        <label class="p-0 label">
-                            <span class="label-text-alt text-rose-500">{{ $message }}</span>
-                        </label>
-                    @enderror
+                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                    @endforeach
+                    </x-input-select>
+                    <x-input-error :messages="$errors->get('department_id')" class="mt-0" />
                 </div>
+              
 
                 <div class="modal-action">
                     <button type="submit" class="text-white btn btn-success btn-xs">Save

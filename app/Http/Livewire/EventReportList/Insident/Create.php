@@ -30,12 +30,53 @@ class Create extends Component
     use WithPagination;
     use WithFileUploads;
     public $event_type, $sub_type, $workgroup, $workgroup_id, $reporter_name, $reporter_name_id, $report_to, $report_to_id, $location, $date_event, $time_event, $potential_lti, $env_incident, $task, $description_incident, $involved_person, $involved_equipment, $preliminary_causes, $imediate_action_taken, $key_learning, $documentation;
-    public $openWG = "modal", $open_ReportBy = "modal ", $open_ReportTo = "modal",$openModal='modal', $radio_select = '',$search='',$search_companyLevel='', $ModalWorkgroup = [], $EventSubType = [], $showWG = false, $search_workgroup = '', $search_reportBy = '', $fileUpload;
+    public $openWG = "modal", $open_ReportBy = "modal ", $open_ReportTo = "modal", $openModal = 'modal', $radio_select = '', $search = '', $search_companyLevel = '', $ModalWorkgroup = [], $EventSubType = [], $showWG = false, $search_workgroup = '', $search_reportBy = '', $fileUpload;
     public $actual_outcome, $notes_assessment, $potential_consequence, $name_assessment, $potential_likelihood, $investigation_req_assessment, $reporting_obligation_assessment, $actual_outcome_description, $potential_consequence_description, $potential_likelihood_description;
-    public $IncidentClose = '', $reference, $username,$wg_id;
+    public $IncidentClose = '', $reference, $username, $wg_id, $show_reportTo = 'hidden', $show_reportBy = 'hidden',$id_incident,$filename;
+    public $tab='checked';
+    public $tab2='';
     protected $listeners = [
         'OpenModalIncident',
+        'backTabIncidents'
     ];
+    public function backTabIncidents($value){
+        if ($value) {
+            $this->tab='checked';
+            $this->tab2='';
+           $this->id_incident=$value;
+           $incident = IncidentReport::whereId($value)->first();
+           $a = $incident->workgroup->CompanyLevel->BussinessUnit->name;
+           $b = $incident->workgroup->CompanyLevel->deptORcont;
+           $c = $incident->workgroup->job_class;
+           $this->workgroup = "$a-$b-$c";
+           $this->reference = $incident->reference;
+           $this->date_event = $incident->date_event;
+           $this->event_type = $incident->event_type;
+           $this->sub_type = $incident->sub_type;
+           $this->workgroup_id = $incident->workgroup_id;
+           $this->reporter_name = $incident->repportBy->lookup_name;
+           $this->reporter_name_id = $incident->reporter_name_id;
+           $this->report_to_id = $incident->report_to_id;
+           $this->report_to = $incident->repportTo->lookup_name;
+           $this->location = $incident->location;
+           $this->date_event = date('d-m-Y',strtotime($incident->date_event));
+           $this->time_event = $incident->time_event;
+           $this->potential_lti = $incident->potential_lti;
+           $this->env_incident = $incident->env_incident;
+           $this->task = $incident->task;
+           $this->description_incident = $incident->description_incident;
+           $this->involved_person = $incident->involved_person;
+           $this->involved_equipment = $incident->involved_equipment;
+           $this->preliminary_causes = $incident->preliminary_causes;
+           $this->imediate_action_taken = $incident->imediate_action_taken;
+           $this->key_learning = $incident->key_learning;
+           $this->actual_outcome = $incident->actual_outcome;
+           $this->potential_consequence = $incident->potential_consequence;
+           $this->potential_likelihood = $incident->potential_likelihood;
+           $this->filename = $incident->documentation;
+
+        }
+    }
     public function OpenModalIncident($value)
     {
         $this->openModal = $value;
@@ -43,35 +84,23 @@ class Create extends Component
     public function render()
     {
         $this->click();
-        $this->actual_outcome_description  = (!empty($this->actual_outcome)) ? RiskConsequence::whereId($this->actual_outcome)->first()->description : $this->actual_outcome_description = '' ;
-        $this->potential_consequence_description  = (!empty($this->potential_consequence)) ? RiskConsequence::whereId($this->potential_consequence)->first()->description : $this->potential_consequence_description = '' ;
-        $this->potential_likelihood_description  = (!empty($this->potential_likelihood)) ? RiskLikelihood::whereId($this->potential_likelihood)->first()->notes : $this->potential_likelihood_description = '' ;
-        if ($this->documentation) {
+        $this->showReportTo();
+        $this->showReportBy();
+        $this->radioSelect();
+        $this->riskAssessment();
+
+        if (!empty($this->documentation)) {
             $file_name = $this->documentation->getClientOriginalName();
-            $this->fileUpload = pathinfo($file_name, PATHINFO_EXTENSION);
+            $this->fileUpload  = pathinfo($file_name, PATHINFO_EXTENSION);
+            $this->filename = null;
         }
-        if ($this->radio_select === 'workgroup') {
-            $this->search_workgroup = $this->search;
-            $this->wg_id=null;
-            $this->search_companyLevel = "";
-        } elseif ($this->radio_select === 'companyLevel') {
-            $this->search_workgroup = "";
-            $this->search_companyLevel = $this->search;
-        }
-        else{
-            $this->search_workgroup = $this->search;
-            $this->search_companyLevel = $this->search;
-        }
-      
-        $this->ModalWorkgroup = (!empty($this->wg_id)) ? Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->searchWgId(trim($this->wg_id))->orderBy('companyLevel_id', 'asc')->get() : Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
-        
         if ($this->event_type) {
             $this->EventSubType = EventSubType::where('eventType_id', $this->event_type)->get();
         }
-
+        $this->ModalWorkgroup = (!empty($this->wg_id)) ? Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->searchWgId(trim($this->wg_id))->orderBy('companyLevel_id', 'asc')->get() : Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
         return view('livewire.event-report-list.insident.create', [
-            'ReportBy' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(100, ['*'], 'ReportByPage'),
-            'ReportTo' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(100, ['*'], 'ReportToPage'),
+            'ReportBy' => People::with('Employer')->search(trim($this->reporter_name))->paginate(100, ['*'], 'ReportByPage'),
+            'ReportTo' => People::with('Employer')->search(trim($this->report_to))->paginate(100, ['*'], 'ReportToPage'),
             'Location' => EventLocation::get(),
             'EventType' => EventType::where('eventCategory_id', 2)->get(),
             'Consequence' => RiskConsequence::get(),
@@ -79,17 +108,37 @@ class Create extends Component
             'Likelihood' => RiskLikelihood::get(),
         ]);
     }
+    public function radioSelect()
+    {
+        if ($this->radio_select === 'workgroup') {
+            $this->search_workgroup = $this->search;
+            $this->wg_id = null;
+            $this->search_companyLevel = "";
+        } elseif ($this->radio_select === 'companyLevel') {
+            $this->search_workgroup = "";
+            $this->search_companyLevel = $this->search;
+        } else {
+            $this->search_workgroup = $this->search;
+            $this->search_companyLevel = $this->search;
+        }
+    }
+    public function riskAssessment()
+    {
+        $this->actual_outcome_description  = (!empty($this->actual_outcome)) ? RiskConsequence::whereId($this->actual_outcome)->first()->description : $this->actual_outcome_description = '';
+        $this->potential_consequence_description  = (!empty($this->potential_consequence)) ? RiskConsequence::whereId($this->potential_consequence)->first()->description : $this->potential_consequence_description = '';
+        $this->potential_likelihood_description  = (!empty($this->potential_likelihood)) ? RiskLikelihood::whereId($this->potential_likelihood)->first()->notes : $this->potential_likelihood_description = '';
+    }
     public function store()
     {
-
+      
         $incident = IncidentReport::latest()->first();
 
         $referenceIncident = "TT–OHS–FO–60–017A";
         if ($incident == null) {
             $reference = 0001;
         } else {
-           
-            $reference =$incident->id + 1;
+
+            $reference = $incident->id + 1;
 
             $reference =  str_pad($reference, 4, "0", STR_PAD_LEFT);
         }
@@ -100,6 +149,13 @@ class Create extends Component
             $this->documentation->storeAs('public/documents', $file_name);
         } else {
             $file_name = "";
+        }
+        if (!$this->documentation) {
+            $file_names = $this->filename;
+        } else {
+
+            $file_names = $this->documentation->getClientOriginalName();
+            $this->documentation->storeAs('public/documents', $file_names);
         }
 
         $this->validate([
@@ -118,15 +174,15 @@ class Create extends Component
             'involved_person' => 'required',
             'involved_equipment' => 'required',
             'preliminary_causes' => 'required',
-            'imediate_action_taken' => 'required',
-            'key_learning' => 'required',
+            // 'imediate_action_taken' => 'required',
+            // 'key_learning' => 'required',
             'actual_outcome' => 'required',
             'potential_consequence' => 'required',
             'potential_likelihood' => 'required',
             'documentation' => 'nullable|mimes:jpg,jpeg,png,svg,gif,xlsx,pdf,docx,PNG'
         ]);
 
-        $incidentReport = IncidentReport::create([
+        $incidentReport = IncidentReport::updateOrCreate(['id'=>$this->id_incident],[
             'event_type' => $this->event_type,
             'sub_type' => $this->sub_type,
             'workgroup_id' => $this->workgroup_id,
@@ -142,62 +198,19 @@ class Create extends Component
             'involved_person' => $this->involved_person,
             'involved_equipment' => $this->involved_equipment,
             'preliminary_causes' => $this->preliminary_causes,
-            'imediate_action_taken' => $this->imediate_action_taken,
-            'key_learning' => $this->key_learning,
+            // 'imediate_action_taken' => $this->imediate_action_taken,
+            // 'key_learning' => $this->key_learning,
             'actual_outcome' => $this->actual_outcome,
             'potential_consequence' => $this->potential_consequence,
             'potential_likelihood' => $this->potential_likelihood,
             'reference' =>  $this->reference,
             'documentation' => $file_name
         ]);
-        $workflow_template_id = WorkflowStep::where('workflow_template', 2)->orderBy('id', 'ASC')->first()->workflow_template;
-        $description = WorkflowAdministration::with(['StatusCode', 'ResponsibleRole'])->where('workflow_template', $workflow_template_id)->first()->description;
-        $b = WorkflowAdministration::with(['StatusCode', 'ResponsibleRole'])->where('description', $description)->first()->id;
-        PanelIncident::create([
-            'assignTo' => null,
-            'also_assignTo' => null,
-            'incident_report_id' => $incidentReport->id,
-            'workflow_step' => $b,
-        ]);
-        $url = $incidentReport->id; 
-        $network_username = People::whereIn('network_username', User::get('username'))->pluck('id')->toArray();
-        $id_moderator = UserSecurity::whereIn('user_id', $network_username)->where('user_id', 'NOT LIKE', auth()->user()->id)->where('event_types_id', $this->event_type)->where('workflow', 'Moderator')->pluck('user_id')->toArray();
-        $EventType = $incidentReport->eventType->name;
-        $people = People::whereIn('id', $id_moderator)->pluck('network_username')->toArray();
-        $moderator = User::whereIn('username', $people)->get();
-        $reportTo  = $this->username;
-        if ($reportTo) {
-            $pengawas = User::where('username', $reportTo)->get();
-            $offerDataSpv = [
-                'name' => 'Hi,'. $this->report_to,
-                'subject' => $EventType,
-                'body' => $this->reporter_name.' '.'sent you an incident report',
-                'thanks' => 'Thank you',
-                'offerText' => $this->reference,
-                'offerUrl' => url("http://tokasafe.tokatindung.com/eventReport/incident/$url"),
-                'offer_id' => $url,
-                'dateTime' => Carbon::now(+8)->toDateTimeString()
-            ];
-            Notification::send($pengawas, new ToSupervisor($offerDataSpv));
-        }
-        $offerData = [
-            'name' => 'Hi,'. $this->report_to,
-            'subject' => $EventType,
-            'body' => $this->reporter_name.' '.'sent you an incident report',
-            'thanks' => 'Thank you',
-            'offerText' => $this->reference,
-            'offerUrl' => url("http://tokasafe.tokatindung.com/eventReport/incident/$url"),
-            'offer_id' => $url,
-            'dateTime' => Carbon::now(+8)->toDateTimeString()
-        ];
-        Notification::send($moderator, new ToModerator($offerData));
-        if ($incidentReport) {
-            $this->dispatchBrowserEvent('articleStore');
-            $this->emptyfields();
-            $this->emit('IncidentTable');
-           
-            return redirect()->route('incidentDetails', ['id' =>  $incidentReport->id]);
-        }
+        $this->id_incident = $incidentReport->id;
+        $this->emit('pasing_id_incident',$this->id_incident);
+        $this->tab ='';
+        $this->tab2 ='checked';
+       
     }
     public function generateUniqueCode()
     {
@@ -207,11 +220,13 @@ class Create extends Component
 
         return $code;
     }
-    public function open_modal(){
+    public function open_modal()
+    {
         $this->openModal = 'modal modal-open';
     }
-    public function close_modal(){
-        $this->openModal='modal';
+    public function close_modal()
+    {
+        $this->openModal = 'modal';
         $this->emptyfields();
         $this->dispatchBrowserEvent('articleStore');
     }
@@ -219,36 +234,39 @@ class Create extends Component
     {
         $this->openWG = "modal modal-open";
     }
-    public function openReportBy()
-    {
-        $this->open_ReportBy  = "modal modal-open";
-    }
-    public function closeReportBy()
-    {
-        $this->open_ReportBy  = "modal";
-        $this->search_reportBy="";
-    }
-    public function openReportTo()
-    {
-        $this->open_ReportTo  = "modal modal-open";
-    }
-    public function closeReportTo()
-    {
-        $this->open_ReportTo  = "modal";
-        $this->search_reportBy="";
-    }
+
     public function closeWokrgroup()
     {
-        $this->openWG = "modal ";
-        $this->radio_select="";
-        $this->search="";
+        $this->openWG = "modal";
+        $this->radio_select = "";
+        $this->search = "";
+    }
+    public function autoPelaporName()
+    {
+        if (People::where('network_username', auth()->user()->username)->first()->id) {
+            $this->reporter_name_id = People::where('network_username', auth()->user()->username)->first()->id;
+            $this->reporter_name = People::find($this->reporter_name_id)->lookup_name;
+        } else {
+            $this->reporter_name_id = '';
+        }
     }
     public function cariPelapor($id)
     {
         if ($id) {
             $this->reporter_name_id = $id;
             $this->reporter_name = People::whereId($id)->first()->lookup_name;
-            $this->closeReportBy();
+        }
+    }
+
+    public function showReportBy()
+    {
+        if (empty($this->reporter_name)) {
+            $this->show_reportBy = 'hidden';
+            $this->reset('reporter_name_id');
+        } elseif (!People::where('lookup_name', $this->reporter_name)->first()) {
+            $this->show_reportBy = 'block';
+        } else {
+            $this->show_reportBy = 'hidden';
         }
     }
     public function cariReportTo($id)
@@ -257,7 +275,17 @@ class Create extends Component
             $this->report_to_id = $id;
             $this->report_to = People::find($id)->lookup_name;
             $this->username = People::find($id)->network_username;
-            $this->closeReportTo();
+        }
+    }
+    public function showReportTo()
+    {
+        if (empty($this->report_to)) {
+            $this->show_reportTo = 'hidden';
+            $this->reset('report_to_id');
+        } elseif (!People::cari(trim($this->report_to))->first()) {
+            $this->show_reportTo = 'block';
+        } else {
+            $this->show_reportTo = 'hidden';
         }
     }
     public function cariCL($id)
@@ -288,8 +316,6 @@ class Create extends Component
         $this->potential_lti = null;
         $this->env_incident = null;
         $this->task = null;
-       
-        
     }
     // ClickFunction
     public function click()

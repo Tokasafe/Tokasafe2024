@@ -2,12 +2,7 @@
     @include('toast.toast')
 
     @push('scripts')
-        {{-- @livewireScripts() --}}
-        {{-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-        <script src="../../flatpickr/dist/plugins/monthSelect/index.js"></script> --}}
+       
         <script>
             const modalact = document.getElementById("closeModalAction");
             $(document).on('click', '#closed', function() {
@@ -38,8 +33,6 @@
             @livewire('event-report-list.hazard-id.action.create', ['id' => $ID_Details])
         </div>
         <div class="hidden">
-
-
             <input wire:model='search'
                 class="w-full max-w-xs py-2 bg-white shadow-sm join-item input-xs input input-success placeholder:italic placeholder:text-slate-400 focus:outline-none focus:border-success focus:ring-success focus:ring-1 sm:text-sm"
                 placeholder="Search Responsiblity..." type="text" />
@@ -59,10 +52,8 @@
 
         <div class="overflow-x-auto">
             <table class="table table-xs">
-
                 <tbody>
-                    @forelse($EventAction as $index =>$value )
-                      
+                    @forelse($EventAction as $index =>$value )  
                     <tr class="border-b-2 border-gray-400">
                         <td>
                             <table class="table table-xs">
@@ -156,7 +147,7 @@
         
                                             <label  wire:click="update({{ $value->id }})"
                                                 class="btn btn-xs {{$hazardClose?'btn-disabled':''}} btn-warning ">Edit</label>
-                                            <label wire:click="delete({{ $value->id }})"
+                                            <label wire:click="deleteAction({{ $value->id }})"
                                                 class="btn btn-xs {{$hazardClose?'btn-disabled':''}} btn-error ">{{ __('Delete') }}</label>
                                         </div>
                                     </td>
@@ -180,10 +171,10 @@
     </div>
     <div>{{ $EventAction->links() }}</div>
     @livewire('event-report-list.hazard-id.action.update')
-    <input type="checkbox" id="delete_data_act" class="modal-toggle" />
-    <div class="modal">
+    
+    <div class="{{$modalDelete}}">
         <div class="modal-box">
-            <h4 class="text-lg font-bold text-center">Are You Sure Delete?</h4>
+            <h4 class="text-lg font-bold text-center">Are You Sure?</h4>
             <form wire:submit.prevent='deleteFileAction'>
 
                 <div class="modal-action">
@@ -195,7 +186,7 @@
                         </svg>
 
                     </button>
-                    <label id="closeModalAction" for="delete_data_act" class="btn btn-xs btn-error">No!</label>
+                    <label  for="delete_data_act" class="btn btn-xs btn-error">No!</label>
                 </div>
             </form>
         </div>

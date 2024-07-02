@@ -1,11 +1,15 @@
 {
     "/js/app.js": "/js/app.js",
-    "/css/flatpickr/dark.css": "/css/flatpickr/dark.css",
     "/css/flatpickr/flatpickr.min.css": "/css/flatpickr/flatpickr.min.css",
     "/css/flatpickr/monthSelect/style.css": "/css/flatpickr/monthSelect/style.css",
+    "/toastify/css/toastify.css": "/toastify/css/toastify.css",
     "/ckeditor5/css/index.css": "/ckeditor5/css/index.css",
     "/css/app.css": "/css/app.css",
-    "/js/apexcharts.js": "/js/apexcharts.js",
+    "/css/flatpickr/dark.css": "/css/flatpickr/dark.css",
+    "/apexcharts/apexcharts.js": "/apexcharts/apexcharts.js",
+    "/rangePlugin/js/rangePlugin.js": "/rangePlugin/js/rangePlugin.js",
+    "/ckeditor/classic/js/ckeditor.js": "/ckeditor/classic/js/ckeditor.js",
     "/ckeditor5/js/index.js": "/ckeditor5/js/index.js",
+    "/toastify/js/toastify.js": "/toastify/js/toastify.js",
     "/js/flatpickr/monthSelect/index.js": "/js/flatpickr/monthSelect/index.js"
 }

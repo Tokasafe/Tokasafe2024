@@ -22,7 +22,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.company.index', [
-            'Company' => Companies::with(['CompanyCategory'])->searchcategory(trim($this->search_category))->searchcompany(trim($this->searchCompany))->paginate(5),
+            'Company' => Companies::with(['CompanyCategory'])->searchcategory(trim($this->search_category))->searchcompany(trim($this->searchCompany))->orderBy('name')->paginate(20),
             'CompanyCategory' => CompanyCategory::get(),
         ])->extends('navigation.homebase', ['header' => 'Company'])->section('content');
     }

@@ -18,6 +18,7 @@ class Index extends Component
 {
     public $proceedTo, $requestName, $report_id, $real_id, $Event_Report_Manager;
     public $moderator, $current_step, $reference, $getStatusId, $responsibleRole, $id_people, $get_Id, $userController = false, $event_subtype, $event_type, $workgroup, $status, $destination_1_label, $destination_1, $destination_2_label, $destination_2, $destination_3, $assignTo, $assignToName, $also_assignTo = null, $also_assignToName;
+
     public function mount($id)
     {
         $this->real_id = $id;
@@ -66,6 +67,7 @@ class Index extends Component
     protected $listeners = ['updateIncident' => 'render'];
     public function render()
     {
+     
         if ($this->proceedTo) {
             $this->getStatusId = WorkflowAdministration::where('workflow_template', 2)->where('name', $this->proceedTo)->first()->id;
             $this->responsibleRole = WorkflowAdministration::whereId($this->getStatusId)->first()->id;

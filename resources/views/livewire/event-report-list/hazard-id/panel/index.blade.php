@@ -22,7 +22,9 @@
                 <div class="w-full sm:max-w-max form-control">
                     <x-input-label-req :value="__('Proceed_To')" />
                     <select wire:model='proceedTo'
-                        class="@error('proceedTo') border-rose-500 border-2 @enderror w-full sm:max-w-max select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
+                        class="@error('proceedTo') bg-rose-400 @enderror select select-bordered select-xs    border shadow-sm border-slate-300 placeholder-slate-400
+                        focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full  sm:text-sm font-semibold focus:ring-1">
+                        
                         <option value="" selected>Select an option</option>
                         @foreach ($Workflow as $value)
                         <option value="{{ $value->destination_1 }}">{{ $value->destination_1_label }}</option>
@@ -38,7 +40,8 @@
                 <div class="{{ $responsibleRole == 2 ? ' w-full sm:max-w-max form-control' : 'hidden' }}">
                     <x-input-label-req :value="__('Assign_To')" />
                     <select wire:model='assignTo'
-                        class="@error('assignTo') border-rose-500 border-2 @enderror w-full select sm:max-w-max select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
+                        class="@error('assignTo') bg-rose-400 @enderror select select-bordered select-xs    border shadow-sm border-slate-300 placeholder-slate-400
+                        focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full  sm:text-sm font-semibold focus:ring-1">
                         <option value="" selected>Select an Person</option>
                         @foreach ($People as $index => $person)
                             @if (old('assignTo') == $person->user_id)
@@ -53,7 +56,8 @@
                 <div class="{{ $responsibleRole == 2 ? ' w-full sm:max-w-max form-control' : 'hidden' }}">
                     <x-input-label-req :value="__('Also_Assign_To')" />
                     <select wire:model='also_assignTo'
-                        class="@error('also_assignTo') border-rose-500 border-2 @enderror w-full select sm:max-w-max select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
+                        class="@error('also_assignTo') bg-rose-400 @enderror select select-bordered select-xs    border shadow-sm border-slate-300 placeholder-slate-400
+                        focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full  sm:text-sm font-semibold focus:ring-1">
                         <option value="" selected>Select an Person</option>
                         @foreach ($People as $index => $person)
                             @if (old('assignTo') == $person->user_id)

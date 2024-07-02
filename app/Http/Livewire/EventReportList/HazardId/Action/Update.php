@@ -105,8 +105,8 @@ class Update extends Component
                 'followup_action' => $this->followup_action,
                 'actionee_comments' => $this->actionee_comments,
                 'action_condition' => $this->action_condition,
-                'due_date' => $this->tanggal_mulai,
-                'competed' => $this->tanggal_selesai,
+                'due_date' => $this->due_date,
+                'competed' => $this->competed,
                 'responsibility' => $this->responsibility_id,
             ]);
             session()->flash('success', 'Data Updated Successfully!!');

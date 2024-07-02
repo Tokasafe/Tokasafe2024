@@ -20,7 +20,7 @@ class Index extends Component
     public function render()
     {
         return view('livewire.department.index', [
-            'Department' => Department::search(trim($this->searchDepartment))->orderBy('name')->paginate(5),
+            'Department' => Department::search(trim($this->searchDepartment))->orderBy('name')->paginate(25),
         ])->extends('navigation.homebase', ['header' => 'department'])->section('content');
     }
     public function update_Department($id)

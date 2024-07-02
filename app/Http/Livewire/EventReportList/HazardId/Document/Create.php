@@ -13,8 +13,8 @@ class Create extends Component
     public $fileTitle, $fileName, $event_report_id,$hazardClose;
     public function mount($id)
     {
-        $eventReportId = $id;
-        $this->event_report_id =  $eventReportId;
+       
+        $this->event_report_id =  $id;
         $close = PanelHazardId::where('hazard_id',$this->event_report_id)->first()->WorkflowStep->name;
         if ($close ==='Closed' || $close ==='Cancelled') {
             $this->hazardClose = $close;

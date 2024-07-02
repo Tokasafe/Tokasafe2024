@@ -14,17 +14,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        
-
-        \App\Models\Roles::factory()->create([
-            'name' => 'Administrator',
-        ]);
-        \App\Models\Roles::factory()->create([
-            'name' => 'User',
-        ]);
-
-        \App\Models\User::factory()->create([
-            'name' => 'User',
-        ]);
+        $this->call(AdminUserSeeder::class);
+        $this->call(AdminRoleUserSeeder::class);
     }
 }

@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="scroll-smooth" data-theme="corporate" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html class="scroll-smooth" data-theme="nord" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     @stack('styles')
@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.11.0/css/flag-icons.min.css" />
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <script src="https://cdn.tailwindcss.com"></script>
+   
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     @if (isset($title))
         <title>{{ $title }}</title>
     @endif
@@ -17,16 +17,16 @@
 
 <body class="static antialiased">
 
-    <div id="loader" >
+    <div id="loader">
 
-        <div class="absolute inset-0   content-center flex  justify-center  z-50 w-full ">
-            <img
-                class=" w-40 p-8 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500" src="{{ asset('loaders/bounce.svg') }}" alt="">
-            </div>
+        <div class="absolute inset-0 content-center flex  justify-center  z-50 w-full ">
+            <img class=" w-40 p-8 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500"
+                src="{{ asset('loaders/bounce.svg') }}" alt="">
+        </div>
     </div>
     <div class="min-h-screen">
         <div class="drawer">
-            <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
+            <input id="my-drawer" type="checkbox" class="drawer-toggle" />
             <div class="flex flex-col drawer-content">
                 <!-- Navbar -->
                 @include('navigation.navbar')

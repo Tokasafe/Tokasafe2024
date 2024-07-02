@@ -28,7 +28,7 @@ class Index extends Component
                 'event_type',
                 'Workgroup.CompanyLevel',
                 'Workgroup.CompanyLevel.BussinessUnit',
-            ])->searchperson(trim($this->searchPerson))->searchwokrgroup(trim($this->searchPerson))->paginate(25),
+            ])->searchperson(trim($this->searchPerson))->paginate(25),
         ])->extends('navigation.homebase', ['header' => 'Security User'])->section('content');
 
         $this->resetPage('userSecurityPage');

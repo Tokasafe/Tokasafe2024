@@ -1,14 +1,13 @@
 <div>
     @push('styles')
         @livewireStyles()
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+        <link rel="stylesheet" type="text/css" href="{{ asset('toastify/css/toastify.css') }}">
     @endpush
     @push('scripts')
         @livewireScripts()
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+            <script type="text/javascript" src="{{ asset('toastify/js/toastify.js') }}"></script>
         <script>
             const modal = document.getElementById("closeModal");
             $(document).on('click', '#close', function() {
@@ -53,7 +52,7 @@
                 @forelse ($Workgroup as $index => $item)
                     <tr class="text-center">
                         <th>{{ $Workgroup->firstItem() + $index }}</th>
-                        <td>{{ $item->CompanyLevel->BussinessUnit->name }}-{{ $item->CompanyLevel->level }}-{{ $item->CompanyLevel->deptORcont }}
+                        <td>{{ $item->CompanyLevel->BussinessUnit->name }}-{{ $item->CompanyLevel->level }}-{{ $item->CompanyLevel->departemen_contractor }}
                             {{ $item->job_class }}
                         </td>
 

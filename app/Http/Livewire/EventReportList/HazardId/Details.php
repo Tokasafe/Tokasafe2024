@@ -70,6 +70,8 @@ class Details extends Component
     public $hazardClose;
     public $wg_id;
     public $ModalWorkgroup = [];
+    public $show_reportBy = 'hidden';
+    public $show_reportTo = 'hidden';
     public function mount($id)
     {
         $model = HazardId::find($id);
@@ -109,127 +111,28 @@ class Details extends Component
     }
     public function render()
     {
-        $this->click();
-        $this->actual_outcome_description  = (!empty($this->actual_outcome)) ? RiskConsequence::whereId($this->actual_outcome)->first()->description : $this->actual_outcome_description = '' ;
-        $this->potential_consequence_description  = (!empty($this->potential_consequence)) ? RiskConsequence::whereId($this->potential_consequence)->first()->description : $this->potential_consequence_description = '' ;
-        $this->potential_likelihood_description  = (!empty($this->potential_likelihood)) ? RiskLikelihood::whereId($this->potential_likelihood)->first()->notes : $this->potential_likelihood_description = '' ;
         if (!empty($this->documentation)) {
             $file_name = $this->documentation->getClientOriginalName();
             $this->fileUpload  = pathinfo($file_name, PATHINFO_EXTENSION);
             $this->filename = null;
         }
-        if ($this->radio_select === 'workgroup') {
-            $this->search_workgroup = $this->search;
-            $this->wg_id=null;
-            $this->search_companyLevel = "";
-        } elseif ($this->radio_select === 'companyLevel') {
-            $this->search_workgroup = "";
-            $this->search_companyLevel = $this->search;
-        }
-      
         $this->ModalWorkgroup = (!empty($this->wg_id)) ? Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->searchWgId(trim($this->wg_id))->orderBy('companyLevel_id', 'asc')->get() : Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
+        $this->click();
+        $this->showReportTo();
+        $this->showReportBy();
+        $this->radioSelect();
+        $this->riskAssessment();
         return view('livewire.event-report-list.hazard-id.detail', [
             'LocationEvent' => EventLocation::get(),
             'EventType' => EventType::get(),
             'EventSubType' => EventSubType::with('EventType')->where('eventType_id', 1)->get(),
-            'People' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(10,  ['*'], 'dtPeople'),
-            'Supervisor' => People::with('Employer')->searchto(trim($this->search_reportTo))->paginate(10,  ['*'], 'dtSupervisor'),
+            'People' => People::with('Employer')->search(trim($this->nama_pelapor))->paginate(100, ['*'], 'ReportByPage'),
+            'Supervisor' => People::with('Employer')->search(trim($this->pengawas_area))->paginate(100, ['*'], 'ReportToPage'),
             'Company' => Companies::with(['CompanyCategory'])->searchcompany(trim($this->search_company))->get(),
             'Consequence' => RiskConsequence::get(),
             'Likelihood' => RiskLikelihood::get(),
             'CompanyLevels' => CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_companyLevel))->orderBy('bussiness_unit', 'asc')->get()
         ])->extends('navigation.homebase', ['header' => 'Hazard report', 'title' => 'hazard', 'h1' => $this->data_id])->section('content');
-    }
-    // FUNCTION BTN MODAL
-    public function previousPage($pageName = 'page')
-    {
-        $this->setPage(max($this->paginators[$pageName] - 1, 1), $pageName);
-    }
-
-    public function nextPage($pageName = 'page')
-    {
-        $this->setPage($this->paginators[$pageName] + 1, $pageName);
-    }
-    public function wgClick()
-    {
-        $this->openModalWG = 'modal modal-open';
-    }
-    public function wgClickClose()
-    {
-        $this->openModalWG = 'modal';
-        $this->clearSearchWg();
-    }
-    public function reportByClick()
-    {
-        $this->openModalreportBy = 'modal-open';
-    }
-    public function reportByClickClose()
-    {
-        $this->openModalreportBy = '';
-        $this->clearSearchWg();
-    }
-    public function reportToClick()
-    {
-        $this->openModalreportTo = 'modal-open';
-    }
-    public function reportToClickClose()
-    {
-        $this->openModalreportTo = '';
-        $this->clearSearchWg();
-    }
-    public function responsibleClick()
-    {
-        $this->openModalResponsibleCompany = 'modal-open';
-    }
-    public function responsibleClickClose()
-    {
-        $this->openModalResponsibleCompany = '';
-    }
-    public function cari($id)
-    {
-        if ($id) {
-            $this->wg_id = $id;
-        }
-    }
-    public function workGroup($id, $bu, $deptOrCont, $job_class)
-    {
-        $this->workgroup_id = $id;
-        $this->workgroup = "$bu-$deptOrCont-$job_class";
-        $this->wgClickClose();
-    }
-    public function cari_reportBy($id)
-    {
-
-        if (!empty($id)) {
-            $reportBy = People::with('Employer')->whereId($id)->first();
-            $this->nama_pelapor = $reportBy->lookup_name;
-            $this->nama_pelapor_id = $reportBy->id;
-            $this->reportByClickClose();
-        }
-    }
-    public function cari_reportTo($id)
-    {
-
-        if (!empty($id)) {
-            $reportTo = People::with('Employer')->whereId($id)->first();
-            $this->pengawas_area = $reportTo->lookup_name;
-            $this->pengawas_area_id = $reportTo->id;
-
-            $this->reportToClickClose();
-        }
-    }
-    public function download()
-    {
-        $name = HazardId::whereId($this->data_id)->first()->documentation;
-        return response()->download(storage_path('app/public/documents/' . $name));
-    }
-    public function clearSearchWg()
-    {
-        $this->search_workgroup = '';
-        $this->radio_select = '';
-        $this->search_reportBy = '';
-        $this->search_reportTo = '';
-        $this->search_company = '';
     }
     public function store()
     {
@@ -287,11 +190,113 @@ class Details extends Component
             session()->flash('success', 'Something goes wrong!!');
         }
     }
+    public function riskAssessment()
+    {
+        $this->actual_outcome_description  = (!empty($this->actual_outcome)) ? RiskConsequence::whereId($this->actual_outcome)->first()->description : $this->actual_outcome_description = '';
+        $this->potential_consequence_description  = (!empty($this->potential_consequence)) ? RiskConsequence::whereId($this->potential_consequence)->first()->description : $this->potential_consequence_description = '';
+        $this->potential_likelihood_description  = (!empty($this->potential_likelihood)) ? RiskLikelihood::whereId($this->potential_likelihood)->first()->notes : $this->potential_likelihood_description = '';
+    }
+    public function radioSelect()
+    {
+        if ($this->radio_select === 'workgroup') {
+            $this->search_workgroup = $this->search;
+            $this->wg_id = null;
+            $this->search_companyLevel = "";
+        } elseif ($this->radio_select === 'companyLevel') {
+            $this->search_workgroup = "";
+            $this->search_companyLevel = $this->search;
+        }
+    }
+    public function showReportBy()
+    {
+        if (empty($this->nama_pelapor)) {
+            $this->show_reportBy = 'hidden';
+            $this->reset('nama_pelapor_id');
+        } elseif (!People::where('lookup_name', $this->nama_pelapor)->first()) {
+            $this->show_reportBy = 'block';
+        } else {
+            $this->show_reportBy = 'hidden';
+        }
+    }
+    public function showReportTo()
+    {
+        if (empty($this->pengawas_area)) {
+            $this->show_reportTo = 'hidden';
+            $this->reset('pengawas_area_id');
+        } elseif (!People::cari(trim($this->pengawas_area))->first()) {
+            $this->show_reportTo = 'block';
+        } else {
+            $this->show_reportTo = 'hidden';
+        }
+    }
+    public function wgClick()
+    {
+        $this->openModalWG = 'modal modal-open';
+    }
+    public function wgClickClose()
+    {
+        $this->openModalWG = 'modal';
+        $this->clearSearchWg();
+    }
+   
+    public function responsibleClick()
+    {
+        $this->openModalResponsibleCompany = 'modal-open';
+    }
+    public function responsibleClickClose()
+    {
+        $this->openModalResponsibleCompany = '';
+    }
+    public function cari($id)
+    {
+        if ($id) {
+            $this->wg_id = $id;
+        }
+    }
+    public function workGroup($id, $bu, $deptOrCont, $job_class)
+    {
+        $this->workgroup_id = $id;
+        $this->workgroup = "$bu-$deptOrCont-$job_class";
+        $this->wgClickClose();
+    }
+    public function cari_reportBy($id)
+    {
+        if (!empty($id)) {
+            $reportBy = People::with('Employer')->whereId($id)->first();
+            $this->nama_pelapor = $reportBy->lookup_name;
+            $this->nama_pelapor_id = $reportBy->id;
+        }
+    }
+    public function cari_reportTo($id)
+    {
+
+        if (!empty($id)) {
+            $reportTo = People::with('Employer')->whereId($id)->first();
+            $this->pengawas_area = $reportTo->lookup_name;
+            $this->pengawas_area_id = $reportTo->id;
+        }
+    }
+    public function download()
+    {
+        $name = HazardId::whereId($this->data_id)->first()->documentation;
+        return response()->download(storage_path('app/public/documents/' . $name));
+    }
+    public function clearSearchWg()
+    {
+        $this->search_workgroup = '';
+        $this->radio_select = '';
+        $this->search_reportBy = '';
+        $this->search_reportTo = '';
+        $this->search_company = '';
+    }
+ 
     public function deleted()
     {
         try {
             HazardId::find($this->data_id)->delete();
-            unlink(storage_path('app/public/documents/' . $this->documentation));
+            if (!empty($this->documentation)) {
+                unlink(storage_path('app/public/documents/' . $this->documentation));
+            }
             return redirect()->route('hazard');
         } catch (\Exception $e) {
             session()->flash('error', "Something goes wrong!!");

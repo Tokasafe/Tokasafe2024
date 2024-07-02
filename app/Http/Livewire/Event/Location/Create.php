@@ -2,12 +2,16 @@
 
 namespace App\Http\Livewire\Event\Location;
 
-use App\Models\EventLocation;
 use Livewire\Component;
+use App\Models\EventLocation;
+use App\Imports\LocationImport;
+use Livewire\WithFileUploads;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Create extends Component
 {
-    public $name;
+    use WithFileUploads;
+    public $name,$fileImport;
     public function render()
     {
         return view('livewire.event.location.create');
@@ -24,5 +28,11 @@ class Create extends Component
         $this->emit('AddLocationEvent');
         $this->name = null;
         session()->flash('success', 'Company Category has been added!!!');
+    }
+    public function uploadLocation(){
+        $this->validate(['fileImport' => 'required']);
+        Excel::import(new LocationImport,$this->fileImport);
+        $this->emit('locationImport');
+        session()->flash('success', "importing file has done!!");
     }
 }

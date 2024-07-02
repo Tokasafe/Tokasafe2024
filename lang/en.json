@@ -98,7 +98,7 @@
     "InvolvedPerson":"Involved Person",
     "InvolvedEquipment":"Involved Equipment",
     "Proceed_To":"Proceed To",
-    "deskripsi":"Short Description of incident",
+    "deskripsi":"Short Description of event",
     "Assign_To":"Assign To",
     "Also_Assign_To":"Also Assign To",
     "insidenlingkungan":"Env. Incident",
@@ -132,5 +132,14 @@
     "komentar":"Moderator Comments",
     "reference":"Reference",
     "documentation":"Documentation",
-    "closeby":"Close out report by"
+    "closeby":"Close out report by",
+    "followup_action":"Followup Action",
+    "actionee_comments":"Actionee Comments",
+    "action_condition":"Action Condition",
+    "responsibility":"Responsibility",
+    "due_date":"Due Date",
+    "completion":"Completion Date",
+    "Previous_step":"Previous step",
+    "Next_Step":"Next Step"
+
 }

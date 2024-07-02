@@ -16,6 +16,11 @@ class People extends Model
 
         $query->where('lookup_name', 'LIKE', '%' . $term . '%');
     }
+    public function scopeCari($query, $term)
+    {
+       
+        $query->where('lookup_name', $term);
+    }
     public function scopeSearchto($query, $term)
     {
 

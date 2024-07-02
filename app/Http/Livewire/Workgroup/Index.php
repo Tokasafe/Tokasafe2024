@@ -9,6 +9,7 @@ use Livewire\WithPagination;
 class Index extends Component
 {
     public $IdData;
+    public $search='';
     public $companyLevel_id;
     public $bussinesUnit;
     public $role;
@@ -24,7 +25,7 @@ class Index extends Component
             "Workgroup" => Workgroup::with([
                 'CompanyLevel',
                 'CompanyLevel.BussinessUnit',
-            ])->orderBy('created_at', 'DESC')->paginate(10),
+            ])->searchWG(trim($this->search))->orderBy('created_at', 'DESC')->paginate(20),
         ])->extends('navigation.homebase', ['header' => 'Workgroup'])->section('content');
     }
 
@@ -38,7 +39,7 @@ class Index extends Component
     {
         $this->IdData = $id;
         $workgroup = Workgroup::whereId($id)->first();
-        $this->companyLevel_id = $workgroup->CompanyLevel->deptORcont;
+        $this->companyLevel_id = $workgroup->CompanyLevel->departemen_contractor;
         $this->bussinesUnit = $workgroup->CompanyLevel->BussinessUnit->name;
         $this->role = $workgroup->job_class;
     }

@@ -2,14 +2,13 @@
     @include('toast.toast')
     @push('styles')
         @livewireStyles()
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+        <link rel="stylesheet" type="text/css" href="{{ asset('toastify/css/toastify.css') }}">
     @endpush
     @push('scripts')
         @livewireScripts()
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+            <script type="text/javascript" src="{{ asset('toastify/js/toastify.js') }}"></script>
         <script>
             const modalDel = document.getElementById("closeModalDel");
             $(document).on('click', '#closeDel', function() {
@@ -85,7 +84,7 @@
                     <tr class="text-center">
                         <th>{{ $CompanyLevel->firstItem() + $index }}</th>
                         <td>{{ $item->BussinessUnit->name }}</td>
-                        <td>{{ $item->deptORcont }}</td>
+                        <td>{{ $item->departemen_contractor }}</td>
                         <td>
                             <div class="flex flex-row justify-center gap-1">
 

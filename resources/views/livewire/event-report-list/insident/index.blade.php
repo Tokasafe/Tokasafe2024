@@ -1,30 +1,41 @@
-<div class=" mx-4 md:mx-0">
+<div class="md:mx-0">
     @push('styles')
         @livewireStyles()
-        <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-        <script src="https://kit.fontawesome.com/3de311882c.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-        <link rel="stylesheet" href="../../flatpickr/dist/flatpickr.min.css">
-        <link rel="stylesheet" href="../../flatpickr/dist/plugins/monthSelect/style.css" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="../../flatpickr/dist/themes/dark.css">
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link rel="stylesheet" type="text/css" href="{{ asset('toastify/css/toastify.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('flatpickr/dist/flatpickr.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('flatpickr/dist/plugins/monthSelect/style.css') }}" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{{ asset('flatpickr/dist/themes/dark.css') }}">
+        <script type="text/javascript" src="{{ asset('ckeditor/classic/js/ckeditor.js') }}"></script>
+        <script src="../../flatpickr/dist/plugins/monthSelect/index.js"></script>
     @endpush
     @push('scripts')
         @livewireScripts()
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="{{ asset('flatpickr/dist/plugins/monthSelect/index.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('toastify/js/toastify.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script>
-            const modal = document.getElementById("closeModal");
-            $(document).on('click', '#close', function() {
-                modal.click()
+            flatpickr("#orginal_dueDate", {
+                disableMobile: "true",
+                dateFormat: "d-m-Y", //defaults to "F Y"
+            });
+            flatpickr("#dueDate", {
+                disableMobile: "true",
+                dateFormat: "d-m-Y", //defaults to "F Y"
+            });
+            
+            flatpickr("#completion_date", {
+                disableMobile: "true",
+                dateFormat: "d-m-Y", //defaults to "F Y"
+            });
+            flatpickr("#personal_reminder", {
+                disableMobile: "true",
+                dateFormat: "d-m-Y", //defaults to "F Y"
             });
         </script>
-        {{-- <script src="../../flatpickr/dist/plugins/rangePlugin.js"></script> --}}
-
-        <script src="../../flatpickr/dist/plugins/monthSelect/index.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        
+        
         <script>
             flatpickr("#tanggal", {
                 disableMobile: "true",
@@ -229,7 +240,7 @@
                             <div class="flex flex-row justify-center gap-1">
                                 <a href="{{ route('incidentDetails', $value->Incident->id) }}"
                                     class="btn btn-xs btn-warning">Details</a>
-                                <label for="delete_data" wire:click="delete({{  $value->Incident->id }})"
+                                <label  wire:click="delete({{  $value->Incident->id }})"
                                     class="btn btn-xs btn-error ">Delete</label>
                             </div>
                         </td>
@@ -261,8 +272,8 @@
         </table>
     </div>
 
-    <input type="checkbox" id="delete_data" class="modal-toggle" />
-    <div class="modal">
+   
+    <div class="{{$modal}}">
         <div class="modal-box">
             <h4 class="text-lg font-bold text-center">Are You Sure Delete {{ $reference }}?</h4>
             <form wire:submit.prevent='deleteFile'>
@@ -275,7 +286,7 @@
                         </svg>
 
                     </button>
-                    <label for="delete_data" id="closeModal" class="btn btn-xs btn-error">No!</label>
+                    <label  wire:click="closeModal" class="btn btn-xs btn-error">No!</label>
                 </div>
             </form>
         </div>

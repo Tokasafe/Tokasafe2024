@@ -1,6 +1,21 @@
 <div>
     @include('toast.toast')
-
+    @push('styles')
+        @livewireStyles()
+        <link rel="stylesheet" type="text/css" href="{{ asset('toastify/css/toastify.css') }}">
+    @endpush
+    @push('scripts')
+        @livewireScripts()
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+            <script type="text/javascript" src="{{ asset('toastify/js/toastify.js') }}"></script>
+        <script>
+            const modal = document.getElementById("closeModal");
+            $(document).on('click', '#close', function() {
+                modal.click()
+            });
+        </script>
+    @endpush
     <div class="{{ !empty($openModal) ? 'modal modal-open' : 'modal' }}">
         <div class="w-11/12 max-w-5xl modal-box">
             <h3 class="text-lg font-bold text-center">Hello!</h3>

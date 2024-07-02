@@ -5,13 +5,12 @@
             <div class="flex flex-col items-center gap-4 m-2 sm:flex-row">
                 <div class="w-full max-w-xs basis-1/2 form-control">
                     <x-input-label-req :value="__('Actual Outcome')" />
-                    <select wire:model='actual_outcome' {{ $hazardClose ? 'disabled' : '' }}
-                        class="@error('actual_outcome') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
+                    <x-select-edit wire:model='actual_outcome' :closed="$hazardClose" :error="$errors->get('actual_outcome')">
                         <option value="" selected>select an item</option>
                         @foreach ($Consequence as $item)
                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                         @endforeach
-                    </select>
+                    </x-select-edit>
                     <x-input-error :messages="$errors->get('actual_outcome')" class="mt-0" />
                 </div>
                 <div class=" basis-full">
@@ -22,13 +21,12 @@
             <div class="flex flex-col items-center gap-4 m-2 sm:flex-row">
                 <div class="w-full max-w-xs basis-1/2 form-control">
                     <x-input-label-req :value="__('Potential Consequence')" />
-                    <select wire:model='potential_consequence' {{ $hazardClose ? 'disabled' : '' }}
-                        class="@error('potential_consequence') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
+                    <x-select-edit wire:model='potential_consequence' :closed="$hazardClose" :error="$errors->get('potential_consequence')">
                         <option value="" selected>select an item</option>
                         @foreach ($Consequence as $item)
                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                         @endforeach
-                    </select>
+                    </x-select-edit>
                     <x-input-error :messages="$errors->get('potential_consequence')" class="mt-0" />
                 </div>
                 <div class=" basis-full">
@@ -38,13 +36,12 @@
             <div class="flex flex-col items-center gap-4 m-2 sm:flex-row">
                 <div class="w-full max-w-xs basis-1/2 form-control">
                     <x-input-label-req :value="__('Potential Likelihood')" />
-                    <select wire:model='potential_likelihood' {{ $hazardClose ? 'disabled' : '' }}
-                        class="@error('potential_likelihood') border-rose-500 border-2 @enderror w-full select select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
+                    <x-select-edit wire:model='potential_likelihood' :closed="$hazardClose" :error="$errors->get('potential_likelihood')">
                         <option value="" selected>select an item</option>
                         @foreach ($Likelihood as $item)
                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                         @endforeach
-                    </select>
+                    </x-select-edit>
                     <x-input-error :messages="$errors->get('potential_likelihood')" class="mt-0" />
                 </div>
                 <div class="self-end basis-full">
@@ -53,7 +50,7 @@
             </div>
         </div>
         <div class=" flex justify-center md:basis-1/4 ">
-            <div class="w-[17rem] bg-slate-200 ">
+            <div class="w-[17rem]  ">
                 <div class="overflow-x-auto shadow-md ">
                     <table>
                        

@@ -30,21 +30,40 @@ class Create extends Component
     public $hazardClose;
     public $email_Responsibilty;
     public $modalOpen = '';
+    public $modalCreate = 'modal';
+    protected $listeners = [
+        'OpenModalAction',
+    ];
+    public function OpenModalAction($value)
+    {
+        $this->modalCreate = $value;
+    }
     public function mount($id)
     {
         $this->real_id = $id;
-        $close = PanelHazardId::where('hazard_id',$this->real_id)->first()->WorkflowStep->name;
-        if ($close ==='Closed' || $close ==='Cancelled') {
-            $this->hazardClose = $close;
+        if(!empty(PanelHazardId::where('hazard_id',$this->real_id)->first()->id)){
+
+            $close = PanelHazardId::where('hazard_id',$this->real_id)->first()->WorkflowStep->name;
+            if ($close ==='Closed' || $close ==='Cancelled') {
+                $this->hazardClose = $close;
+            }
+            $ER = HazardId::find($this->real_id)->first();
+           $this->report = $ER->task;
+        }else{
+            $this->hazardClose='';
         }
-        $ER = HazardId::whereid($this->real_id)->first();
-       $this->report = $ER->task;
     }
     public function render()
     {
         return view('livewire.event-report-list.hazard-id.action.create',[
             'Person' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(20),
         ]);
+    }
+    public function openModalCreate(){
+        $this->modalCreate='modal modal-open';
+    }
+    public function closeModalCreate(){
+        $this->modalCreate='modal';
     }
     public function openModal()
     {
@@ -98,8 +117,8 @@ class Create extends Component
                 'followup_action' => $this->followup_action,
                 'actionee_comments' => $this->actionee_comments,
                 'action_condition' => $this->action_condition,
-                'due_date' =>  date('Y-m-d',strtotime($this->due_date)),
-                'competed' => date('Y-m-d',strtotime($this->competed)),
+                'due_date' =>  $this->due_date,
+                'competed' => $this->competed,
                 'responsibility' => $this->responsibility_id,
                 'event_hzd_id' => $this->real_id,
             ]);

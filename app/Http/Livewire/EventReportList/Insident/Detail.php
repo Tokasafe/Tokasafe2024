@@ -22,7 +22,7 @@ class Detail extends Component
     use WithFileUploads;
     use WithPagination;
    
-    public $data_id, $delete_id, $IncidentClose, $filename,$wg_id,$search_companyLevel='',$search='';
+    public $data_id, $delete_id, $IncidentClose, $filename,$wg_id,$search_companyLevel='',$search='',$show_reportTo = 'hidden', $show_reportBy = 'hidden';
     public $event_type, $sub_type, $reference, $workgroup, $workgroup_id, $reporter_name, $reporter_name_id, $report_to, $report_to_id, $location, $date_event, $time_event, $potential_lti, $env_incident, $task, $description_incident, $involved_person, $involved_equipment, $preliminary_causes, $imediate_action_taken, $key_learning, $documentation;
     public $openWG = "modal", $open_ReportBy = "modal ", $open_ReportTo = "modal", $modalDelete = "modal", $radio_select = '', $ModalWorkgroup = [], $EventSubType = [], $showWG = false, $search_workgroup = '', $search_reportBy = '', $fileUpload;
     public $actual_outcome, $notes_assessment, $potential_consequence, $name_assessment, $potential_likelihood, $investigation_req_assessment, $reporting_obligation_assessment, $actual_outcome_description, $potential_consequence_description, $potential_likelihood_description;
@@ -53,7 +53,7 @@ class Detail extends Component
             $this->report_to_id = $incident->report_to_id;
             $this->report_to = $incident->repportTo->lookup_name;
             $this->location = $incident->location;
-            $this->date_event = $incident->date_event;
+            $this->date_event = date('d-m-Y',strtotime($incident->date_event));
             $this->time_event = $incident->time_event;
             $this->potential_lti = $incident->potential_lti;
             $this->env_incident = $incident->env_incident;
@@ -74,38 +74,73 @@ class Detail extends Component
     }
     public function render()
     {
-        $this->click();
-        $this->actual_outcome_description  = (!empty($this->actual_outcome)) ? RiskConsequence::whereId($this->actual_outcome)->first()->description : $this->actual_outcome_description = '' ;
-        $this->potential_consequence_description  = (!empty($this->potential_consequence)) ? RiskConsequence::whereId($this->potential_consequence)->first()->description : $this->potential_consequence_description = '' ;
-        $this->potential_likelihood_description  = (!empty($this->potential_likelihood)) ? RiskLikelihood::whereId($this->potential_likelihood)->first()->notes : $this->potential_likelihood_description = '' ;
-        if (!empty($this->documentation)) {
+        
+       if (!empty($this->documentation)) {
             $file_name = $this->documentation->getClientOriginalName();
             $this->fileUpload  = pathinfo($file_name, PATHINFO_EXTENSION);
             $this->filename = null;
         }
 
-        if ($this->radio_select === 'workgroup') {
-            $this->search_workgroup = $this->search;
-            $this->wg_id=null;
-            $this->search_companyLevel = "";
-        } elseif ($this->radio_select === 'companyLevel') {
-            $this->search_workgroup = "";
-            $this->search_companyLevel = $this->search;
-        }
-      
         $this->ModalWorkgroup = (!empty($this->wg_id)) ? Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->searchWgId(trim($this->wg_id))->orderBy('companyLevel_id', 'asc')->get() : Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
         if ($this->event_type) {
             $this->EventSubType = EventSubType::where('eventType_id', $this->event_type)->get();
         }
+        $this->click();
+        $this->showReportTo();
+        $this->showReportBy();
+        $this->radioSelect();
+        $this->riskAssessment();
         return view('livewire.event-report-list.insident.detail', [
-            'ReportBy' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(100, ['*'], 'ReportByPage'),
-            'ReportTo' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(100, ['*'], 'ReportToPage'),
+            'ReportBy' => People::with('Employer')->search(trim($this->reporter_name))->paginate(100, ['*'], 'ReportByPage'),
+            'ReportTo' => People::with('Employer')->search(trim($this->report_to))->paginate(100, ['*'], 'ReportToPage'),
             'Location' => EventLocation::get(),
             'EventType' => EventType::where('eventCategory_id', 2)->get(),
             'Consequence' => RiskConsequence::get(),
             'Likelihood' => RiskLikelihood::get(),
             'CompanyLevel' => CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_companyLevel))->orderBy('bussiness_unit', 'asc')->get()
         ])->extends('navigation.homebase', ['header' => 'Incident Report', 'title' => 'incident', 'h1' => $this->data_id])->section('content');
+    }
+    public function showReportTo()
+    {
+        if (empty($this->report_to)) {
+            $this->show_reportTo = 'hidden';
+            $this->reset('report_to_id');
+        } elseif (!People::cari(trim($this->report_to))->first()) {
+            $this->show_reportTo = 'block';
+        } else {
+            $this->show_reportTo = 'hidden';
+        }
+    }
+    public function showReportBy()
+    {
+        if (empty($this->reporter_name)) {
+            $this->show_reportBy = 'hidden';
+            $this->reset('reporter_name_id');
+        } elseif (!People::cari(trim($this->reporter_name))->first()) {
+            $this->show_reportBy = 'block';
+        } else {
+            $this->show_reportBy = 'hidden';
+        }
+    }
+    public function radioSelect()
+    {
+        if ($this->radio_select === 'workgroup') {
+            $this->search_workgroup = $this->search;
+            $this->wg_id = null;
+            $this->search_companyLevel = "";
+        } elseif ($this->radio_select === 'companyLevel') {
+            $this->search_workgroup = "";
+            $this->search_companyLevel = $this->search;
+        } else {
+            $this->search_workgroup = $this->search;
+            $this->search_companyLevel = $this->search;
+        }
+    }
+    public function riskAssessment()
+    {
+        $this->actual_outcome_description  = (!empty($this->actual_outcome)) ? RiskConsequence::whereId($this->actual_outcome)->first()->description : $this->actual_outcome_description = '';
+        $this->potential_consequence_description  = (!empty($this->potential_consequence)) ? RiskConsequence::whereId($this->potential_consequence)->first()->description : $this->potential_consequence_description = '';
+        $this->potential_likelihood_description  = (!empty($this->potential_likelihood)) ? RiskLikelihood::whereId($this->potential_likelihood)->first()->notes : $this->potential_likelihood_description = '';
     }
     public function updateStore()
     {

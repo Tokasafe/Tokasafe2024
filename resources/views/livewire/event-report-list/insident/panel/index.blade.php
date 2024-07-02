@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between bg-gray-300 rounded-t-lg">
         <div class="flex flex-col">
             <div class="flex flex-row pl-2 text-xs w-80">
-                <div class="font-semibold w-36">{{ __('Current_Step') }}{{$responsibleRole}} </div>
+                <div class="font-semibold w-36">{{ __('Current_Step') }} </div>
                 <div class="w-full font-bold">: {{ $current_step }}</div>
             </div>
             <form  wire:submit.prevent='storeUpdate' class="flex sm:flex-row flex-col  items-center  gap-1 pl-2 py-0.5 text-xs m-[3px]">
@@ -13,6 +13,8 @@
                     <x-span-label :value="__('Proceed_To')" />
                     <select wire:model='proceedTo'
                         class=" @error('proceedTo') border-rose-500 border-2 @enderror peer select select-bordered select-xs w-full max-w-xl focus:outline-none  focus:ring-success focus:ring-1">
+
+                
                         <option value="" selected>{{ __('select_option') }}</option>
                         @foreach ($Workflow as $value)
                             <option value="{{ $value->destination_1 }}">{{ $value->destination_1_label }}</option>

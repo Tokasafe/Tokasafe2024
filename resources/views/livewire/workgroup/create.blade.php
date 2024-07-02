@@ -37,7 +37,7 @@
                         <option selected>Select Company Level</option>
                         @foreach ($CompanyLevel as $item)
                             <option value="{{ $item->id }}">
-                                {{ $item->BussinessUnit->name }}-{{ $level }}-{{ $item->deptORcont }}
+                                {{ $item->BussinessUnit->name }}-{{ $level }}-{{ $item->departemen_contractor }}
                             </option>
                         @endforeach
                     </select>

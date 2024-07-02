@@ -22,6 +22,7 @@ class Index extends Component
     public $reference;
     public $documentation;
     public $IdData;
+    public $modal = 'modal';
     public $search_wg;
     public $month = '';
     public $tglMulai = '';
@@ -80,6 +81,7 @@ class Index extends Component
     }
     public function delete($id)
     {
+        $this->modal='modal modal-open';
         $this->IdData = $id;
         $this->reference = HazardId::whereId($id)->first()->reference;
         $this->documentation = HazardId::whereId($id)->first()->documentation;
@@ -93,6 +95,7 @@ class Index extends Component
                 unlink(storage_path('app/public/documents/' . $this->documentation));
             }
             session()->flash('success', "Hazard Report Deleted Successfully!!");
+            $this->modal='modal';
         } catch (\Exception $e) {
             session()->flash('error', "Something goes wrong!!");
         }
@@ -100,5 +103,8 @@ class Index extends Component
     public function paginationView()
     {
         return 'livewire.pagination';
+    }
+    public function closeModal(){
+        $this->modal='modal';
     }
 }

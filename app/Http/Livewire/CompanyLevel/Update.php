@@ -26,7 +26,7 @@ class Update extends Component
         if (!is_null($value)) {
             $this->IdData = $value;
             $this->bussiness_unit = CompanyLevel::where('id', $this->IdData)->first()->bussiness_unit;
-            $this->dept_or_group = CompanyLevel::where('id', $this->IdData)->first()->deptORcont;
+            $this->dept_or_group = CompanyLevel::where('id', $this->IdData)->first()->departemen_contractor;
             $this->level = CompanyLevel::where('id', $this->IdData)->first()->level;
             $this->openModal = 'modal-open';
         }
@@ -57,7 +57,7 @@ class Update extends Component
         try {
             CompanyLevel::whereId($this->IdData)->update([
                 'bussiness_unit' => $this->bussiness_unit,
-                'deptORcont' => $this->dept_or_group,
+                'departemen_contractor' => $this->dept_or_group,
                 'level' => $this->level,
             ]);
             session()->flash('success', 'Data Updated Successfully!!');

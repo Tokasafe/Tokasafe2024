@@ -27,23 +27,22 @@ return [
      */
 
     'connections' => [
-
         'default' => [
             'hosts' => [env('LDAP_HOST', '10.10.200.5')],
-            'username' => env('LDAP_USERNAME', 'cn=SU Unlock,ou=Administrator,dc=archimining,dc=local'),
-            'password' => env('LDAP_PASSWORD', '@ichiapr0431'),
+            // 'username' => env('LDAP_USERNAME', 'cn=SU Unlock,ou=Administrator,dc=archimining,dc=local'),
+            // 'password' => env('LDAP_PASSWORD', '@ichiapr0431'),
+            'username' => env('LDAP_USERNAME', 'CN=Yoman Denis Banea,OU=Indonesian,OU=Users,OU=TOKATINDUNG,DC=archimining,DC=local'),
+            'password' => env('LDAP_PASSWORD', 'Denis28%%'),
             'port' => env('LDAP_PORT', 389),
             'base_dn' => env('LDAP_BASE_DN', 'dc=archimining,dc=local'),
             'timeout' => env('LDAP_TIMEOUT', 5),
             'use_ssl' => env('LDAP_SSL', false),
             'use_tls' => env('LDAP_TLS', false),
             'use_sasl' => env('LDAP_SASL', false),
-            'sasl_options' => [
-            ],
+            'sasl_options' => [],
         ],
-
     ],
-
+    
     /*
     |--------------------------------------------------------------------------
     | LDAP Logging

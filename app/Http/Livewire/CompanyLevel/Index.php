@@ -25,6 +25,7 @@ class Index extends Component
 
         'AddCompanyLevel' => 'render',
         'UpdateCompanyLevel' => 'render',
+        'importCompanyLevel' => 'render',
     ];
     public function render()
     {
@@ -62,7 +63,7 @@ class Index extends Component
     {
         $this->IdData = $id;
         $this->bu_name = CompanyLevel::whereId($id)->first()->BussinessUnit->name;
-        $this->contractor_name = CompanyLevel::whereId($id)->first()->deptORcont;
+        $this->contractor_name = CompanyLevel::whereId($id)->first()->departemen_contractor;
        
     }
     public function deleteFileCompanyLevel()

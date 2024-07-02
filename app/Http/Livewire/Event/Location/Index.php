@@ -14,11 +14,12 @@ class Index extends Component
 
         'AddLocationEvent' => 'render',
         'UpdateLocationEvent' => 'render',
+        'locationImport' => 'render',
     ];
     public function render()
     {
         return view('livewire.event.location.index', [
-            'EventLocation' => EventLocation::orderBy('name', 'ASC')->search(trim($this->search))->paginate(5),
+            'EventLocation' => EventLocation::orderBy('name', 'ASC')->search(trim($this->search))->paginate(20),
         ])->extends('navigation.homebase', ['header' => 'Event Location'])->section('content');
     }
     public function update_EventLocation($id)

@@ -2,14 +2,14 @@
     @include('toast.toast')
     @push('styles')
         @livewireStyles()
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+        <link rel="stylesheet" type="text/css" href="{{ asset('toastify/css/toastify.css') }}">
     @endpush
     @push('scripts')
         @livewireScripts()
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+            <script type="text/javascript" src="{{ asset('toastify/js/toastify.js') }}"></script>
+
         <script>
             const modalDel = document.getElementById("closeModal");
             $(document).on('click', '#close', function() {
@@ -56,8 +56,8 @@
 
                 <tr class="text-center">
                     <th>#</th>
-                    <th>Event Category</th>
                     <th>Event Type</th>
+                    <th>Event Sub-Type</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -89,8 +89,8 @@
             <tfoot class="bg-emerald-300">
                 <tr class="text-center">
                     <th>#</th>
-                    <th>Event Category</th>
                     <th>Event Type</th>
+                    <th>Event Sub-Type</th>
                     <th>Action</th>
                 </tr>
             </tfoot>

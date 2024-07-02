@@ -1,8 +1,7 @@
 <div class=" mx-4 md:mx-0">
-  
+
     @push('styles')
         @livewireStyles()
-        <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
         <style>
             .ck-editor__editable[role="textbox"] {
                 /* Editing area */
@@ -10,31 +9,27 @@
                 padding: 25px !IMPORTANT;
             }
         </style>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-
-        <link rel="stylesheet" href="../../flatpickr/dist/flatpickr.min.css">
-        <link rel="stylesheet" href="../../flatpickr/dist/plugins/monthSelect/style.css" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="../../flatpickr/dist/themes/dark.css">
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      
+        <link rel="stylesheet" type="text/css" href="{{ asset('toastify/css/toastify.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('flatpickr/dist/flatpickr.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('flatpickr/dist/plugins/monthSelect/style.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('flatpickr/dist/themes/dark.css') }}">
+        <script type="text/javascript" src="{{ asset('ckeditor/classic/js/ckeditor.js') }}"></script>
     @endpush
     @push('scripts')
         @livewireScripts()
-        <script src="../../ckeditor5/js/index.js"></script>
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <script type="text/javascript" src="{{ asset('flatpickr/dist/plugins/monthSelect/index.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('toastify/js/toastify.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+      
         <script>
             const modal = document.getElementById("closeModal");
             $(document).on('click', '#close', function() {
                 modal.click()
             });
         </script>
-        {{-- <script src="../../flatpickr/dist/plugins/rangePlugin.js"></script> --}}
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-        <script src="../../flatpickr/dist/plugins/monthSelect/index.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script>
             flatpickr("#tanggal", {
                 disableMobile: "true",
@@ -42,6 +37,14 @@
             });
 
             flatpickr("#tglLapor", {
+                disableMobile: "true",
+                dateFormat: "d-m-Y", //defaults to "F Y"
+            });
+            flatpickr("#due_date", {
+                disableMobile: "true",
+                dateFormat: "d-m-Y", //defaults to "F Y"
+            });
+            flatpickr("#completion", {
                 disableMobile: "true",
                 dateFormat: "d-m-Y", //defaults to "F Y"
             });
@@ -98,8 +101,8 @@
                             month2 = '0' + month2;
                         }
 
-                      tglMulai=  year + '-' + month + '-' + dt;
-                      tglAkhir=  year2 + '-' + month2 + '-' + dt2;
+                        tglMulai = year + '-' + month + '-' + dt;
+                        tglAkhir = year2 + '-' + month2 + '-' + dt2;
 
                         // console.log(start.toISOString());
                         // console.log(end.toISOString());
@@ -120,7 +123,7 @@
             @livewire('event-report-list.hazard-id.create')
         </div>
         <div class="flex flex-col join lg:flex-row sm:gap-0 ">
-           
+
             <div class="relative flex items-center w-full max-w-xs join-item ">
                 <input id="rangeDate" type="text" readonly wire:model='dateRange'
                     class="relative w-full   peer input input-bordered pl-6 input-xs text-[10px] lg:text-[9px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
@@ -137,10 +140,10 @@
                 <select type="text" wire:model='search_eventsubtype'
                     class="relative w-full sm:w-full max-w-xs pl-6 peer select select-bordered select-xs text-[10px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
                     placeholder="Initial Incident Class">
-                    <option  value="" selected>Initial Incident Class</option>
+                    <option value="" selected>Initial Incident Class</option>
                     @foreach ($EventType as $key => $value)
-                    <option value="{{ $value->id }}">{{ $value->name }}</option>
-                @endforeach
+                        <option value="{{ $value->id }}">{{ $value->name }}</option>
+                    @endforeach
 
                 </select>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
@@ -152,7 +155,7 @@
             </div>
             <div class="relative flex items-center w-full max-w-xs join-item ">
                 <select type="text" wire:model='search_eventsubtype'
-                    class="relative w-full sm:w-auto max-w-xs pl-6 peer select select-bordered select-xs text-[10px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
+                    class="relative w-full sm:w-full max-w-xs pl-6 peer select select-bordered select-xs text-[10px] font-semibold focus:ring-1 focus:outline-none focus:drop-shadow-lg"
                     placeholder="Initial Incident Class">
                     <option value="" selected>Sub {{ __('KelasInsidenAwal') }}</option>
                     @foreach ($EventSubType as $key => $value)
@@ -188,17 +191,17 @@
             </div>
         </div>
     </div>
-    <div class="grid ">
+   
         <div class="overflow-x-auto">
             <table class="table table-xs table-zebra">
                 <thead class="bg-gray-400">
                     <tr class="text-center ">
                         <th>#</th>
-                        <th>{{__('date')}}</th>
+                        <th>{{ __('date') }}</th>
                         <th>{{ __('reference') }}</th>
                         <th>{{ __('est') }}</th>
                         <th>{{ __('rw') }}</th>
-                        <th>{{ __('rincian_bahaya') }}</th>
+                        <th>{{ __('tugas') }}</th>
                         <th>{{ __('Actions_Total_Open') }}</th>
                         <th>Status</th>
                         <th>{{ __('Action') }}</th>
@@ -214,26 +217,23 @@
                             <td>{{ $item->Hazard->Workgroup->CompanyLevel->BussinessUnit->name }}-{{ $item->Hazard->Workgroup->CompanyLevel->deptORcont }}-{{ $item->Hazard->Workgroup->job_class }}
                             </td>
                             <td>
-                                <p class="w-32 truncate">{{ $item->Hazard->tindakan_perbaikan }}</p>
+                                <p class="w-40 truncate">{{ $item->Hazard->task }}</p>
                             </td>
                             <td>
-
                                 @if (!empty($event_action->where('event_hzd_id', $item->Hazard->id)->first()->event_hzd_id))
                                     {{ $event_action->where('event_hzd_id', $item->Hazard->id)->count('due_date') }}/{{ $event_action->where('event_hzd_id', $item->Hazard->id)->whereNull('competed')->count() }}
                                 @else
                                     0/0
                                 @endif
                             </td>
-                            <td
-                                class="
+                            <td class="
                             {{ $item->WorkflowStep->StatusCode->name === 'Submitted' ? 'bg-cyan-500 text-white font-semibold' : '' }}
                             {{ $item->WorkflowStep->StatusCode->name === 'In Progress' ? 'bg-emerald-500 text-white font-semibold' : '' }}
                             {{ $item->WorkflowStep->StatusCode->name === 'Pending' ? 'bg-amber-500 text-white font-semibold' : '' }}
-                            {{ $item->WorkflowStep->StatusCode->name === 'Closed' ? 'bg-sky-500 text-white font-semibold' : '' }}
+                            {{ $item->WorkflowStep->StatusCode->name === 'Closed' ? 'bg-blue-500 text-white font-semibold' : '' }}
                             {{ $item->WorkflowStep->StatusCode->name === 'Cancelled' ? 'bg-rose-500 text-white font-semibold' : '' }}">
                                 {{ $item->WorkflowStep->StatusCode->name }}
                             </td>
-
                             <td>
                                 <div class="flex flex-row justify-center gap-1">
                                     <a href="{{ route('hazardDetails', $item->Hazard->id) }}"
@@ -247,8 +247,7 @@
                         <tr class="text-center">
                             <td colspan="9" class="font-semibold text-rose-500">
 
-                                <p class="flex justify-center"> Data not found <span
-                                        class="loading loading-bars loading-xs"> </span></p>
+                                <p class="flex justify-center"> Data not found <span class="loading loading-bars loading-xs"> </span></p>
                             </td>
                         </tr>
                     @endforelse
@@ -256,11 +255,11 @@
                 <tfoot class="bg-gray-400">
                     <tr class="text-center">
                         <th>#</th>
-                        <th>{{__('date')}}</th>
+                        <th>{{ __('date') }}</th>
                         <th>{{ __('reference') }}</th>
                         <th>{{ __('est') }}</th>
                         <th>{{ __('rw') }}</th>
-                        <th>{{ __('rincian_bahaya') }}</th>
+                        <th>{{ __('tugas') }}</th>
                         <th>{{ __('Actions_Total_Open') }}</th>
                         <th>Status</th>
                         <th>{{ __('Action') }}</th>
@@ -268,16 +267,16 @@
                 </tfoot>
             </table>
         </div>
-    </div>
+   
     <div>{{ $PanelHazardId->links() }}</div>
 
-    <input type="checkbox" id="delete_data" class="modal-toggle" />
-    <div class="modal">
+
+    <div class="{{$modal}}">
         <div class="modal-box">
             <h4 class="text-lg font-bold text-center">Are You Sure Delete {{ $reference }}?</h4>
             <form wire:submit.prevent='deleteFile'>
                 <div class="modal-action">
-                    <button id="close" type="submit" class="text-white btn btn-success btn-xs">Yes
+                    <button  type="submit" class="text-white btn btn-success btn-xs">Yes
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -285,7 +284,7 @@
                         </svg>
 
                     </button>
-                    <label for="delete_data" id="closeModal" class="btn btn-xs btn-error">No!</label>
+                    <label  wire:click="closeModal" class="btn btn-xs btn-error">No!</label>
                 </div>
             </form>
         </div>

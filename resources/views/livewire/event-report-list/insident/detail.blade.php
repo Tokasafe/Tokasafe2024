@@ -1,32 +1,51 @@
-<div >
+<div>
     @include('toast.toast')
     @push('styles')
         @livewireStyles()
+        <script type="text/javascript" src="{{ asset('ckeditor/classic/js/ckeditor.js') }}"></script>
         <script src="https://kit.fontawesome.com/3de311882c.js" crossorigin="anonymous"></script>
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-        <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-        <link rel="stylesheet" href="../../flatpickr/dist/flatpickr.min.css">
-        <link rel="stylesheet" href="../../flatpickr/dist/plugins/monthSelect/style.css" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="../../flatpickr/dist/themes/dark.css">
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link rel="stylesheet" type="text/css" href="{{ asset('toastify/css/toastify.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('flatpickr/dist/flatpickr.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('flatpickr/dist/plugins/monthSelect/style.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('flatpickr/dist/themes/dark.css') }}">
     @endpush
     @push('scripts')
-        @livewireScripts()
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-        {{-- <script>
-            const modal = document.getElementById("closeModalAction");
-            $(document).on('click', '#close', function() {
-                modal.click()
-            });
-        </script> --}}
-        {{-- <script src="../../flatpickr/dist/plugins/rangePlugin.js"></script> --}}
-
-        <script src="../../flatpickr/dist/plugins/monthSelect/index.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="{{ asset('flatpickr/dist/plugins/monthSelect/index.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('toastify/js/toastify.js') }}"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-      
+
+        <script>
+            flatpickr("#tanggal", {
+                disableMobile: "true",
+                dateFormat: "d-m-Y", //defaults to "F Y"
+            });
+
+            flatpickr("#tglLapor", {
+                disableMobile: "true",
+                dateFormat: "d-m-Y", //defaults to "F Y"
+            });
+            flatpickr("#jamKejadian", {
+                disableMobile: "true",
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",
+                time_24hr: true
+            });
+
+            flatpickr("#month", {
+                disableMobile: "true",
+                plugins: [
+                    new monthSelectPlugin({
+                        shorthand: true, //defaults to false
+                        dateFormat: "M-Y", //defaults to "F Y"
+                        altFormat: "F Y", //defaults to "F Y"
+                        theme: "dark" // defaults to "light"
+                    })
+                ]
+            });
+        </script>
     @endpush
     @section('bradcrumbs')
         {{ Breadcrumbs::render('incident_details', $data_id) }}
@@ -49,7 +68,7 @@
     </div>
     @livewire('event-report-list.insident.panel.index', ['id' => $data_id])
     <div class="shadow-md ">
-        <form  wire:submit.prevent='updateStore' wire:loading.class="skeleton" wire:target="updateStore">
+        <form wire:submit.prevent='updateStore' wire:loading.class="skeleton" wire:target="updateStore">
             @csrf
             @method('PATCH')
             <div class="top-0 z-10 p-1 bg-white shadow-md sm:sticky">
@@ -72,42 +91,39 @@
 
                 </label>
             </div>
-            <div  class=" {{ $IncidentClose ? 'stack ' : '' }}">
+            <div class=" {{ $IncidentClose ? 'stack ' : '' }}">
                 <div
                     class=" {{ $IncidentClose ? 'overflow-y-auto h-[520px] sm:h-auto md:h-auto lg:h-auto xl:h-[19.5rem] 2xl:h-[40rem] p-2 ' : 'overflow-y-auto h-[520px] sm:h-auto md:h-auto lg:h-auto xl:h-[19.5rem] 2xl:h-[40rem] p-2 ' }}">
                     <div class="flex flex-wrap gap-1 sm:grid md:grid-cols-3 xl:grid-cols-4">
                         <div class="w-full max-w-xl form-control">
                             <x-input-label-req :value="__('et')" />
-                            <select wire:model='event_type'
-                                class=" @error('event_type') border-rose-500 border-2 @enderror select select-bordered select-xs w-full max-w-xl focus:outline-none  focus:ring-success focus:ring-1"
-                                @if ($IncidentClose) disabled @endif>
-                                <option selected>{{ __('select_option') }}</option>
+                            <x-select-edit wire:model='event_type' :closed="$IncidentClose" :error="$errors->get('event_type')">
+                                <option value="" selected>{{ __('select_option') }}</option>
                                 @foreach ($EventType as $key)
                                     <option value="{{ $key->id }}">{{ $key->name }}</option>
                                 @endforeach
-                            </select>
+                            </x-select-edit>
                             <x-input-error :messages="$errors->get('event_type')" class="mt-0" />
                         </div>
                         <div class="w-full max-w-xl form-control">
                             <x-input-label-req :value="__('est')" />
-                            <select wire:model='sub_type'
-                                class=" @error('sub_type') border-rose-500 border-2 @enderror select select-bordered select-xs w-full max-w-xl focus:outline-none  focus:ring-success focus:ring-1"
-                                @if ($IncidentClose) disabled @endif>
-                                <option selected>{{ __('select_option') }}</option>
+
+                            <x-select-edit wire:model='sub_type' :closed="$IncidentClose" :error="$errors->get('sub_type')">
+                                <option value="" selected>{{ __('select_option') }}</option>
                                 @foreach ($EventSubType as $key)
                                     <option value="{{ $key->id }}">{{ $key->name }}</option>
                                 @endforeach
-                            </select>
+                            </x-select-edit>
                             <x-input-error :messages="$errors->get('sub_type')" class="mt-0" />
                         </div>
                         <div class="w-full max-w-xl form-control">
                             <x-input-label-req :value="__('rw')" />
                             <label class="join " wire:click='openWokrgroup'>
-                                <input type="text" placeholder="Type here" wire:model='workgroup' readonly
-                                    class=" @error('workgroup') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1"
-                                    @if ($IncidentClose) disabled @endif />
+
+                                <x-input-edit wire:model='workgroup' type="text" class="join-item cursor-pointer"
+                                    :error="$errors->get('workgroup')" readonly :closed="$IncidentClose" />
                                 <label for=""
-                                    class="border btn btn-xs btn-square join-item @error('workgroup') btn-error @enderror" btn-info {{ $IncidentClose ? 'btn-disabled' : '' }}">
+                                    class="border btn btn-xs btn-square join-item @error('workgroup') @enderror btn-info {{ $IncidentClose ? 'btn-disabled' : '' }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -118,14 +134,14 @@
                             </label>
                             <x-input-error :messages="$errors->get('workgroup')" class="mt-0" />
                         </div>
-                        <div class="w-full max-w-xl form-control">
+                        <div class="w-full max-w-xl form-control relative">
                             <x-input-label-req :value="__('nama_pelapor')" />
-                            <label class="join" wire:click='openReportBy'>
-                                <input type="text" placeholder="Type here" wire:model='reporter_name' readonly
-                                    class=" @error('reporter_name') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1"
-                                    @if ($IncidentClose) disabled @endif />
+                            <label class="join" >
+                              
+                                <x-input-edit wire:model='reporter_name' type="text" class="join-item"
+                                    :error="$errors->get('reporter_name')" :closed="$IncidentClose" />
                                 <label for=""
-                                    class="border btn btn-xs btn-square join-item @error('reporter_name') btn-error @enderror" btn-info {{ $IncidentClose ? 'btn-disabled' : '' }}">
+                                    class="border btn btn-xs btn-square join-item @error('reporter_name') btn-error @enderror btn-info  {{ $IncidentClose ? 'btn-disabled' : '' }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -136,53 +152,79 @@
                                 </label>
                             </label>
                             <x-input-error :messages="$errors->get('reporter_name')" class="mt-0" />
+                              
+                                <div class=" fixed mt-10 py-1 z-10 w-64 {{ $show_reportBy }}">
+                                    <div class="w-full max-w-xs text-xs shadow-inner bg-base-200 mt-2">
+                                        <ul class="overflow-y-auto list-disc list-inside h-60">
+    
+                                            @forelse ($ReportBy as $index => $pelapor)
+                                                <li wire:click="cariPelapor('{{ $pelapor->id }}')"
+                                                    class="px-2 cursor-pointer hover:bg-sky-400">
+                                                    {{ $pelapor->lookup_name }}</li>
+                                            @empty
+                                                <li class="text-rose-500 text-center font-semibold">name not found!!</li>
+                                            @endforelse
+                                        </ul>
+                                    </div>
+                                    <div class="bg-base-200">{{ $ReportBy->links('livewire.miniPagination') }}</div>
+                                </div>
                         </div>
-                        <div class="w-full max-w-xl form-control">
+                        <div class="w-full max-w-xl form-control relative">
                             <x-input-label-req :value="__('pengawas_area')" />
                             <label wire:click='openReportTo' class="join">
-                                <input type="text" placeholder="Type here" wire:model='report_to'
-                                    class=" @error('report_to') border-rose-500 border-2 @enderror cursor-pointer w-full join-item input input-bordered input-xs focus:outline-none  focus:ring-success focus:ring-1"
-                                    @if ($IncidentClose) disabled @endif />
+
+                                <x-input-edit wire:model='report_to' type="text" class="join-item" :error="$errors->get('report_to')"
+                                    :closed="$IncidentClose" />
                                 <label for=""
-                                    class="border btn btn-xs btn-square join-item @error('report_to') btn-error @enderror" btn-info {{ $IncidentClose ? 'btn-disabled' : '' }}">
+                                    class="border btn btn-xs btn-square join-item @error('report_to') btn-error @enderror btn-info {{ $IncidentClose ? 'btn-disabled' : '' }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
-
-
                                 </label>
                             </label>
                             <x-input-error :messages="$errors->get('report_to')" class="mt-0" />
+                                <div class=" fixed mt-10 py-1 z-10 w-64  {{ $show_reportTo }} ">
+                                    <div class="w-full max-w-xs text-xs shadow-inner bg-base-200 mt-2">
+                                        <ul class="overflow-y-auto list-disc list-inside h-60">
+                                            @forelse ($ReportTo as $index => $pelapor)
+                                                <li wire:click="cariReportTo('{{ $pelapor->id }}')"
+                                                    class="px-2 cursor-pointer hover:bg-sky-400">
+                                                    {{ $pelapor->lookup_name }}</li>
+                                            @empty
+                                                <li class="text-rose-500 text-center font-semibold">name not found!!</li>
+                                            @endforelse
+                                        </ul>
+                                    </div>
+                                    <div class="bg-base-200">{{ $ReportTo->links('livewire.miniPagination') }}</div>
+    
+                                </div>
                         </div>
                         <div class="w-full max-w-xl form-control">
                             <x-input-label-req :value="__('el')" />
-                            <select wire:model='location'
-                                class=" @error('location') border-rose-500 border-2 @enderror select select-bordered select-xs w-full max-w-xl focus:outline-none  focus:ring-success focus:ring-1"
-                                @if ($IncidentClose) disabled @endif>
-                                <option selected>{{ __('select_option') }}</option>
+
+                            <x-select-edit wire:model='location' :closed="$IncidentClose" :error="$errors->get('location')">
+                                <option value="" selected>{{ __('select_option') }}</option>
                                 @foreach ($Location as $value)
                                     <option value="{{ $value->id }}">{{ $value->name }}</option>
                                 @endforeach
-                            </select>
-                            <x-input-error :messages="$errors->get('location')" class="mt-0" />
+                                </x-select-edi>
+                                <x-input-error :messages="$errors->get('location')" class="mt-0" />
                         </div>
 
                         <div class="w-full max-w-xl form-control">
                             <x-input-label-req :value="__('tanggal_kejadian')" />
-                            <input type="text" id="tglLapor" placeholder="Type here" wire:model='date_event'
-                                readonly
-                                class=" @error('date_event') border-rose-500 border-2 @enderror  w-full input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1"
-                                @if ($IncidentClose) disabled @endif />
+
+                            <x-input-edit id="tglLapor" wire:model='date_event' readonly type="text"
+                                class="join-item" :error="$errors->get('date_event')" :closed="$IncidentClose" />
                             <x-input-error :messages="$errors->get('date_event')" class="mt-0" />
                         </div>
                         <div class="w-full max-w-xl form-control">
                             <x-input-label-req :value="__('time_event')" />
-                            <input type="text" id="jamKejadian" placeholder="Type here" wire:model='time_event'
-                                readonly
-                                class=" @error('time_event') border-rose-500 border-2 @enderror w-full input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1"
-                                @if ($IncidentClose) disabled @endif />
+
+                            <x-input-edit id="jamKejadian" wire:model='time_event' readonly type="text"
+                                class="join-item" :error="$errors->get('time_event')" :closed="$IncidentClose" />
                             <x-input-error :messages="$errors->get('time_event')" class="mt-0" />
                         </div>
 
@@ -191,7 +233,7 @@
                             <x-input-label-req :value="__('BerpotensiLTI')" />
 
                             <fieldset
-                                class="flex items-start p-[3px] border @error('potential_lti') border-rose-500 border-2 @enderror gap-0.5">
+                                class="flex items-start p-[3px] border  @error('potential_lti') border-rose-500 border-2 @enderror gap-0.5 ">
                                 <input wire:model.live="potential_lti" name="radio-10" id="yes"
                                     @if ($IncidentClose) disabled @endif
                                     class="radio-xs peer/yes checked:bg-rose-500 radio" type="radio" name="status"
@@ -211,31 +253,28 @@
                         </div>
                         <div class="w-full max-w-xl form-control ">
                             <x-input-label :value="__('insidenlingkungan')" />
-                            <select wire:model='env_incident'
-                                class=" @error('env_incident') border-rose-500 border-2 @enderror select select-bordered select-xs w-full max-w-xl focus:outline-none  focus:ring-success focus:ring-1"
-                                @if ($IncidentClose) disabled @endif>
+
+                            <x-select-edit wire:model='env_incident' :closed="$IncidentClose" :error="$errors->get('env_incident')">
                                 <option selected>{{ __('select_option') }}</option>
                                 <option value="Level 1">Level 1</option>
                                 <option value="Level 2">Level 2</option>
                                 <option value="Level 3">Level 3</option>
-                            </select>
+                            </x-select-edit>
                             <x-input-error :messages="$errors->get('env_incident')" class="mt-0" />
                         </div>
                         <div class="w-full max-w-xl form-control">
                             <x-input-label-req :value="__('tugas')" />
-                            <input type="text" placeholder="Type here" wire:model='task'
-                                class=" @error('task') border-rose-500 border-2 @enderror  w-full input input-bordered  input-xs focus:outline-none  focus:ring-success focus:ring-1"
-                                @if ($IncidentClose) disabled @endif />
+
+                            <x-input-edit id="tglLapor" wire:model='task' type="text" :error="$errors->get('task')"
+                                :closed="$IncidentClose" />
                             <x-input-error :messages="$errors->get('task')" class="mt-0" />
                         </div>
                         <div class="flex flex-row w-full max-w-xl form-control">
                             <div class="flex-initial w-[650px]">
 
                                 <x-input-label :value="__('documentation')" />
-
-                                <input type="file" @if ($IncidentClose) disabled @endif
-                                    wire:model=documentation
-                                    class=" @error('documentation') border-rose-500 border-2 @enderror file-input  file-input-bordered file-input-primary w-full m file-input-xs  focus:outline-none  focus:ring-success focus:ring-1" />
+                                <x-input-file-edit :error="$errors->get('documentation')" class="relative" wire:model='documentation'
+                                    :closed="$IncidentClose" />
                                 <x-input-error :messages="$errors->get('documentation')" class="mt-0" />
                             </div>
                             @if ($filename)
@@ -247,8 +286,7 @@
                                 </div>
                             @endif
                             @if ($documentation)
-                                <div
-                                    class="flex-none w-6 mt-[25px] ">
+                                <div class="flex-none w-6 mt-[25px] ">
 
                                     @include('livewire.event-report-list.insident.svgCreate')
 
@@ -313,6 +351,14 @@
                                 class="font-extrabold text-transparent divider divider-info text-1xl bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
                                 {{ __('Tindakan_Perbaikan') }}</div>
                             @livewire('event-report-list.insident.action.index', ['id' => $data_id])
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-2 my-4 sm:justify-normal">
+                        <div class="w-full p-4 ">
+                            <div
+                                class="font-extrabold text-transparent divider divider-info text-1xl bg-clip-text bg-gradient-to-r from-pink-500 to-violet-500">
+                                {{ __('Documentation') }}</div>
+                            @livewire('event-report-list.insident.documentation.index', ['id' => $data_id])
                         </div>
                     </div>
                 </div>

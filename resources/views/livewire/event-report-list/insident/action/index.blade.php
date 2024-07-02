@@ -14,7 +14,7 @@
                 modalact.click()
             });
         </script>
-
+       
         <script>
             flatpickr("#due_date", {
                 disableMobile: "true",
@@ -34,8 +34,8 @@
         </script>
     @endpush
     <div class="flex justify-between mx-4 mt-4">
-        <div class="{{$guest_respons?'block':'hidden'}}">
-          @livewire('event-report-list.insident.action.create',['id' => $data_id])
+        <div class="{{ $guest_respons ? 'block' : 'hidden' }}">
+            @livewire('event-report-list.insident.action.create', ['id' => $data_id])
         </div>
         <div class="hidden">
 
@@ -60,127 +60,138 @@
             <table class="table table-xs">
 
                 <tbody>
-                    @forelse($IncidentAction as $index =>$value )
-                      
-                    <tr class="border-b-2 border-gray-400">
-                        <td>
-                            <table class="table table-xs">
-                                <tr valign="top">
-                                    <td>
-                                        <p class="font-bold leading-loose text-[10px]">Action No.   {{ $IncidentAction->firstItem() + $index }}</p>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td>
-                            <table class="table table-xs">
-                                <tr >
-                                    <td>
-                                       <p class="text-justify text-[11px] font-bold">Observation, Hazard or Non-Conformance</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-[10px]">{{$value->IncidentAction->task}}</p>
-                                    </td>
-                                </tr>
-                              
-                                <tr >
-                                    <td>
-                                       <p class="text-justify text-[11px] font-bold">Followup Action</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-justify text-[10px] text-wrap w-96 "> {{$value->followup_action}}</p>
-                                    </td>
-                                </tr>
+                    @forelse($IncidentAction as $index =>$value)
+                        <tr class="border-b-2 border-gray-400">
+                            <td>
+                                <table class="table table-xs">
+                                    <tr valign="top">
+                                        <td>
+                                            <p class="font-bold leading-loose text-[10px]">Action No.
+                                                {{ $IncidentAction->firstItem() + $index }}</p>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td>
+                                <table class="table table-xs">
+                                    <tr>
+                                        <td>
+                                            <p class="text-justify text-[11px] font-bold">Observation, Hazard or
+                                                Non-Conformance</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-[10px]">{{ $value->IncidentAction->task }}</p>
+                                        </td>
+                                    </tr>
 
-                                <tr >
-                                    <td>
-                                       <p class="text-justify text-[11px] font-bold">Actionee Comments</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-justify text-[10px] text-wrap w-96 " >{{$value->actionee_comments}}</p>
-                                    </td>
-                                </tr>
-                        
-                                <tr >
-                                    <td>
-                                       <p class="text-justify text-[11px] font-bold">Action Conditions</p>
-                                    </td>
-                                    <td>
-                                        <p class="text-justify text-[10px] text-wrap w-96 " >{{$value->action_condition}}</p>
-                                    </td>
-                                </tr>
-                               
-                                
-                            </table>
-                        </td>
-                        <td>
-                            <table class="table table-xs">
-                                <tr >
-                                    <td>
-                                       <p class=" text-[11px] font-bold">Original Due Date</p>                    
-                                    </td>
-                                    <td>
-                                        <span id="ctl00_cphMain_gdvActionList_ctl03_eaRow_lblOriginalDueDate">{{$value->orginal_dueDate?  date('d-m-Y',strtotime($value->orginal_dueDate)):'-'}}</span>
-                                    </td>
-                                </tr>
-                              
-                                <tr valign="top">
-                                    <td>
-                                       <p class="text-justify text-[11px] font-bold ">Responsibility</p> 
-                                    </td>
-                                    <td>
-                                        <span id="ctl00_cphMain_gdvActionList_ctl03_eaRow_lblResponsibility">{{$value->responsibility?$value->People->lookup_name:'-'}}</span>
-                                    </td>
-                                </tr>
-                               
-                                <tr valign="top">
-                                    <td>
-                                       <p class="text-justify text-[11px] font-bold">Due Date</p> 
-                                    </td>
-                                    <td>
-                                        <span id="ctl00_cphMain_gdvActionList_ctl03_eaRow_lblDueDate">{{$value->dueDate?date('d-m-Y',strtotime($value->dueDate)):'-'}}</span>
-                                    </td>
-                                </tr>
-                               
-                                <tr valign="top">
-                                    <td>
-                                       <p class=" text-[11px] font-bold">Completion Date</p> 
-                                    </td>
-                                    <td>
-                                        <span id="text-[11px]">{{$value->completion_date?date('d-m-Y',strtotime($value->completion_date)):'-'}}</span>
-                                    </td>
-                                </tr>
-                                <tr valign="top">
-                                    <td>
-                                       <p class=" text-[11px] font-bold">Personal Reminder</p> 
-                                    </td>
-                                    <td>
-                                        <span class="text-[11px]">{{$value->personal_reminder?date('d-m-Y',strtotime($value->personal_reminder)):'-'}}</span>
-                                    </td>
-                                </tr>
-                                
-                            </table>
-                        </td>
-                        <td class="{{$guest_respons?'block':'hidden'}}">
-                            <table class="table table-xs ">
-                                <tr valign="top">
-                                    <td>
-                                        <div class="flex flex-row justify-center gap-1">
-        
-                                            <label  wire:click="update({{ $value->id }})"
-                                                class="btn btn-xs btn-warning ">Edit</label>
-                                            <label wire:click="delete({{ $value->id }})"
-                                                class="btn btn-xs btn-error ">{{ __('Delete') }}</label>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                   
+                                    <tr>
+                                        <td>
+                                            <p class="text-justify text-[11px] font-bold">Followup Action</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-justify text-[10px] text-wrap w-96 ">
+                                                {{ $value->followup_action }}</p>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <p class="text-justify text-[11px] font-bold">Actionee Comments</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-justify text-[10px] text-wrap w-96 ">
+                                                {{ $value->actionee_comments }}</p>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>
+                                            <p class="text-justify text-[11px] font-bold">Action Conditions</p>
+                                        </td>
+                                        <td>
+                                            <p class="text-justify text-[10px] text-wrap w-96 ">
+                                                {{ $value->action_condition }}</p>
+                                        </td>
+                                    </tr>
+
+
+                                </table>
+                            </td>
+                            <td>
+                                <table class="table table-xs">
+                                    <tr>
+                                        <td>
+                                            <p class=" text-[11px] font-bold">Original Due Date</p>
+                                        </td>
+                                        <td>
+                                            <span
+                                                id="ctl00_cphMain_gdvActionList_ctl03_eaRow_lblOriginalDueDate">{{ $value->orginal_dueDate ? date('d-m-Y', strtotime($value->orginal_dueDate)) : '-' }}</span>
+                                        </td>
+                                    </tr>
+
+                                    <tr valign="top">
+                                        <td>
+                                            <p class="text-justify text-[11px] font-bold ">Responsibility</p>
+                                        </td>
+                                        <td>
+                                            <span
+                                                id="ctl00_cphMain_gdvActionList_ctl03_eaRow_lblResponsibility">{{ $value->responsibility ? $value->People->lookup_name : '-' }}</span>
+                                        </td>
+                                    </tr>
+
+                                    <tr valign="top">
+                                        <td>
+                                            <p class="text-justify text-[11px] font-bold">Due Date</p>
+                                        </td>
+                                        <td>
+                                            <span
+                                                id="ctl00_cphMain_gdvActionList_ctl03_eaRow_lblDueDate">{{ $value->dueDate ? date('d-m-Y', strtotime($value->dueDate)) : '-' }}</span>
+                                        </td>
+                                    </tr>
+
+                                    <tr valign="top">
+                                        <td>
+                                            <p class=" text-[11px] font-bold">Completion Date</p>
+                                        </td>
+                                        <td>
+                                            <span
+                                                id="text-[11px]">{{ $value->completion_date ? date('d-m-Y', strtotime($value->completion_date)) : '-' }}</span>
+                                        </td>
+                                    </tr>
+                                    <tr valign="top">
+                                        <td>
+                                            <p class=" text-[11px] font-bold">Personal Reminder</p>
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="text-[11px]">{{ $value->personal_reminder ? date('d-m-Y', strtotime($value->personal_reminder)) : '-' }}</span>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </td>
+                            <td class="{{ $guest_respons ? 'block' : 'hidden' }}">
+                                <table class="table table-xs ">
+                                    <tr valign="top">
+                                        <td>
+                                            <div class="flex flex-row justify-center gap-1">
+
+                                                <label wire:click="update({{ $value->id }})"
+                                                    class="btn btn-xs btn-warning ">Edit</label>
+                                                <label wire:click="delete({{ $value->id }})"
+                                                    class="btn btn-xs btn-error ">{{ __('Delete') }}</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
                     @empty
                         <tr>
-                            <th class="font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-500 animate-pulse">{{__('Tindakan_Perbaikan_empty')}}</th>
+                            <th
+                                class="font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-500 animate-pulse">
+                                {{ __('Tindakan_Perbaikan_empty') }}</th>
                         </tr>
                     @endforelse
 
@@ -191,8 +202,8 @@
     </div>
     {{-- <div>{{ $EventAction->links() }}</div> --}}
     @livewire('event-report-list.insident.action.update')
-   
-    <div class="{{$modalDelete}}">
+
+    <div class="{{ $modalDelete }}">
         <div class="modal-box">
             <h4 class="text-lg font-bold text-center">Are You Sure Delete?</h4>
             <form wire:submit.prevent='deleteFileAction'>

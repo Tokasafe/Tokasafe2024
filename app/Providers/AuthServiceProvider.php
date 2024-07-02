@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use App\Ldap\Scopes\OnlyIndonesiaUsers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -25,6 +26,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        // \LdapRecord\Models\ActiveDirectory\User::addGlobalScope(
+        //     new OnlyIndonesiaUsers
+        // );
     }
 }

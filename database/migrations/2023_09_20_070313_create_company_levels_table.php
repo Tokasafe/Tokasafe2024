@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('level')->nullable();
             $table->unsignedBigInteger('bussiness_unit');
-            $table->string('deptORcont');
+            $table->string('departemen_contractor')->nullable();
             $table->foreign('bussiness_unit')->references('id')->on('companies')->onDelete('cascade');
             $table->timestamps();
         });

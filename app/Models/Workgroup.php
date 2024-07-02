@@ -15,7 +15,7 @@ class Workgroup extends Model
     {
 
         $query->whereHas('CompanyLevel', function ($query) use ($term) {
-            $query->where('deptORcont', 'like', '%' . $term . '%');
+            $query->where('departemen_contractor', 'like', '%' . $term . '%');
         });
     }
     public function scopeSearchWgId($query, $term)

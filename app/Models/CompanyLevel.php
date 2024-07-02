@@ -20,7 +20,7 @@ class CompanyLevel extends Model
     }
     public function scopeDeptcont($query, $term)
     {
-        $query->where('deptORcont', 'like', '%' . $term . '%');
+        $query->where('departemen_contractor', 'like', '%' . $term . '%');
     }
 
     public function BussinessUnit()

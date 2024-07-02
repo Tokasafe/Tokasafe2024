@@ -1,8 +1,6 @@
 <div>
     @include('toast.toast')
-    <!-- The button to open modal -->
-    <!-- You can open the modal using ID.showModal() method -->
-    <!-- The button to open modal -->
+   
     <label for="addCompany" class="btn btn-sm btn-square btn-info tooltip-info tooltip-right tooltip" data-tip="Add Company">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 pt-0.5"
             viewBox="0 0 20 20" fill="currentColor">

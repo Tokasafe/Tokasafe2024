@@ -16,11 +16,11 @@ class Create extends Component
 {
     use WithFileUploads;
 
-    public $role_class, $label_dept, $company, $company_category, $category, $date, $manhour, $manpower, $dept_name, $dept, $group, $SelectCompany = [], $files;
+    public $role_class, $label_dept, $company, $company_category, $category, $date, $manhour, $manpower, $dept_name, $dept, $group,  $files,$showCompany='hidden';
     public function render()
     {
+        $this->showPerusahaan();
         if ($this->company_category) {
-            $this->SelectCompany = Companies::where('category_company', $this->company_category)->orderBy('name', 'ASC')->get();
             $this->category = CompanyCategory::whereId($this->company_category)->first()->name;
             if ($this->company_category == 1) {
                 $this->label_dept = 'department';
@@ -36,9 +36,30 @@ class Create extends Component
         }
         return view('livewire.manhours.manhours-register.create', [
             'KategoryCompany' => CompanyCategory::get(),
+            'SelectCompany'=>Companies::searchcompany(trim($this->company))->where('category_company', $this->company_category)->orderBy('name', 'ASC')->get(),
             'Company' => Companies::orderBy('name', 'ASC')->get(),
             'GroupCompany' => GroupDepartment::with(['Department', 'Group'])->get(),
         ]);
+    }
+    public function showPerusahaan()
+    {
+        if (empty($this->company)) {
+            $this->showCompany = 'hidden';
+          
+        } elseif (!Companies::caricompany(trim($this->company))->where('category_company', $this->company_category)->first()) {
+            $this->showCompany = 'block';
+        } else {
+            $this->showCompany = 'hidden';
+        }
+    }
+    public function cari_perusahaan($id)
+    {
+      
+        if (!empty($id)) {
+            $Perusahaan = Companies::whereId($id)->first();
+            $this->company = $Perusahaan->name;
+          
+        }
     }
     public function uploadManhours()
     {

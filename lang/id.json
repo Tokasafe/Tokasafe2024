@@ -148,12 +148,14 @@
     "closeby":"Diselesaikan Oleh",
 
     "followup_action":"Tindakan Tindak Lanjut",
-    "Actionee_Comments":"Komentar Pihak yang Ditindaklanjuti",
-    "Action_Conditions":"Kondisi Tindakan",
-    "Responsibility":"Penanggung jawab",
-    "Due_Date":"Tenggat waktu",
-    "Completion_Date":"Tanggal penyelesaian",
-    "Actions_Total_Open":"Jumlah Tindakan/Terbuka"
+    "actionee_comments":"Komentar Pihak yang Ditindaklanjuti",
+    "action_condition":"Kondisi Tindakan",
+    "responsibility":"Penanggung jawab",
+    "due_date":"Tenggat waktu",
+    "completion":"Tanggal penyelesaian",
+    "Actions_Total_Open":"Jumlah Tindakan/Terbuka",
 
+    "Previous_step":"Step Sebelumnya",
+    "Next_Step":"Step Selanjutnya"
 
 }

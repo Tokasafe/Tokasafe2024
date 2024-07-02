@@ -1,10 +1,10 @@
 <div class="">
     @include('toast.toast')
     @push('styles')
-        {{-- @livewireStyles() --}}
+        @livewireStyles()
     @endpush
     @push('scripts')
-        {{-- @livewireScripts() --}}
+        @livewireScripts()
 
         <script>
             const modaldoc = document.getElementById("closeModalDoc");
@@ -22,6 +22,7 @@
     <div class="flex justify-between mx-4 mt-4">
         <div class="mt-2  ">
             @livewire('event-report-list.hazard-id.document.create', ['id' => $ID_Details])
+           
 
         </div>
 
@@ -45,9 +46,9 @@
     </div>
     <div class="grid px-2 ">
 
-        <div class="w-auto mx-4 mt-4 overflow-x-auto rounded-md shadow-md md:w-auto">
+        <div class="w-auto mt-4 overflow-x-auto shadow-md ">
             <table class="table table-xs">
-                <thead class="bg-emerald-300">
+                <thead class="">
                     <tr class="text-center ">
                         <th>#</th>
                         <th>{{ __('description') }}</th>
@@ -162,15 +163,12 @@
                         </tr>
                     @empty
                         <tr class="text-center">
-                            <td colspan="10" class="font-semibold text-rose-500">
-
-                                <p class="flex justify-center"> Data not found <span
-                                        class="loading loading-bars loading-xs"> </span></p>
-                            </td>
+                            
+                            <th colspan="5" class="font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-500 animate-pulse">Final Documentation has not been taken</th>
                         </tr>
                     @endforelse
                 </tbody>
-                <tfoot class="bg-emerald-300">
+                <tfoot class="">
                     <tr class="text-center">
                         <th>#</th>
                         <th>{{ __('description') }}</th>

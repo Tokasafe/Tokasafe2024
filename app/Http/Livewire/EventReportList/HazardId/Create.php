@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\EventReportList\HazardId;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\People;
 use Livewire\Component;
@@ -61,14 +62,17 @@ class Create extends Component
     public $task;
     public $fileUpload;
     public $statusER;
+    public $id_hazard;
+    public $id_hazardBack;
     public $modal = '';
-
+    public $tab='checked';
+    public $tab2;
     public $EventSubType = [];
     public $openModalWG = "modal";
     public $openModalreportBy = '';
     public $openModalreportTo = '';
     public $search_reportTo = '';
-    public $search= '';
+    public $search = '';
     public $search_workgroup = '';
     public $search_companyLevel = '';
     public $radio_select = '';
@@ -78,6 +82,9 @@ class Create extends Component
     public $showDataInput = false;
     public $showAccess = false;
     public $wg_id;
+    public $filename;
+    public $show_reportBy = 'hidden';
+    public $show_reportTo = 'hidden';
     public function clearSearchWg()
     {
         $this->search_workgroup = '';
@@ -88,76 +95,157 @@ class Create extends Component
     }
     protected $listeners = [
         'OpenModalHzd',
+        'backTabFunction'
     ];
+
+    public function backTabFunction($value)
+    {
+        if ($value) {
+            $this->tab='checked';
+            $this->id_hazardBack = $value;
+            $HazardId = HazardId::with(['Workgroup.CompanyLevel', 'Workgroup.CompanyLevel.BussinessUnit'])->whereId($this->id_hazardBack)->first();
+            
+            if ( $HazardId) {
+                $a = $HazardId->Workgroup->CompanyLevel->BussinessUnit->name;
+                $b = $HazardId->Workgroup->CompanyLevel->deptORcont;
+                $c = $HazardId->Workgroup->job_class;
+                $this->event_subtype = $HazardId->event_subtype;
+                $this->nama_pelapor = $HazardId->People->lookup_name;
+                $this->nama_pelapor_id = $HazardId->nama_pelapor;
+                $this->tanggal_kejadian = date('d-m-Y', strtotime($HazardId->tanggal_kejadian));
+                $this->waktu = $HazardId->waktu;
+                $this->workgroup = "$a-$b-$c";
+                $this->pengawas_area = $HazardId->Pengawas->lookup_name;
+                $this->pengawas_area_id = $HazardId->pengawas_area;
+                $this->lokasi = $HazardId->lokasi;
+                $this->workgroup_id = $HazardId->workgroup;
+                $this->filename = $HazardId->documentation;
+                $this->rincian_bahaya = $HazardId->rincian_bahaya;
+                $this->tindakan_perbaikan = $HazardId->tindakan_perbaikan;
+                $this->tindakan_perbaikan_disarankan = $HazardId->tindakan_perbaikan_disarankan;
+                $this->actual_outcome = $HazardId->actual_outcome;
+                $this->potential_consequence = $HazardId->potential_consequence;
+                $this->potential_likelihood = $HazardId->potential_likelihood;
+                // $this->tindakan_perbaikan_dilakuan = $HazardId->tindakan_perbaikan_dilakuan;
+                // $this->komentar = $HazardId->komentar;
+                $this->task = $HazardId->task;
+                $this->reference = $HazardId->reference;
+            }
+        }
+       
+        
+        $this->tab2 = '';
+    }
     public function OpenModalHzd($value)
     {
         $this->modal = $value;
     }
     public function render()
     {
+    
         $this->modal;
         $this->click();
-        $this->actual_outcome_description  = (!empty($this->actual_outcome)) ? RiskConsequence::whereId($this->actual_outcome)->first()->description : $this->actual_outcome_description = '' ;
-        $this->potential_consequence_description  = (!empty($this->potential_consequence)) ? RiskConsequence::whereId($this->potential_consequence)->first()->description : $this->potential_consequence_description = '' ;
-        $this->potential_likelihood_description  = (!empty($this->potential_likelihood)) ? RiskLikelihood::whereId($this->potential_likelihood)->first()->notes : $this->potential_likelihood_description = '' ;
-        if ($this->documentation) {
+        $this->showReportTo();
+        $this->showReportBy();
+        $this->radioSelect();
+        $this->riskAssessment();
+        if (!empty($this->documentation)) {
             $file_name = $this->documentation->getClientOriginalName();
-            $this->fileUpload = pathinfo($file_name, PATHINFO_EXTENSION);
+            $this->fileUpload  = pathinfo($file_name, PATHINFO_EXTENSION);
+            $this->filename = null;
         }
-        if (!$this->nama_pelapor) {
-            if (!empty(auth()->user()->username)) {
-                if (People::where('network_username', auth()->user()->username)->first()->lookup_name) {
-                    $this->nama_pelapor = People::where('network_username', auth()->user()->username)->first()->lookup_name;
-                    $this->nama_pelapor_id = People::where('network_username', auth()->user()->username)->first()->id;
-                }
-            } else {
-                $this->nama_pelapor = '';
-            }
-        }
-        if ($this->radio_select === 'workgroup') {
-            $this->search_workgroup = $this->search;
-            $this->wg_id=null;
-            $this->search_companyLevel = "";
-        } elseif ($this->radio_select === 'companyLevel') {
-            $this->search_workgroup = "";
-            $this->search_companyLevel = $this->search;
-        }
-        else{
-            $this->search_workgroup = $this->search;
-            $this->search_companyLevel = $this->search;
-        }
-      
         $this->ModalWorkgroup = (!empty($this->wg_id)) ? Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->searchWgId(trim($this->wg_id))->orderBy('companyLevel_id', 'asc')->get() : Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
-        
         $this->EventSubType = EventSubType::with('EventType')->where('eventType_id', 1)->get();
+       
         return view('livewire.event-report-list.hazard-id.create', [
             'LocationEvent' => EventLocation::get(),
             'EventType' => EventType::get(),
-            'People' => People::with('Employer')->search(trim($this->search_reportBy))->paginate(100, ['*'], 'ReportByPage'),
-            'Supervisor' => People::with('Employer')->search(trim($this->search_reportTo))->paginate(100, ['*'], 'ReportToPage'),
+            'People' => People::with('Employer')->search(trim($this->nama_pelapor))->paginate(100, ['*'], 'ReportByPage'),
+            'Supervisor' => People::with('Employer')->search(trim($this->pengawas_area))->paginate(100, ['*'], 'ReportToPage'),
             'CompanyLevel' => CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_companyLevel))->orderBy('bussiness_unit', 'asc')->get(),
             'Company' => Companies::with(['CompanyCategory'])->searchcompany(trim($this->search_company))->get(),
             'Consequence' => RiskConsequence::get(),
             'Likelihood' => RiskLikelihood::get(),
         ]);
     }
-   
-
-    public function previousPage($pageName = 'page')
-    {
-        $this->setPage(max($this->paginators[$pageName] - 1, 1), $pageName);
+    public function riskAssessment(){
+        $this->actual_outcome_description  = (!empty($this->actual_outcome)) ? RiskConsequence::whereId($this->actual_outcome)->first()->description : $this->actual_outcome_description = '';
+        $this->potential_consequence_description  = (!empty($this->potential_consequence)) ? RiskConsequence::whereId($this->potential_consequence)->first()->description : $this->potential_consequence_description = '';
+        $this->potential_likelihood_description  = (!empty($this->potential_likelihood)) ? RiskLikelihood::whereId($this->potential_likelihood)->first()->notes : $this->potential_likelihood_description = '';
     }
-
-    public function nextPage($pageName = 'page')
+    public function radioSelect()
     {
-        $this->setPage($this->paginators[$pageName] + 1, $pageName);
+        if ($this->radio_select === 'workgroup') {
+            $this->search_workgroup = $this->search;
+            $this->wg_id = null;
+            $this->search_companyLevel = "";
+        } elseif ($this->radio_select === 'companyLevel') {
+            $this->search_workgroup = "";
+            $this->search_companyLevel = $this->search;
+        } else {
+            $this->search_workgroup = $this->search;
+            $this->search_companyLevel = $this->search;
+        }
     }
-   
-    // public function paginationView()
-    // {
-    //     return 'livewire.pagination';
-    // }
-    // FUNCTION BTN MODAL
+    public function store()
+    {
+        if (!$this->documentation) {
+            $file_name = $this->filename;
+        } else {
+
+            $file_name = $this->documentation->getClientOriginalName();
+            $this->documentation->storeAs('public/documents', $file_name);
+        }
+        $a = $this->generateUniqueCode();
+        $this->reference = "hzd-$a";
+        $this->validate([
+            'nama_pelapor' => 'required',
+            'event_subtype' => 'required',
+            'tanggal_kejadian' => 'required',
+            'waktu' => 'required',
+            'workgroup' => 'required',
+            'pengawas_area' => 'required',
+            'lokasi' => 'required',
+            'rincian_bahaya' => 'required',
+            'tindakan_perbaikan' => 'nullable',
+            'tindakan_perbaikan_disarankan' => 'nullable',
+            'actual_outcome' => 'required',
+            'potential_consequence' => 'required',
+            'potential_likelihood' => 'required',
+            'task' => 'required',
+
+            'documentation' => 'nullable|mimes:jpg,jpeg,png,svg,gif,xlsx,pdf,docx',
+        ]);
+
+        try {
+        $hazard_ids =  HazardId::updateOrCreate(['id'=>$this->id_hazardBack],[
+            'nama_pelapor' => $this->nama_pelapor_id,
+            'event_subtype' => $this->event_subtype,
+            'tanggal_kejadian' => date('Y-m-d', strtotime($this->tanggal_kejadian)),
+            'waktu' => $this->waktu,
+            'workgroup' => $this->workgroup_id,
+            'pengawas_area' => $this->pengawas_area_id,
+            'lokasi' => $this->lokasi,
+            'rincian_bahaya' => $this->rincian_bahaya,
+            'tindakan_perbaikan' => $this->tindakan_perbaikan,
+            'tindakan_perbaikan_disarankan' => $this->tindakan_perbaikan_disarankan,
+            'reference' => $this->reference,
+            'actual_outcome' => $this->actual_outcome,
+            'potential_consequence' => $this->potential_consequence,
+            'potential_likelihood' => $this->potential_likelihood,
+            'task' => $this->task,
+            'documentation' => $file_name
+        ]);
+        $this->clearFields();
+        $this->id_hazard = $hazard_ids->id;
+        $this->tab ='';
+        $this->tab2 ='checked';
+        $this->emit('pasing_id',$this->id_hazard);
+ 
+        } catch (\Throwable $th) {
+            session()->flash('success', 'Something goes wrong!!');
+        }
+    }
     public function wgClick()
     {
         $this->openModalWG = "modal modal-open";
@@ -167,26 +255,7 @@ class Create extends Component
         $this->openModalWG = 'modal';
         $this->clearSearchWg();
     }
-    public function reportByClick()
-    {
-        $this->openModalreportBy = 'modal-open';
-    }
-    public function reportByClickClose()
-    {
-        $this->openModalreportBy = '';
-        $this->clearSearchWg();
-       
-    }
-    public function reportToClick()
-    {
-        $this->openModalreportTo = 'modal-open';
-    }
-    public function reportToClickClose()
-    {
-        $this->openModalreportTo = '';
-        $this->clearSearchWg();
-       
-    }
+    
     public function responsibleClick()
     {
         $this->openModalResponsibleCompany = 'modal-open';
@@ -214,7 +283,17 @@ class Create extends Component
             $reportBy = People::with('Employer')->whereId($id)->first();
             $this->nama_pelapor = $reportBy->lookup_name;
             $this->nama_pelapor_id = $reportBy->id;
-            $this->reportByClickClose();
+        }
+    }
+    public function showReportBy()
+    {
+        if (empty($this->nama_pelapor)) {
+            $this->show_reportBy = 'hidden';
+            $this->reset('nama_pelapor_id');
+        } elseif (!People::where('lookup_name', $this->nama_pelapor)->first()) {
+            $this->show_reportBy = 'block';
+        } else {
+            $this->show_reportBy = 'hidden';
         }
     }
     public function cari_reportTo($id)
@@ -224,7 +303,17 @@ class Create extends Component
             $reportTo = People::with('Employer')->whereId($id)->first();
             $this->pengawas_area = $reportTo->lookup_name;
             $this->pengawas_area_id = $reportTo->id;
-            $this->reportToClickClose();
+        }
+    }
+    public function showReportTo()
+    {
+        if (empty($this->pengawas_area)) {
+            $this->show_reportTo = 'hidden';
+            $this->reset('pengawas_area_id');
+        } elseif (!People::cari(trim($this->pengawas_area))->first()) {
+            $this->show_reportTo = 'block';
+        } else {
+            $this->show_reportTo = 'hidden';
         }
     }
     public function openModal()
@@ -233,118 +322,19 @@ class Create extends Component
     }
     public function closeModal()
     {
-        $this->modal = '';
-    }
-    public function store()
-    {
-
-        if (!empty($this->documentation)) {
-            $file_name = $this->documentation->getClientOriginalName();
-            $this->fileUpload = pathinfo($file_name, PATHINFO_EXTENSION);
-            $this->documentation->storeAs('public/documents', $file_name);
-        } else {
-            $file_name = "";
-        }
-        $a = $this->generateUniqueCode();
-        $this->reference = "hzd-$a";
-        $this->validate([
-            'nama_pelapor' => 'required',
-            'event_subtype' => 'required',
-            'tanggal_kejadian' => 'required',
-            'waktu' => 'required',
-            'workgroup' => 'required',
-            'pengawas_area' => 'required',
-            'lokasi' => 'required',
-            'rincian_bahaya' => 'required',
-            'tindakan_perbaikan' => 'required',
-            'tindakan_perbaikan_disarankan' => 'required',
-            'actual_outcome' => 'required',
-            'potential_consequence' => 'required',
-            'potential_likelihood' => 'required',
-            'task' => 'required',
-
-            'documentation' => 'nullable|mimes:jpg,jpeg,png,svg,gif,xlsx,pdf,docx',
-        ]);
-
-        try {
-            $hazard_ids =  HazardId::create([
-                'nama_pelapor' => $this->nama_pelapor_id,
-                'event_subtype' => $this->event_subtype,
-                'tanggal_kejadian' => date('Y-m-d', strtotime($this->tanggal_kejadian)),
-                'waktu' => $this->waktu,
-                'workgroup' => $this->workgroup_id,
-                'pengawas_area' => $this->pengawas_area_id,
-                'lokasi' => $this->lokasi,
-                'rincian_bahaya' => $this->rincian_bahaya,
-                'tindakan_perbaikan' => $this->tindakan_perbaikan,
-                'tindakan_perbaikan_disarankan' => $this->tindakan_perbaikan_disarankan,
-                'reference' => $this->reference,
-                'actual_outcome' => $this->actual_outcome,
-                'potential_consequence' => $this->potential_consequence,
-                'potential_likelihood' => $this->potential_likelihood,
-                'task' => $this->task,
-                'documentation' => $file_name
-            ]);
-
-            $workflow_template_id = WorkflowStep::where('workflow_template', 1)->orderBy('id', 'ASC')->first()->workflow_template;
-            $description = WorkflowAdministration::with(['StatusCode', 'ResponsibleRole'])->where('workflow_template', $workflow_template_id)->first()->description;
-            $b = WorkflowAdministration::with(['StatusCode', 'ResponsibleRole'])->where('description', $description)->first()->id;
-            PanelHazardId::create([
-                'assignTo' => null,
-                'also_assignTo' => null,
-                'hazard_id' => $hazard_ids->id,
-                'workflow_step' => $b,
-
-            ]);
-            $idhazard = $hazard_ids->id;
-            $url = "$idhazard";
-            $this->statusER = $description;
-            $network_username = People::whereIn('network_username', User::get('username'))->pluck('id')->toArray();
-            $id_moderator = UserSecurity::whereIn('user_id', $network_username)->where('user_id', 'NOT LIKE', auth()->user()->id)->where('event_sub_types_id', $this->event_subtype)->where('workflow', 'Moderator')->pluck('user_id')->toArray();
-            $nameSubType = EventSubType::whereId($this->event_subtype)->first()->EventType->name;
-
-            $people = People::whereIn('id', $id_moderator)->pluck('network_username')->toArray();
-            $moderator = User::whereIn('username', $people)->get();
-            $reportTo = People::where('id', $this->pengawas_area_id)->first()->network_username;
-
-            if ($reportTo) {
-                $pengawas = User::where('username', $reportTo)->get();
-
-                $offerDataSpv = [
-                    'name' => 'Report By' . ' ' . $this->nama_pelapor,
-                    'subject' => $nameSubType,
-                    'body' => $this->rincian_bahaya,
-                    'thanks' => 'Thank you',
-                    'offerText' => $this->reference,
-                    'offerUrl' => url("http://tokasafe.tokatindung.com/eventReport/hazard_id/$url"),
-                    'offer_id' => $url
-                ];
-
-                Notification::send($pengawas, new ToSupervisor($offerDataSpv));
+        
+       if ($this->id_hazardBack) {
+       
+           
+            HazardId::whereId($this->id_hazardBack)->delete();
+            if ($this->documentation) {
+                unlink(storage_path('app/public/documents/' . $this->documentation));
             }
-            $offerData = [
-                'name' => 'Report By' . ' ' . $this->nama_pelapor,
-                'subject' => $nameSubType,
-                'body' => $this->rincian_bahaya,
-                'thanks' => 'Thank you',
-                'offerText' => $this->reference,
-                'offerUrl' => url("http://tokasafe.tokatindung.com/eventReport/hazard_id/$url"),
-                'offer_id' => $url
-            ];
-            Notification::send($moderator, new ToModerator($offerData));
-            $this->emit('hazard_add');
-            $this->closeModal();
-            $this->clearFields();
-            if (auth()->user()->role_users_id == 2) {
-                return redirect()->route('hazardDetailsGuest', ['id' =>  $idhazard]);
-            } else {
-
-                return redirect()->route('hazardDetails', ['id' =>  $idhazard]);
-            }
-        } catch (\Throwable $th) {
-            session()->flash('success', 'Something goes wrong!!');
-        }
+      
+       }
+       $this->modal = '';
     }
+
     public function clearFields()
     {
         $this->nama_pelapor = '';
@@ -358,6 +348,11 @@ class Create extends Component
         $this->rincian_bahaya = '';
         $this->tindakan_perbaikan = '';
         $this->tindakan_perbaikan_disarankan = '';
+        $this->task = '';
+        $this->rincian_bahaya = '';
+        $this->potential_likelihood = '';
+        $this->actual_outcome = '';
+        $this->potential_consequence = '';
     }
     public function generateUniqueCode()
     {
@@ -367,7 +362,7 @@ class Create extends Component
 
         return $code;
     }
-    // ClickFunction
+// ClickFunction
     public function click()
     {
         if ($this->potential_consequence == 5 && $this->potential_likelihood == 1) {

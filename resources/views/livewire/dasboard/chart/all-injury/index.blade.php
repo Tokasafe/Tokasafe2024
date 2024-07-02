@@ -4,6 +4,7 @@
         <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
         <link rel="stylesheet" href="/css/flatpickr/flatpickr.min.css">
         <link rel="stylesheet" href="/css/flatpickr/monthSelect/style.css" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{{ asset('toastify/css/toastify.css') }}">
         <link rel="stylesheet" type="text/css" href="/css/flatpickr/dark.css">
     @endpush
     @push('scripts')
@@ -11,6 +12,7 @@
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         <script src=" \js\flatpickr\monthSelect\index.js"></script>
+        <script type="text/javascript" src="{{ asset('toastify/js/toastify.js') }}"></script>
         <script src=" \js\apexcharts.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         <script>
@@ -20,6 +22,14 @@
             });
 
             flatpickr("#tglLapor", {
+                disableMobile: "true",
+                dateFormat: "d-m-Y", //defaults to "F Y"
+            });
+            flatpickr("#due_date", {
+                disableMobile: "true",
+                dateFormat: "d-m-Y", //defaults to "F Y"
+            });
+            flatpickr("#completion", {
                 disableMobile: "true",
                 dateFormat: "d-m-Y", //defaults to "F Y"
             });
@@ -437,7 +447,7 @@
 
                 <div class="px-4 ">
                     <!-- Chart -->
-                    @livewire('dasboard.chart.kpi.index')
+                    {{-- @livewire('dasboard.chart.kpi.index') --}}
                     <div class="relative mt-2 rounded-sm bg-zinc-400">
                         <div class="" id="chart"></div>
                     </div>
@@ -445,7 +455,7 @@
                 <div class="self-center m-4">
                 </div>
                 <div class="mx-8 lg:mx-0">
-                    @livewire('dasboard.chart.key-state.index')
+                    {{-- @livewire('dasboard.chart.key-state.index') --}}
                 </div>
                 <div class="grid gap-2 m-4 sm:grid-cols-2">
                     <div class="bg-zinc-400" id="chartLine"></div>
@@ -460,10 +470,10 @@
                         {{-- <div class="p-0 text-xs divider divider-info">Short Menu</div> --}}
                         <div class="flex justify-center p-0 card-body ">
                             <div class="self-center">
-                                @livewire('dasboard.short-link.index')
+                                {{-- @livewire('dasboard.short-link.index') --}}
                                 <div class="invisible h-0 p-0">
-                                    @livewire('event-report-list.insident.create')
-                                    @livewire('event-report-list.hazard-id.create')
+                                    {{-- @livewire('event-report-list.hazard-id.create')
+                                    @livewire('event-report-list.insident.create') --}}
                                 </div>
                             </div>
                         </div>

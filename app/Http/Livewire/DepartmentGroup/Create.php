@@ -41,7 +41,7 @@ class Create extends Component
     }
     public function clearFields()
     {
-        $this->group_id = '';
+        $this->group_id ;
         $this->department_id = '';
     }
 }

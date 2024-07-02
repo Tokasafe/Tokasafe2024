@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Auth\Events\Lockout;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\RateLimiter;
+use LdapRecord\Connection;
 use Illuminate\Support\Str;
+use Illuminate\Auth\Events\Lockout;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
@@ -49,7 +50,6 @@ class LoginRequest extends FormRequest
                 'password' => $this->password,
             ],
         ];
-
         if (!Auth::attempt($credentials, $this->filled('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
@@ -57,6 +57,24 @@ class LoginRequest extends FormRequest
                 'username' => __('auth.failed'),
             ]);
         }
+
+        // $connection = new Connection([
+        //     'hosts'    => ['10.10.200.5'],
+        //     'username' => null,
+        //     'password' => null,
+        //     'base_dn'  => 'dc=archimining,dc=local',
+        //     'port'     => 389,
+        //     'version'  => 3,
+        // ]);
+
+        // $query = $connection->query();
+
+        // if ($query->findBy('samaccountname', $this->username)) {
+        //    dd('jadi');
+        // }
+        // else{
+        //     dd('laso');
+        // }
 
         RateLimiter::clear($this->throttleKey());
     }

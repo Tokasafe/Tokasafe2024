@@ -188,18 +188,21 @@
         <form wire:submit.prevent='uploadPeople'>
             @csrf
 
-            <div class="w-full max-w-xs form-control">
+            <div class="w-full max-w-lg form-control">
+
                 <x-input-label-req :value="__('File Name')" />
-                <input type="file" placeholder="Type here" wire:model='fileImport' required`
-                    class=" @error('fileImport') border-rose-500 border-2 @enderror w-full max-w-xs file-input file-input-bordered file-input-success file-input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
+                <x-input-file :error="$errors->get('fileImport')" class="relative" wire:model='fileImport' />
                 <x-input-error :messages="$errors->get('fileImport')" class="mt-0" />
             </div>
             <div class="modal-action">
                 <button type="submit" class="text-white btn btn-success btn-xs">Save
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                    <svg  wire:loading.remove xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                         <path
                             d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6h5a2 2 0 012 2v7a2 2 0 01-2 2H4a2 2 0 01-2-2V8a2 2 0 012-2h5v5.586l-1.293-1.293zM9 4a1 1 0 012 0v2H9V4z" />
                     </svg>
+                    <span wire:loading wire:target="uploadPeople" wire:target="fileImport" wire:loading.delay.long
+                    wire:loading.class="bg-rose-500"
+                    class="hidden loading loading-spinner loading-sm"></span>
                 </button>
                 <label for="uploadPeople" class="btn btn-xs btn-error">Close!</label>
             </div>

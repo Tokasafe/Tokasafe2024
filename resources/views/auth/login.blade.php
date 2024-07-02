@@ -15,21 +15,23 @@
                     <!-- Username -->
                     <div>
                         <x-input-label for="username" :value="__('Username')" />
-                        <x-text-input id="username"
+                        {{-- <x-text-input id="username"
                             class="appearance-none  rounded w-full py-3 px-3 leading-tight border-success  focus:outline-none  focus:bg-white text-gray-700 pr-16 font-mono"
-                            type="text" name="username" :value="old('username')" required autofocus
-                            autocomplete="username" />
+                            type="text" name="username" :value="old('username')"  autofocus
+                            autocomplete="username" /> --}}
+                            <x-input-text id="username" name="username" type="text"  :error="$errors->get('username')" autofocus="true" autocomplete="username"/>
                         <x-input-error :messages="$errors->get('username')" class="mt-0" />
                     </div>
                     <!-- Password -->
-                    <div class="mt-4">
+                    <div class="">
                         <x-input-label for="password" :value="__('Password')" />
 
                         <div class="relative">
                            
-                            <x-text-input name="password"
+                            {{-- <x-text-input name="password"
                                 class="appearance-none  rounded w-full py-3 px-3 leading-tight border-success  focus:outline-none  focus:bg-white text-gray-700 pr-16 font-mono js-password"
-                                id="password" type="password" autocomplete="off" />
+                                id="password" type="password" autocomplete="off" /> --}}
+                                <x-input-text id="password" name="password" type="password"  :error="$errors->get('password')" autofocus="true" autocomplete="password"/>
                                 <div class="absolute inset-y-0 right-0 flex items-center px-2">
                                     <label id="btnToggle"
                                         class=" btn btn-xs btn-ghost btn-circle rounded px-2  text-sm text-gray-600 font-mono cursor-pointer "

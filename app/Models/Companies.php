@@ -23,8 +23,14 @@ class Companies extends Model
     }
     public function scopeSearchcompany($query, $term)
     {
-        $term = "%$term%";
+       
         $query->where('name', 'like', '%' . $term . '%');
+
+    }
+    public function scopeCaricompany($query, $term)
+    {
+       
+        $query->where('name',  $term );
 
     }
 

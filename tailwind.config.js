@@ -10,31 +10,40 @@ module.exports = {
     ],
     daisyui: {
         themes: [
-            "light", "dark", "cupcake", "sunset", "nord", "corporate",
-            {
-                mytheme: {
-
-                    "primary": "#e8b68f",
-
-                    "secondary": "#b560f7",
-
-                    "accent": "#f954bd",
-
-                    "neutral": "#1f1826",
-
-                    "base-100": "#f1ffff",
-
-                    "info": "#4461ca",
-
-                    "success": "#16c079",
-
-                    "warning": "#f9a448",
-
-                    "error": "#ea1a47",
-                },
-            },
+          "light",
+          "dark",
+          "cupcake",
+          "bumblebee",
+          "emerald",
+          "corporate",
+          "synthwave",
+          "retro",
+          "cyberpunk",
+          "valentine",
+          "halloween",
+          "garden",
+          "forest",
+          "aqua",
+          "lofi",
+          "pastel",
+          "fantasy",
+          "wireframe",
+          "black",
+          "luxury",
+          "dracula",
+          "cmyk",
+          "autumn",
+          "business",
+          "acid",
+          "lemonade",
+          "night",
+          "coffee",
+          "winter",
+          "dim",
+          "nord",
+          "sunset",
         ],
-    },
+      },
     theme: {
         screens: {
             'sm': '640px',
@@ -79,7 +88,7 @@ module.exports = {
     },
 
     plugins: [
-        require('@tailwindcss/typography'),
+        // require('@tailwindcss/typography'),
         
         require("daisyui")
     ],
