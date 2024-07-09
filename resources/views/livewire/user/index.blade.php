@@ -41,7 +41,7 @@
         </div>
     </div>
     <div class="mx-4 mt-4 overflow-x-auto rounded-md shadow-md">
-        <table class="table table-xs" wire:poll>
+        <table class="table table-xs">
             <thead class="bg-emerald-300">
                 <tr class="text-center">
                     <th>#</th>

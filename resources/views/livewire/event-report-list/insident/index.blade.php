@@ -1,4 +1,4 @@
-<div class="md:mx-0">
+<div class="">
     @push('styles')
         @livewireStyles()
         <link rel="stylesheet" type="text/css" href="{{ asset('toastify/css/toastify.css') }}">
@@ -114,12 +114,12 @@
         {{ Breadcrumbs::render('incident') }}
     @endsection
 
-    <div class="items-center justify-between flex-none my-4 sm:flex sm:p-0">
+    <div class="items-center justify-between flex-none  sm:flex sm:p-0 mb-2">
         <div class="">
             @livewire('event-report-list.insident.create')
         </div>
 
-        <div class="flex flex-col join lg:flex-row sm:gap-0 ">
+        <div class="flex flex-col join lg:flex-row  ">
 
 
             <div class="relative flex items-center w-full max-w-xs join-item ">

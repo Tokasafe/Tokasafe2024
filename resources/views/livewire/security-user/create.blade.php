@@ -12,31 +12,31 @@
 
     <!-- Put this part before </body> tag -->
     <input type="checkbox" id="addPC" class="modal-toggle" />
-    <div class="modal ">
+    <div class="modal">
         <div class="w-auto sm:w-96 h-auto modal-box">
             <div class="divider divider-accent m-0">Add User Security!</div>
             <form wire:submit.prevent='store'>
                 @csrf
-                <div class="w-full max-w-xs form-control">
+               
+                <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
                     <x-input-label-req :value="__('Workflow Role')" />
-                    <select wire:model='workflow'
-                        class="@error('workflow') border-rose-500 border-2 @enderror w-full select max-w-xs select-bordered select-xs select-success focus:outline-none focus:border-success focus:ring-success focus:ring-1">
-                        <option selected>Select an option</option>
+                    <x-input-select wire:model='workflow' :error="$errors->get('workflow')">
+                        <option value="" selected>Select an option</option>
                         @foreach ($ResponsibleRole as $key)
-                            <option value="{{ $key->name }}">{{ $key->name }}</option>
-                        @endforeach
-
-
-                    </select>
+                        <option value="{{ $key->name }}">{{ $key->name }}</option>
+                    @endforeach
+                    </x-input-select>
                     <x-input-error :messages="$errors->get('workflow')" class="mt-0" />
                 </div>
-                <div class="w-full max-w-xs form-control">
-                    <x-input-label-req :value="__('Company Level')" />
+               
+                <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
+                    <x-input-label-req :value="__('rw')" />
+                    <label class="join " wire:click='wgClick'>
 
-                    <label class="join" wire:click='wgClick'>
-                        <input type="text" placeholder="Type here" wire:model='workgroup' readonly
-                            class=" @error('workgroup') border-rose-500 border-2 @enderror w-full join-item input input-bordered input-success input-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1" />
-                        <label for="" class="border btn btn-xs btn-square join-item border-info btn-info">
+                        <x-input-new wire:model='workgroup' type="text" class="join-item"
+                            :error="$errors->get('workgroup')" readonly />
+                        <label for=""
+                            class="border btn btn-xs btn-square join-item  btn-info">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -45,10 +45,9 @@
 
                         </label>
                     </label>
-
                     <x-input-error :messages="$errors->get('workgroup')" class="mt-0" />
                 </div>
-                <div class="w-full max-w-xs form-control">
+                {{-- <div class="w-full max-w-xs form-control">
                     <x-input-label-req :value="__('Event Subtype')" />
                     <div class="join">
                         <input type="text" placeholder="Type here" wire:model='event_sub_types' readonly
@@ -64,7 +63,26 @@
                         </label>
                     </div>
                     <x-input-error :messages="$errors->get('event_sub_types')" class="mt-0" />
+                </div> --}}
+                <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
+                    <x-input-label-req :value="__('Event Subtype')" />
+                    <label class="join " wire:click='EventSubtypeClick'>
+
+                        <x-input-new wire:model='event_sub_types' type="text" class="join-item"
+                            :error="$errors->get('event_sub_types')" readonly />
+                        <label for=""
+                            class="border btn btn-xs btn-square join-item  btn-info">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 01-1.125-1.125v-3.75zM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-8.25zM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 01-1.125-1.125v-2.25z" />
+                            </svg>
+
+                        </label>
+                    </label>
+                    <x-input-error :messages="$errors->get('event_sub_types')" class="mt-0" />
                 </div>
+
                 <div class=" my-1  overflow-y-auto border  border-stone-400 h-52 w-80 mr-2">
                     <div class="grid justify-items-stretch drop-shadow-md sticky top-0 z-30 bg-base-100 py-1">
                        <div class="justify-self-center flex gap-1">

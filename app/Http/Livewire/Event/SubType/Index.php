@@ -19,6 +19,7 @@ class Index extends Component
 
         'AddEventSubType' => 'render',
         'UpdateEventSubType' => 'render',
+        'uploadEventSubType' => 'render',
     ];
     public function render()
     {

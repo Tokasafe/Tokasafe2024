@@ -19,11 +19,12 @@ class Index extends Component
 
         'AddEventType' => 'render',
         'UpdateEventType' => 'render',
+        'uploadEventType' => 'render',
     ];
     public function render()
     {
         return view('livewire.event.type.index', [
-            'EventType' => EventType::with(['EventCategory'])->searchcategory(trim($this->searchEventCategory))->searchtype(trim($this->searchEventType))->paginate(5),
+            'EventType' => EventType::with(['EventCategory'])->searchcategory(trim($this->searchEventCategory))->searchtype(trim($this->searchEventType))->orderBy('eventCategory_id')->paginate(25),
             'EventCategory' => EventCategory::get(),
         ])->extends('navigation.homebase', ['header' => 'Event Type'])->section('content');
     }

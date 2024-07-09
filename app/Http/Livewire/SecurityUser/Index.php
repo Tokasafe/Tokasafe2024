@@ -26,12 +26,14 @@ class Index extends Component
             'UserSecurity' => UserSecurity::with([
                 'People',
                 'event_type',
-                'Workgroup.CompanyLevel',
+                
                 'Workgroup.CompanyLevel.BussinessUnit',
+                'Workgroup.CompanyLevel',
+                'Workgroup'
             ])->searchperson(trim($this->searchPerson))->paginate(25),
         ])->extends('navigation.homebase', ['header' => 'Security User'])->section('content');
 
-        $this->resetPage('userSecurityPage');
+        // $this->resetPage('userSecurityPage');
     }
     public function update_UserSecurity($id)
     {

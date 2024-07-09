@@ -117,7 +117,7 @@
                                             href="{{ route('roleUser') }}"class="{{ Request::is('InControl/roleUser') ? 'active font-semibold' : '' }}">{{ __('Role User') }}</a>
                                     </li>
 
-                                    <li>
+                                    {{-- <li>
                                         <details {{ Request::is('InControl/rolePosition*') ? 'open' : '' }}>
                                             <summary
                                                 class="{{ Request::is('InControl/rolePosition*') ? 'text-amber-500 font-semibold' : '' }}">
@@ -134,7 +134,7 @@
                                                 </li>
                                             </ul>
                                         </details>
-                                    </li>
+                                    </li> --}}
                                     <li>
                                         <a
                                             href="{{ route('workgroup') }}"class="{{ Request::is('InControl/workgroup') ? 'active font-semibold' : '' }}">{{ __('Workgroup') }}</a>

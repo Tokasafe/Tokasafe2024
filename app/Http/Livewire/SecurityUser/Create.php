@@ -18,8 +18,9 @@ class Create extends Component
     public $search_workgroup = '';
     public $search = '';
     public $searchLevel = '';
-    public $openModalWG = '';
+    public $openModalWG = 'modal';
     public $openModalEST = '';
+    public $search_companyLevel = '';
     public $selectedUser = [];
     public $selectedWorkgroup = [];
     public $event_types_id;
@@ -28,8 +29,9 @@ class Create extends Component
     public $radio_select;
     public $workgroup_id;
     public $ComapanyLevel_id;
+    public $wg_id;
     public $workflow;
-    public $CompanyLevel;
+    public $selectAllWg;
     public $showWG = true;
     public $ModalWorkgroup = [];
     
@@ -38,26 +40,40 @@ class Create extends Component
         if (empty($this->selectedWorkgroup)) {
            $this->workgroup="";
         }
-        if (!empty($this->radio_select)) {
-            if ($this->radio_select === 'companyLevel') {
-                $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_workgroup))->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
-            }
-            if ($this->radio_select === 'workgroup') {
-               
-                    $this->ModalWorkgroup = Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit',])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
-                
-            }
-        } else {
+        $this->ModalWorkgroup = (!empty($this->wg_id)) ? Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->searchWgId(trim($this->wg_id))->orderBy('companyLevel_id', 'asc')->get() : Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
 
-            $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
-        }
+        $this->radioSelect();
         return view('livewire.security-user.create', [
             'People' => People::search(trim($this->search))->paginate(500),
             'ResponsibleRole' => ResponsibleRole::get(),
+            'CompanyLevel' => CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_companyLevel))->orderBy('bussiness_unit', 'asc')->get(),
             'EventTypes' => EventType::with('EventCategory')->get()
         ]);
     }
+    public function updatedSelectAllWg($value)
+    {
+        $main =  (!empty($this->wg_id)) ? Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->searchWgId(trim($this->wg_id))->orderBy('companyLevel_id', 'asc')->pluck('id') : Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->pluck('id');
+        if ($value) {
+            $this->selectedWorkgroup = $main;
+        } else {
+            $this->selectedWorkgroup = [];
+        }
+    }
     // Workgroup Function
+    public function radioSelect()
+    {
+        if ($this->radio_select === 'workgroup') {
+            $this->search_workgroup = $this->search;
+            $this->wg_id = null;
+            $this->search_companyLevel = "";
+        } elseif ($this->radio_select === 'companyLevel') {
+            $this->search_workgroup = "";
+            $this->search_companyLevel = $this->search;
+        } else {
+            $this->search_workgroup = $this->search;
+            $this->search_companyLevel = $this->search;
+        }
+    }
     public function cari($id)
     {
         $this->selectedWorkgroup=[];
@@ -73,24 +89,30 @@ class Create extends Component
     {
         $this->showWG = false;
         $this->workgroup = "$bu-$deptOrCont";
+    }
+    public function allWorkgroup( $wg)
+    {
+        $this->showWG = false;
+        $this->workgroup = "$wg";
 
        
     }
-    public function btnsave()
-    {
-        $this->openModalWG = '';
-    }
     public function wgClick()
     {
-        $this->openModalWG = 'modal-open';
+        $this->openModalWG = "modal modal-open";
     }
+    public function btnsave()
+    {
+        $this->openModalWG = "modal ";
+    }
+
   
    
     public function wgClickClose()
     {
         
         $this->resetPage();
-        $this->openModalWG = '';
+        $this->openModalWG = 'modal';
         $this->selectedWorkgroup=[];
     }
     public function EventSubtypeClick()
@@ -112,8 +134,7 @@ class Create extends Component
 
     public function store()
     {
-
-    
+  
         $this->validate([
             'selectedUser' => 'required',
             'workflow' => 'required',
@@ -137,20 +158,9 @@ class Create extends Component
         $this->emit('AddUserSecurity');
     }
 
-    public function updatedSelectAll($value)
-    {
-        if ($value) {
-            $this->selectedUser = People::pluck('id');
-        } else {
-            $this->selectedUser = [];
-        }
-    }
 
-    public function clearSelect()
-    {
-        $this->selectedUser = [];
-        $this->search = '';
-    }
+
+ 
     public function clearFields()
     {
         $this->selectedUser = [];

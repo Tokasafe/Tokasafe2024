@@ -266,6 +266,8 @@ class Create extends Component
     }
     public function cari($id)
     {
+        $this->reset('selectAllWg');
+        $this->reset('selectedWorkgroup');
         if ($id) {
             $this->wg_id = $id;
         }

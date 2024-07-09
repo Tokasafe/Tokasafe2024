@@ -1,4 +1,4 @@
-<div class="mt-8">
+<div class="">
     @push('styles')
         @livewireStyles()
         <link rel="stylesheet" type="text/css" href="{{ asset('toastify/css/toastify.css') }}">
@@ -85,9 +85,10 @@
     @section('bradcrumbs')
     {{ Breadcrumbs::render('manhoursRegister') }}
 @endsection
-    <div class="flex justify-between mx-3 mt-3">
-        <div class="flex">
-            @livewire('manhours.manhours-register.create')
+    <div class="flex justify-between ">
+      <div class="flex">
+        @livewire('manhours.manhours-register.create')
+        <div class="flex gap-2 flex-col md:flex-row">
             <button
                     class="ml-2 btn  btn-square btn-primary btn-xs tooltip-primary  tooltip tooltip-top @if ($bulkDisable) hidden @endif"
                     data-tip="Download" wire:click="export">
@@ -106,6 +107,7 @@
                       
                 </button>
         </div>
+      </div>
 
 
 
@@ -165,9 +167,9 @@
             </div>
         </div>
     </div>
-    <div class="grid px-2 " wire:loading.class="skeleton"  wire:target="export">
+    <div class="grid  " wire:loading.class="skeleton"  wire:target="export">
 
-        <div class="w-auto mx-3 mt-2 overflow-x-auto rounded-sm shadow-md md:w-auto">
+        <div class="w-auto  mt-2 overflow-x-auto rounded-sm shadow-md md:w-auto">
 
             <table class="table table-xs table-zebra-zebra">
                 <thead class="bg-gray-400">

@@ -60,7 +60,7 @@
                            {{$item->event_type->name}}
                         </td>
                         <td>{{ $item->People->lookup_name }}</td>
-                        <td>{{ $item->Workgroup->CompanyLevel->BussinessUnit->name }}-{{ $item->Workgroup->CompanyLevel->deptORcont }}-{{ $item->Workgroup->job_class }}
+                        <td>{{ $item->Workgroup->CompanyLevel->BussinessUnit->name }}-{{ $item->Workgroup->CompanyLevel->departemen_contractor }}-{{ $item->Workgroup->job_class }}
                         </td>
                         <td>
                             <div class="flex flex-row justify-center gap-1">

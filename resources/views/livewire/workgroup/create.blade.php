@@ -57,7 +57,7 @@
                                         <option value="Supervisor">Supervisor</option>
                                         <option value="Operational">Operational</option>
                                         <option value="Administrator">Administrator</option>
-                                        <option value="MSD">MSD</option>
+                                        <option value="-">-</option>
                                     </select>
                                     <x-input-error :messages="$errors->get('role.' . $value)" class="mt-0" />
                                 </div>
@@ -84,7 +84,7 @@
                                 <option value="Supervisor">Supervisor</option>
                                 <option value="Operational">Operational</option>
                                 <option value="Administrator">Administrator</option>
-                                <option value="MSD">MSD</option>
+                                <option value="-">-</option>
                             </select>
                             <x-input-error :messages="$errors->get('role.0')" class="mt-0" />
                         </div>

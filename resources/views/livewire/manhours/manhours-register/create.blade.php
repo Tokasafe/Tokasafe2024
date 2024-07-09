@@ -1,25 +1,28 @@
 <div>
     @include('toast.toast')
     <!-- Open the modal using ID.showModal() method -->
-    <label for="manhoursRegister"
-        class="btn btn-xs btn-square btn-info tooltip-info tooltip-top tooltip"data-tip="Create">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4  mt-0.5 ml-0.5">
-            <path fill-rule="evenodd"
-                d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25v2.5h2.5a.75.75 0 0 1 0 1.5h-2.5v2.5a.75.75 0 0 1-1.5 0v-2.5h-2.5a.75.75 0 0 1 0-1.5h2.5v-2.5a.75.75 0 0 1 1.5 0Z"
-                clip-rule="evenodd" />
-        </svg>
+    <div class="flex gap-2 flex-col md:flex-row">
+        <label for="manhoursRegister"
+            class="btn btn-xs btn-square btn-info tooltip-info tooltip-top tooltip"data-tip="Create">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4  mt-0.5 ml-0.5">
+                <path fill-rule="evenodd"
+                    d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm.75-10.25v2.5h2.5a.75.75 0 0 1 0 1.5h-2.5v2.5a.75.75 0 0 1-1.5 0v-2.5h-2.5a.75.75 0 0 1 0-1.5h2.5v-2.5a.75.75 0 0 1 1.5 0Z"
+                    clip-rule="evenodd" />
+            </svg>
 
-    </label>
-    <label for="uploadManhoursRegister" class="btn btn-xs btn-square btn-warning tooltip-warning tooltip-top tooltip"
-        data-tip="Import">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4   mt-0.5 ml-0.5">
-            <path
-                d="M8.75 6h-1.5V3.56L6.03 4.78a.75.75 0 0 1-1.06-1.06l2.5-2.5a.75.75 0 0 1 1.06 0l2.5 2.5a.75.75 0 1 1-1.06 1.06L8.75 3.56V6H11a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2.25v5.25a.75.75 0 0 0 1.5 0V6Z" />
-        </svg>
+        </label>
+        <label for="uploadManhoursRegister" class="btn btn-xs btn-square btn-warning tooltip-warning tooltip-top tooltip"
+            data-tip="Import">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                class="size-4   mt-0.5 ml-0.5">
+                <path
+                    d="M8.75 6h-1.5V3.56L6.03 4.78a.75.75 0 0 1-1.06-1.06l2.5-2.5a.75.75 0 0 1 1.06 0l2.5 2.5a.75.75 0 1 1-1.06 1.06L8.75 3.56V6H11a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2.25v5.25a.75.75 0 0 0 1.5 0V6Z" />
+            </svg>
 
-    </label>
+        </label>
+    </div>
     <input type="checkbox" id="manhoursRegister" class="modal-toggle" />
-    <div id="manhoursRegister" role="dialog" class="modal modal-open">
+    <div id="manhoursRegister" role="dialog" class="modal ">
         <div class="modal-box sm:w-[55%] max-w-5xl">
             <div class="font-bold divider divider-primary">{{ __('add') }} Manhours</div>
             <form wire:submit.prevent='store'>
@@ -45,28 +48,28 @@
                         <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control relative">
 
                             <x-input-label-req :value="__('Company')" />
-                           
-                            <x-input-new wire:model='company' type="text"
-                                            onClick="document.getElementById('inputNamaPerusahaan').style.display='block'"
-                                            :error="$errors->get('company')" />
-                            <x-input-error :messages="$errors->get('company')" class="mt-0" />
-                                <div id="inputNamaPerusahaan" class="fixed mt-10 py-1 z-10 w-64 {{ $showCompany }}">
-                                    <div class="w-full max-w-xs text-xs shadow-inner bg-base-200 mt-2">
-                                        <ul class="overflow-y-auto list-disc list-inside h-">
-                                            @forelse ($SelectCompany as $key => $value)
-                                                <li class="w-full cursor-pointer"
-                                                    wire:click="cari_perusahaan({{ $value->id }})">
-                                                    {{ $value->name }}
-                                                </li>
 
-                                            @empty
-                                                <li class="text-rose-500 text-center font-semibold">name not found!!
-                                                </li>
-                                            @endforelse
-                                        </ul>
-                                    </div>
-                                   
+                            <x-input-new wire:model='company' type="text"
+                                onClick="document.getElementById('inputNamaPerusahaan').style.display='block'"
+                                :error="$errors->get('company')" />
+                            <x-input-error :messages="$errors->get('company')" class="mt-0" />
+                            <div id="inputNamaPerusahaan" class="fixed mt-10 py-1 z-10 w-64 {{ $showCompany }}">
+                                <div class="w-full max-w-xs text-xs shadow-inner bg-base-200  mt-2">
+                                    <ul class="overflow-y-auto list-disc list-inside h-32">
+                                        @forelse ($SelectCompany as $key => $value)
+                                            <li class="w-full cursor-pointer"
+                                                wire:click="cari_perusahaan({{ $value->id }})">
+                                                {{ $value->name }}
+                                            </li>
+
+                                        @empty
+                                            <li class="text-rose-500 text-center font-semibold">name not found!!
+                                            </li>
+                                        @endforelse
+                                    </ul>
                                 </div>
+
+                            </div>
                         </div>
                         <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
                             <x-input-label-req :value="__($label_dept)" />
@@ -91,12 +94,12 @@
                     </div>
                     <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
                         <x-input-label-req :value="__('manhour')" />
-                        <x-input-new  wire:model='manhour' type="text" :error="$errors->get('manhour')" />
+                        <x-input-new wire:model='manhour' type="text" :error="$errors->get('manhour')" />
                         <x-input-error :messages="$errors->get('manhour')" class="mt-0" />
                     </div>
                     <div class="w-full max-w-xs sm:max-w-sm xl:max-w-xl  form-control">
                         <x-input-label-req :value="__('manpower')" />
-                        <x-input-new  wire:model='manpower' type="text" :error="$errors->get('manpower')" />
+                        <x-input-new wire:model='manpower' type="text" :error="$errors->get('manpower')" />
                         <x-input-error :messages="$errors->get('manpower')" class="mt-0" />
                     </div>
                 </div>

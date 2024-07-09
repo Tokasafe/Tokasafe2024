@@ -67,9 +67,9 @@
                         <ul class="ml-4 text-xs list-disc list-outside ">
                             <li class=" hover:bg-cyan-200">
                                 <p
-                                    wire:click="workGroup('{{ $wg->companyLevel->BussinessUnit->name }}','{{ $wg->CompanyLevel->deptORcont }}','{{ $wg->job_class }}')">
+                                    wire:click="workGroup('{{ $wg->CompanyLevel->BussinessUnit->name }}','{{ $wg->CompanyLevel->departemen_contractor }}','{{ $wg->job_class }}')">
 
-                                    {{ $wg->CompanyLevel->BussinessUnit->name }}-{{ $wg->CompanyLevel->deptORcont }}-{{ $wg->job_class }}
+                                    {{ $wg->CompanyLevel->BussinessUnit->name }}-{{ $wg->CompanyLevel->departemen_contractor }}-{{ $wg->job_class }}
                                 </p>
                             </li>
 

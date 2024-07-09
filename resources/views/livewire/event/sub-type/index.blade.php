@@ -26,7 +26,7 @@
 
             <select wire:model='searchEventType'
                 class="w-full max-w-xs mb-1 bg-white md:w-auto md:mb-0 join-item select select-success select-xs focus:outline-none focus:border-success focus:ring-success focus:ring-1">
-                <option value="" selected>Search Event Type...</option>
+                <option value="" selected>All</option>
                 @foreach ($EventType as $item)
                     <option value="{{ $item->name }}">{{ $item->name }}</option>
                 @endforeach

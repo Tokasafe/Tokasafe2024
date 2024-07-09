@@ -16,7 +16,8 @@ class Update extends Component
 {
     use WithPagination;
     public $search = '';
-    public $openModalWGupdate = '';
+    public $searchWg = '';
+    public $openModalWG = 'modal';
     public $selectedUser;
     public $Person = [];
     public $selectedWorkgroup;
@@ -26,11 +27,15 @@ class Update extends Component
     public $event_sub_types;
     public $user_id;
     public $workflow;
-    public $CompanyLevel;
     public $showWG = true;
     public $ModalWorkgroup = [];
     public $data_id;
+    public $workgroup1;
+    public $wg_id;
+    public $radio_select;
     public $openModal = '';
+    public $search_companyLevel = '';
+    public $search_workgroup = '';
     public $openModalEST = '';
     protected $listeners = [
 
@@ -42,13 +47,13 @@ class Update extends Component
             $this->data_id = $value;
             $role = UserSecurity::where('id', $this->data_id)->first();
             $Bu = $role->Workgroup->CompanyLevel->BussinessUnit->name;
-            $deptORcont = $role->Workgroup->CompanyLevel->deptORcont;
+            $deptORcont = $role->Workgroup->CompanyLevel->departemen_contractor;
             $job_class = $role->Workgroup->job_class;
             $eventtype = $role->event_type->name;
             $this->event_sub_types ="$eventtype";
             $this->event_types_id =$role->event_types_id;
             $this->workflow = $role->workflow;
-            $this->workgroup = "$Bu-$deptORcont-$job_class";
+            $this->workgroup1 = "$Bu-$deptORcont-$job_class";
             $this->selectedWorkgroup = $role->workgroup_id;
             $this->user_id = $role->user_id;
             $this->selectedUser = $role->user_id;
@@ -57,25 +62,33 @@ class Update extends Component
     }
     public function render()
     {
-
-        if (!empty($this->radio_select)) {
-            if ($this->radio_select == 'companyLevel') {
-                $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_workgroup))->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
-            } else {
-                if ($this->showWG == true) {
-                    $this->ModalWorkgroup = Workgroup::with(['CompanyLevel'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
-                }
-            }
-        } else {
-
-            $this->CompanyLevel = CompanyLevel::with(['BussinessUnit'])->orderBy('bussiness_unit', 'asc')->orderBy('level', 'desc')->get();
+        if(empty($this->workgroup)){
+            $this->workgroup = $this->workgroup1;
         }
+       
+        $this->ModalWorkgroup = (!empty($this->wg_id)) ? Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->searchWgId(trim($this->wg_id))->orderBy('companyLevel_id', 'asc')->get() : Workgroup::with(['CompanyLevel', 'CompanyLevel.BussinessUnit'])->searchWG(trim($this->search_workgroup))->orderBy('companyLevel_id', 'asc')->get();
 
+        $this->radioSelect();
         return view('livewire.security-user.update', [
             'Orang' => People::search(trim($this->search))->paginate(500, ['*'], 'commentsPage'),
             'ResponsibleRole' =>ResponsibleRole::get(),
+            'CompanyLevel' => CompanyLevel::with(['BussinessUnit'])->deptcont(trim($this->search_companyLevel))->orderBy('bussiness_unit', 'asc')->get(),
             'EventTypes' => EventType::with('EventCategory')->get()
         ]);
+    }
+    public function radioSelect()
+    {
+        if ($this->radio_select === 'workgroup') {
+            $this->search_workgroup = $this->searchWg;
+            $this->wg_id = null;
+            $this->search_companyLevel = "";
+        } elseif ($this->radio_select === 'companyLevel') {
+            $this->search_workgroup = "";
+            $this->search_companyLevel = $this->searchWg;
+        } else {
+            $this->search_workgroup = $this->searchWg;
+            $this->search_companyLevel = $this->searchWg;
+        }
     }
 // Workgroup Function
     public function cariUpdate($id)
@@ -96,14 +109,22 @@ class Update extends Component
         $this->workgroup = "$bu-$deptOrCont-$job_class";
         $this->wgClickClose();
     }
-
+    public function workGroup( $bu, $deptOrCont,$job_class)
+    {
+        $this->showWG = false;
+        $this->workgroup = "$bu-$deptOrCont-$job_class";
+    }
+    public function btnsave()
+    {
+        $this->openModalWG = "modal ";
+    }
     public function wgClick()
     {
-        $this->openModalWGupdate = 'modal-open';
+        $this->openModalWG = 'modal modal-open';
     }
     public function wgClickClose()
     {
-        $this->openModalWGupdate = '';
+        $this->openModalWG = 'modal';
 
     }
     public function outModal()

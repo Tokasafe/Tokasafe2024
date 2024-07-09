@@ -2,13 +2,17 @@
 
 namespace App\Http\Livewire\Event\SubType;
 
-use App\Models\EventSubType;
-use App\Models\EventType;
 use Livewire\Component;
+use App\Models\EventType;
+use App\Models\EventSubType;
+use App\Imports\EventSubTypeImport;
+use Livewire\WithFileUploads;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Create extends Component
 {
-    public $name;
+    use WithFileUploads;
+    public $name,$fileImport;
     public $eventType_id;
     public function render()
     {
@@ -31,6 +35,14 @@ class Create extends Component
         session()->flash('success', 'Data added Successfully!!');
         $this->clearFields();
         $this->emit('AddEventSubType');
+    }
+
+    public function uploadEventSubTypes()
+    {
+        $this->validate(['fileImport' => 'required']);
+        Excel::import(new EventSubTypeImport, $this->fileImport);
+        $this->emit('uploadEventSubType');
+        session()->flash('success', "importing file has done!!");
     }
     public function clearFields()
     {

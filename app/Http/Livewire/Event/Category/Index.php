@@ -16,6 +16,7 @@ class Index extends Component
 
         'AddEventCategory' => 'render',
         'UpdateEventCategory' => 'render',
+        'uploadEventCategory' => 'render',
     ];
     public function render()
     {

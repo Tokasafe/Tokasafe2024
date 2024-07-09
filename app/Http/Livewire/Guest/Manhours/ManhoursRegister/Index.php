@@ -56,6 +56,7 @@ class Index extends Component
                 $this->tglMulai="";
                 $this->endDate="";
             }
+        
             $companies = AdminControlCompanyManhours::where('user_id',auth()->user()->id)->pluck('companies_id');
             $this->namecompanies = Companies::whereIn('id',$companies)->pluck('name');
            
